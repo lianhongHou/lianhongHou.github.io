@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>批量替换文件名及文件内容</title>
+<!-- 2015-11-15 Sun 15:55 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">批量替换文件名及文件内容</h1>
+<p>
+该ruby程序用来，批量替换位于某文件夹下，符合某规则的文件名及文件中的内容。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #DCDCCC; font-weight: bold;">require</span> <span style="color: #CC9393;">'FileUtils'</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">string_replace</span>(rep_set, str)
+  rep_set.each_with_index <span style="color: #F0DFAF; font-weight: bold;">do</span> |h, idx|
+    re = <span style="color: #7CB8BB;">Regexp</span>.new h.keys[0]
+    <span style="color: #F0DFAF; font-weight: bold;">if</span> str =~ re
+      str.gsub!(re, h.values[0])
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+  str
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">dir_traverse</span>(dir, regexp, &amp;block)
+  <span style="color: #7CB8BB;">Dir</span>.open(dir) <span style="color: #F0DFAF; font-weight: bold;">do</span> |dir|
+    dir.each <span style="color: #F0DFAF; font-weight: bold;">do</span> |sd|
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> [<span style="color: #CC9393;">"."</span>, <span style="color: #CC9393;">".."</span>].include? sd
+        <span style="color: #F0DFAF; font-weight: bold;">next</span>
+      <span style="color: #F0DFAF; font-weight: bold;">end</span>
+      fd = <span style="color: #CC9393;">"%s\\%s"</span>%[dir.path, sd]
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> <span style="color: #7CB8BB;">File</span>.directory?(fd)
+        dir_traverse(fd, regexp, &amp;block)
+      <span style="color: #F0DFAF; font-weight: bold;">elsif</span> sd =~ regexp
+          block.call fd <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">yield fd</span>
+      <span style="color: #F0DFAF; font-weight: bold;">end</span>
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">fileContent_replace</span>(file_name, rep_set)
+  <span style="color: #7CB8BB;">File</span>.open(file_name, <span style="color: #CC9393;">'r+'</span>) <span style="color: #F0DFAF; font-weight: bold;">do</span> |file|
+    fc = <span style="color: #CC9393;">''</span>
+    file.each_with_index <span style="color: #F0DFAF; font-weight: bold;">do</span> |line, number|
+      string_replace rep_set, line
+      fc &lt;&lt; line
+    <span style="color: #F0DFAF; font-weight: bold;">end</span>
+    file.seek 0
+    file.truncate 0
+    file.write fc
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">change_fileContent_under_folder</span>(rep_set, fregexp, dir)
+  dir_traverse(dir, fregexp) <span style="color: #F0DFAF; font-weight: bold;">do</span> |fpath|
+    fileContent_replace(fpath, rep_set)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">rename_file</span> rep_set, oldfilename
+  dir = <span style="color: #7CB8BB;">File</span>.dirname(oldfilename)
+  oldfile = oldfilename.split(<span style="color: #CC9393;">"\\"</span>)[-1]
+  newfile = string_replace rep_set, oldfile.dup
+  newfilename = <span style="color: #CC9393;">"%s\\%s"</span>%[dir, newfile]  <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">{dir}\\#{newfile}"  </span>
+  <span style="color: #DCDCCC; font-weight: bold;">puts</span> oldfilename
+  <span style="color: #DCDCCC; font-weight: bold;">puts</span> newfilename
+
+  <span style="color: #F0DFAF; font-weight: bold;">if</span> newfilename != oldfilename
+    <span style="color: #7CB8BB;">File</span>.rename(oldfilename, newfilename)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">change_fileName_under_folder</span>(rep_set, fregexp, dir)
+  dir_traverse(dir, fregexp) <span style="color: #F0DFAF; font-weight: bold;">do</span> |fpath|
+    rename_file(rep_set, fpath)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">if</span> <span style="color: #DCDCCC; font-weight: bold;">__FILE__</span> == <span style="color: #DCDCCC; font-weight: bold;">$0</span>
+  <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">example 1, usage of change_fileName_under_folder</span>
+  dir = <span style="color: #CC9393;">'C:\test'</span> <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">this directory will be traversed</span>
+  fregexp = <span style="color: #7CB8BB;">Regexp</span>.new(<span style="color: #CC9393;">".txt$"</span>) <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">file name end with ".txt"</span>
+  rep_set = [{<span style="color: #CC9393;">'^create_'</span>=&gt;<span style="color: #CC9393;">'crt_'</span>}] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">initialed "creat_" in file name will be replaced with "crt_"</span>
+  change_fileName_under_folder(rep_set, fregexp, dir)
+
+  <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">example 2, usage of change_fileContent_under_folder</span>
+  dir = <span style="color: #CC9393;">'C:\test'</span> <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">this directory will be traversed</span>
+  fregexp = <span style="color: #7CB8BB;">Regexp</span>.new(<span style="color: #CC9393;">".txt$"</span>) <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">file name end with ".txt"</span>
+  rep_set = [{<span style="color: #CC9393;">'delete_'</span>=&gt;<span style="color: #CC9393;">'dlt_'</span>}, {<span style="color: #CC9393;">'create'</span>=&gt;<span style="color: #CC9393;">'crt_'</span>}] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">"delete_" and "create_" in the file will be replaced by "dlt", "crt_" respectively</span>
+  change_fileContent_under_folder rep_set, fregexp, dir
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 15:55</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

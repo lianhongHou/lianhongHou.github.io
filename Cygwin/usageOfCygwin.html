@@ -1,0 +1,425 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Cygwin的使用</title>
+<!-- 2015-11-15 Sun 16:28 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Cygwin的使用</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. cygwin下访问windows盘符</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 查看windows盘符在cygwin下的映射</a></li>
+<li><a href="#sec-1-2">1.2. cygpath命令的使用</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. cygwin中用户主目录不一致问题</a>
+<ul>
+<li><a href="#sec-2-1">2.1. 问题描述</a></li>
+<li><a href="#sec-2-2">2.2. 解决办法</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. 命令行自动补齐忽略文件名大小写</a></li>
+<li><a href="#sec-4">4. 安装新软件git</a>
+<ul>
+<li><a href="#sec-4-1">4.1. 忽略文件权限的可执行位</a></li>
+<li><a href="#sec-4-2">4.2. 对中文的支持</a></li>
+<li><a href="#sec-4-3">4.3. SSH服务</a>
+<ul>
+<li><a href="#sec-4-3-1">4.3.1. 安装putty</a></li>
+<li><a href="#sec-4-3-2">4.3.2. 密钥转换</a></li>
+<li><a href="#sec-4-3-3">4.3.3. 设置plink为SSH服务器的客户端</a></li>
+<li><a href="#sec-4-3-4">4.3.4. 测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> cygwin下访问windows盘符</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 查看windows盘符在cygwin下的映射</h3>
+<div class="outline-text-3" id="text-1-1">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ mount
+C:/cygwin/bin on /usr/bin type ntfs (binary,auto)
+C:/cygwin/lib on /usr/lib type ntfs (binary,auto)
+C:/cygwin on / type ntfs (binary,auto)
+C: on /cygdrive/c type ntfs (binary,<span style="color: #DFAF8F;">posix</span>=0,user,noumount,auto)
+D: on /cygdrive/d type ntfs (binary,<span style="color: #DFAF8F;">posix</span>=0,user,noumount,auto)
+E: on /cygdrive/e type ntfs (binary,<span style="color: #DFAF8F;">posix</span>=0,user,noumount,auto)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> cygpath命令的使用</h3>
+<div class="outline-text-3" id="text-1-2">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cygpath -u c:<span style="color: #CC9393;">\\</span>Windows
+/cygdrive/c/Windows
+$ cygpath -w /cygdrive/c/Windows
+C:\Windows
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> cygwin中用户主目录不一致问题</h2>
+<div class="outline-text-2" id="text-2">
+</div><div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> 问题描述</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+如果其他软件(如msysGit)为windows设置了HOME环境变量, 会影响到Cygwin中用户主目录的设置, 甚至会造成在Cygwin中的不同命令有不同的用户主目录的情况。
+</p>
+
+<p>
+cygwin确定用户主目录的依据是，先查看系统的HOME环境变量, 再查看/etc/passwd中为用户设置的主目录. 而有些cygwin应用(如SSH)却没有先查看HOME环境变量, 而是直接使用/etc/passwd中设置的用户主目录.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 解决办法</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+不要让其他软件设置的HOME环境变量影响cygwin, 在C:\cygwin\Cygwin.bat的开头添加 set HOME=
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 命令行自动补齐忽略文件名大小写</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+windows的文件系统是忽略文件名的大小写的。
+</p>
+
+<p>
+为使用方便，最好让cygwin的命令行补齐功能也忽略大小写。编辑文件~/.inputrc，删除掉 #set completion-ignore-case on其中的 #，再重新进入cygwin。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 安装新软件git</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+重新打开安装cygwin时的setup.exe。在搜索框中输入git，然后选择相关的软件，如，
+</p>
+<ul class="org-ul">
+<li>git， git-gui， git-svn， gitk， stgit
+</li>
+<li>git-completion：Git命令的自动补齐功能
+</li>
+<li>openssh：SSH客户端，因有些git仓库是需要SSH服务访问的
+</li>
+<li>vim: Git的默认编辑器
+</li>
+</ul>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> 忽略文件权限的可执行位</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+默认，git会跟踪文件的可执行位，但对windows平台而言，这是没用的，甚而是有害的，因为windows平台的其他软件或操作可能会破坏文件的可执行位。
+</p>
+
+<p>
+可通过命令禁止git对文件权限的跟踪。
+</p>
+
+<p>
+<code>git config --system core.fileMode false</code>
+</p>
+
+<p>
+这样，已添加到库中的文件的权限在本地改变时，git不会更新库中的相应文件。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> 对中文的支持</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+版本1.7.x后的Cygwin能很好的支持中文（用locale命令可查看支持的字符），但msysgit的shell环境仍然需要相关的配置。 
+同linux平台一样，文件名称中包含中文的文件，在工作区状态输出时，中文文件名不能正常显示，而是用八进制字符显示的，为了解决此问题，可执行
+</p>
+
+<p>
+<code>git config --global core.quotepath false</code>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> SSH服务</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+以公钥认证的方式访问Git服务器，是实现Git写操作的最重要的服务。 
+</p>
+
+<p>
+使用如下命令来生成SSH公钥、私钥对：
+</p>
+
+<p>
+<code>$ssh-keygen –C “emailAddress” –t rsa</code>
+</p>
+
+<p>
+上述命令执行中，一路选择回车，会生成/home/Administrator/.ssh/。 
+但是，cygwin下的openssh有一个bug： 使用git克隆来自SSH协议版本库时，偶尔会中断,致使克隆失败。解决办法是，使用plink，具体如下：
+</p>
+</div>
+<div id="outline-container-sec-4-3-1" class="outline-4">
+<h4 id="sec-4-3-1"><span class="section-number-4">4.3.1</span> 安装putty</h4>
+<div class="outline-text-4" id="text-4-3-1">
+<p>
+putty是windows下的开源软件，提供SSH客户端服务，还包括管理公钥的相关工具。
+</p>
+
+<p>
+下面几个包含在安装目录中的程序，用于与Git整合， 
+</p>
+<ul class="org-ul">
+<li>plink.exe，命令行的SSH客户端，用于替代ssh命令。 
+</li>
+<li>puttygen，管理putty格式的私钥，也可用于将openssh的私钥转换为putty格式的私钥。 
+</li>
+<li>pageant， ssh认证代理，运行于后台，负责为ssh连接提供私钥访问服务。
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-4-3-2" class="outline-4">
+<h4 id="sec-4-3-2"><span class="section-number-4">4.3.2</span> 密钥转换</h4>
+<div class="outline-text-4" id="text-4-3-2">
+<p>
+将openssh格式的私钥转换为putty格式的私钥。 
+打开puttygen，加载/home/Administrator/.ssh/id\<sub>rsa</sub>,会有窗口弹出转换成功的提示，在关闭提示回到puttygen界面后，选择保存私钥，起名为 id\<sub>rsa</sub>.ppk，保存在/home/Administrator/.ssh中。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-3-3" class="outline-4">
+<h4 id="sec-4-3-3"><span class="section-number-4">4.3.3</span> 设置plink为SSH服务器的客户端</h4>
+<div class="outline-text-4" id="text-4-3-3">
+<p>
+创建脚本文件/bin/ssh-client-plink，内容为：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">!/bin/</span><span style="color: #F0DFAF; font-weight: bold;">sh</span>
+/cygwin/c/Program \Files <span style="color: #CC9393;">\(</span>x86)/PuTTY/plink.exe &#8211;T &#8211;i C:/cygwin/home/Administrator/.ssh/id_rsa.ppk $<span style="color: #DFAF8F;">*</span>
+</pre>
+</div>
+<p>
+当git访问ssh服务器时，为使上述脚本被自动调用，执行：=export GIT<sub>SSH</sub>=/bin/ssh-client-plink=
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-3-4" class="outline-4">
+<h4 id="sec-4-3-4"><span class="section-number-4">4.3.4</span> 测试</h4>
+<div class="outline-text-4" id="text-4-3-4">
+<div class="org-src-container">
+
+<pre class="src src-sh">$<span style="color: #DFAF8F;">ssh</span> &#8211;T git@github.com
+Hi usernameOngithub! You&#8217;ve successfully authenticated&#8230;..
+</pre>
+</div>
+<p>
+注意，测试之前应将公钥复制到个人github网页的SSH KEYS中。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 16:28</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

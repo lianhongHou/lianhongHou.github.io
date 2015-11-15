@@ -1,0 +1,1489 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Inside the C++ Object Model</title>
+<!-- 2015-11-14 Sat 20:55 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Inside the C++ Object Model</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Semantics of Constructors</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Default Constructor Construction</a></li>
+<li><a href="#sec-1-2">1.2. Copy Constructor Constrution</a></li>
+<li><a href="#sec-1-3">1.3. Program Transformation Semantics</a>
+<ul>
+<li><a href="#sec-1-3-1">1.3.1. Argument Initialization</a></li>
+<li><a href="#sec-1-3-2">1.3.2. Return Value Initialization</a></li>
+</ul>
+</li>
+<li><a href="#sec-1-4">1.4. Member Initialization List</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Semantics of Data</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Data Member Layout</a></li>
+<li><a href="#sec-2-2">2.2. Poiner to Data Members</a></li>
+<li><a href="#sec-2-3">2.3. Access of a Data Member</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1. Static Data Members</a></li>
+<li><a href="#sec-2-3-2">2.3.2. Nonstatic Data Members</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-4">2.4. Inheritance and the Data Member</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. Single inheritance</a></li>
+<li><a href="#sec-2-4-2">2.4.2. Multiple inheritance</a></li>
+<li><a href="#sec-2-4-3">2.4.3. Virtual inheritance</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Semantics of Funtion</a>
+<ul>
+<li><a href="#sec-3-1">3.1. Varieties of Member Invocation</a>
+<ul>
+<li><a href="#sec-3-1-1">3.1.1. Nonstatic Member Functions</a></li>
+<li><a href="#sec-3-1-2">3.1.2. Virtual Member Function</a></li>
+<li><a href="#sec-3-1-3">3.1.3. Static Member Function</a></li>
+</ul>
+</li>
+<li><a href="#sec-3-2">3.2. Virtual Member Functions</a>
+<ul>
+<li><a href="#sec-3-2-1">3.2.1. Virtual Functions under Multiple Inheritance</a></li>
+<li><a href="#sec-3-2-2">3.2.2. Pointer to Member Functions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Semantics of Construction, Destruction and Copy</a>
+<ul>
+<li><a href="#sec-4-1">4.1. Object Construction</a>
+<ul>
+<li><a href="#sec-4-1-1">4.1.1. Object Construction without Inheritance</a></li>
+<li><a href="#sec-4-1-2">4.1.2. Object Construction with Inheritance</a></li>
+</ul>
+</li>
+<li><a href="#sec-4-2">4.2. Object Copy</a></li>
+<li><a href="#sec-4-3">4.3. Object Destruction</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Semantics of Constructors</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+keyword <code>explicit</code> makes it possible to suppress application of a single argument constructor as a conversion operator.
+</p>
+</div>
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Default Constructor Construction</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+"default constructors &#x2026; are generated (by the compiler) where needed&#x2026;.".
+there are 2 kinds of needs, one is needs of the program, another is need of the compiler. Here, it means latter, 
+moreover, the synthesized constructor performs only those activities required by the compiler.
+</p>
+
+<p>
+The synthesis (including default constructor, copy constructor, destructor and assignment copy operator) takes place 
+only if the contructor actually needs to be invoked.since these synthesized functions are inline or non-inline static, 
+it prevent compiler to synthesize multiple these default functions.
+</p>
+
+<p>
+Within the synthesized default constructor, only the base class subobjects and member class objects are initialize. 
+All other nonstatic data members are not.
+</p>
+
+<p>
+For a class without any constructors, four conditions under which the default constructor generated by compiler are:
+</p>
+
+<ul class="org-ul">
+<li>it has one or more Member Class Objects with Default Constructor
+</li>
+</ul>
+<p>
+No matter synthesized constructor or user defined contructors of the class, these Default Constructors are invoked in 
+the order of Member Class Objects declaration, and before explicit user code.
+</p>
+<ul class="org-ul">
+<li>it has Base Class with Default Constructor
+</li>
+</ul>
+<p>
+If Member Class Objects with Default Constructor are also present, they are also invoked after the invocation of all base class constructors.
+</p>
+<ul class="org-ul">
+<li>it either declare or inherit a virtual function
+</li>
+</ul>
+<p>
+In order to initialize the vptr for object of the class with the address of proper virtual table, code must be be inserted by 
+compiler to each constructor the class defines. If the class has no user-declared constructor, compiler synthesize a default 
+constructor to initialize the vptr for object of the class.
+</p>
+<ul class="org-ul">
+<li>it is derived from an inheritance chain in which one or more base classes are virtual
+</li>
+</ul>
+<p>
+To make the virtual base class location within each derived class object available at runtime,compiler insert code in each constructors.
+Without user-declared constructor, compiler need to synthesize a default constructor.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Copy Constructor Constrution</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+If a class does not provide an explicit copy constructor, the class object initiazed with another object of its class is
+initialized by Default Memberwise Initialization.
+</p>
+
+<p>
+Default Memberwise Initialization copies the value of each built-in or derived data member(such as a pointer or an array)
+from one class object to another. 
+</p>
+
+<p>
+A member class object, however, is not copied; rather, Memberwise Initialization is recursively applied. 
+How is this operation in practice carried out? Compiler need to synthesize a copy constructor in order to invoke
+the copy constructor of the member class object. The prereuisite is that the class does not exhibit Bitwise Copy Semantics.
+</p>
+
+<p>
+By the way, in case of the synthesized copy constructor, the nonclass members are also copied.
+</p>
+
+<p>
+Four instances that a class does not exhibit Bitwise Copy Semantics:
+</p>
+
+<ol class="org-ol">
+<li>the class contains a member object of a class for which a copy constructor(either explicit one or synthesized one) exists
+</li>
+<li>the class is derived from a base class for which a copy constructor(either explicit one or synthesized one) exists
+</li>
+<li>the class declares one or more virtual functions
+</li>
+<li>the class is derived from an inheritance chain in which one or more base classes are virtual
+</li>
+</ol>
+
+<p>
+For 1 and 2, compiler needs to insert invocations of the member or base class copy constructors inside the synthesized copy constructor.
+</p>
+
+<p>
+For 3, the synthesized copy constructor explicitly sets the object's vptr to the class virtual table rather than coping it 
+from the right-hand class object.
+</p>
+
+<p>
+For 4, the synthesized copy constructor is to initialize the virtual base class pointer, to perform necessary memberwise 
+initializations of its members, and to do some other memory tasks.
+</p>
+
+<p>
+The rule applies on Copy assignment operator as well.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Program Transformation Semantics</h3>
+<div class="outline-text-3" id="text-1-3">
+</div><div id="outline-container-sec-1-3-1" class="outline-4">
+<h4 id="sec-1-3-1"><span class="section-number-4">1.3.1</span> Argument Initialization</h4>
+<div class="outline-text-4" id="text-1-3-1">
+<p>
+Example shown below.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">foo</span>(<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">x0</span>);
+<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">xx</span>;
+foo(xx);
+</pre>
+</div>
+<p>
+One implementation described with Pseudo C++ Code.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Pseudo C++ Code</span>
+<span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">foo</span>(<span style="color: #7CB8BB;">X</span>&amp; <span style="color: #DFAF8F;">x0</span>);
+
+<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">_tmp0</span>;
+_tmp0.<span style="color: #BFEBBF;">X</span>::X(xx) <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Copy Constructor</span>
+foo(_tmp0);
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Destructor would be invoked on _tmp0.</span>
+</pre>
+</div>
+
+<p>
+Another implementation is to copy constructor the actual argument directly onto program stack. 
+Prior to the return of the function, the local object's desconstructor, if defined, is applied to it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-3-2" class="outline-4">
+<h4 id="sec-1-3-2"><span class="section-number-4">1.3.2</span> Return Value Initialization</h4>
+<div class="outline-text-4" id="text-1-3-2">
+<p>
+Example:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">X</span> <span style="color: #93E0E3;">bar</span>() {
+  <span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">xx</span>;
+  <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">skip process...</span>
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> xx;
+}
+
+<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">x</span> = bar();
+</pre>
+</div>
+
+<p>
+Pseudo C++ Code for above
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">bar</span>(<span style="color: #7CB8BB;">X</span>&amp; <span style="color: #DFAF8F;">_result</span>) {
+  <span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">xx</span>;
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">skip process..</span>
+  _result.<span style="color: #BFEBBF;">X</span>::X(xx); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Copy Constructor</span>
+  <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+}
+
+<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">x</span>; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">Not call Default constructor</span>
+bar(x);
+</pre>
+</div>
+
+<p>
+NRV: Optimize the function by substituting the <code>_result</code> argument for the named return value.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">bar</span>(<span style="color: #7CB8BB;">X</span>&amp; <span style="color: #DFAF8F;">_result</span>) {
+   _result.<span style="color: #BFEBBF;">X</span>::<span style="color: #DFAF8F;">X</span>(); 
+
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">process _result directly</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+}
+
+<span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">x</span>; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">Not call Default constructor</span>
+bar(x);
+</pre>
+</div>
+<p>
+Some programmers criticize the NRV optimization, because other constructor instead of Copy Constructor is called, 
+if they are very different, problem could happen.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-1-4" class="outline-3">
+<h3 id="sec-1-4"><span class="section-number-3">1.4</span> Member Initialization List</h3>
+<div class="outline-text-3" id="text-1-4">
+<p>
+Two options of initializing class members: either the member initialization list or within constructors.
+which one you choose is not signigicant, except in 4 cases below you must use the Member Initialization List .
+</p>
+<ul class="org-ul">
+<li>when initializing a reference member
+</li>
+<li>when initializing a const member
+</li>
+<li>when invoking a base constructor with a set of arguments
+</li>
+<li>when invoking a member class constructor with a set of arguments
+</li>
+</ul>
+
+<p>
+Compiler iterates over and possiblt reorders the initialization list to reflect the declaration order of the members.
+It inserts the code within the body of the constructor prior to any explicit user code.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Semantics of Data</h2>
+<div class="outline-text-2" id="text-2">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">X</span>{};
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Y</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">X</span> {};
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Z</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">X</span> {};
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">A</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Y</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Z</span> {};
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>(){
+  <span style="color: #7CB8BB;">X</span> <span style="color: #DFAF8F;">x</span>; <span style="color: #7CB8BB;">Y</span> <span style="color: #DFAF8F;">y</span>; <span style="color: #7CB8BB;">Z</span> <span style="color: #DFAF8F;">z</span>; <span style="color: #7CB8BB;">A</span> <span style="color: #DFAF8F;">a</span>;
+
+    cout&lt;&lt;<span style="color: #CC9393;">"x:"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(x)&lt;&lt;<span style="color: #CC9393;">", y:"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(y)&lt;&lt;<span style="color: #CC9393;">", z:"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(z)&lt;&lt;<span style="color: #CC9393;">", a:"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(a)&lt;&lt;endl;
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+The output from some older compiler perhaps is <i>x:1, y:5, z:5, a:12</i>, while output from GCC is <i>x:1, y:4, z:4, a:8</i>
+</p>
+
+<p>
+For an empty class(like <i>X</i>), compiler inserts a char member so that two objects of the class are allocated 
+unique addresses in memory.
+</p>
+
+<p>
+For a class with a virtual base class(like <i>Y</i>), it has a pointer (either to the virtual base class subobject or to an 
+associated table within which either the address or offset to the virtual base class subobject),Older compiler also inserts 
+the char member of the virtual base class to <i>Y</i> while GCC does not, because <i>Y</i> has the pointer, no need a char member to assure 
+that two objects of <i>Y</i> are allocated unique addresses in memory, so it has 4 bytes for GCC, while, considering alignment, 8 bytes for older compiler.
+</p>
+
+<p>
+For class <i>A</i>, only consider older compiler, why is it 12 bytes instead of 16 bytes? because a virtual base class subobject occurs only once 
+in the derived class regardless of the number of times it occurs within the class inheritance hierarchy.
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Data Member Layout</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+The static data members are stored in the program's data segment independant of individual class objects.
+</p>
+
+<p>
+Within an access section(private, protected or public) of a class object, the nonstatic data members are set down in the order of their declaration.
+</p>
+
+<p>
+Within multiple access section of a class object, it is up to compiler to order the nonstaitc data members.
+In practice, multiple access sections are concatenated together into an contiguous block in the order of declaration.
+</p>
+
+<p>
+A derived class object is represented as the concatenation of its members with those of its base class(es). The actual ordering of the derived 
+and base class parts vary from compiler, but, in practice, the base class members always appear first, exept in case of a virtual base class.
+</p>
+
+<p>
+Traditionally, <code>vptr</code> is placed after all the explicitly declared members of the class so that it is compatible to <code>struct</code>.
+More recently, it has been placed at the beginning of the class object so that it is convinient, in case of multiple inheritance, 
+to invoke virtual function by pointer or reference.
+</p>
+
+<p>
+<b>what about vbptr ?</b>
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Poiner to Data Members</h3>
+<div class="outline-text-3" id="text-2-2">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point3d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> ~<span style="color: #93E0E3;">Point3d</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">Point3d</span> <span style="color: #DFAF8F;">origin</span>;
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>, <span style="color: #DFAF8F;">y</span>, <span style="color: #DFAF8F;">z</span>;
+};
+<span style="color: #BFEBBF;">Point3d</span>::~<span style="color: #93E0E3;">Point3d</span>(){}
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>(){
+    <span style="color: #7CB8BB;">Point3d</span> <span style="color: #DFAF8F;">p3d</span>;
+
+  cout&lt;&lt;<span style="color: #CC9393;">"&amp;Point3d::x = "</span>&lt;&lt;&amp;<span style="color: #BFEBBF;">Point3d</span>::x&lt;&lt;<span style="color: #CC9393;">", &amp;Point3d::y = "</span>&lt;&lt;&amp;<span style="color: #BFEBBF;">Point3d</span>::y&lt;&lt;endl;
+  printf(<span style="color: #CC9393;">"&amp;Point3d::x = %p, &amp;Point3d::y = %p\n"</span>, &amp;<span style="color: #BFEBBF;">Point3d</span>::x, &amp;<span style="color: #BFEBBF;">Point3d</span>::y);
+  cout&lt;&lt;&amp;p3d&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;&amp;p3d.x&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;&amp;p3d.y&lt;&lt;endl;
+  printf(<span style="color: #CC9393;">"%p, %p, %p"</span>, &amp;p3d, &amp;p3d.x, &amp;p3d.y);
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+
+<p>
+Output for GCC is shown in table, that is very different from the content in the book.
+</p>
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="right" />
+
+<col  class="right" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">&#xa0;</th>
+<th scope="col" class="right">cout</th>
+<th scope="col" class="right">printf</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">&amp;Point3d::x</td>
+<td class="right">1</td>
+<td class="right">4</td>
+</tr>
+
+<tr>
+<td class="left">&amp;Point3d::y</td>
+<td class="right">1</td>
+<td class="right">8</td>
+</tr>
+
+<tr>
+<td class="left">&amp;p3d.x</td>
+<td class="right">4</td>
+<td class="right">4</td>
+</tr>
+
+<tr>
+<td class="left">&amp;p3d.y</td>
+<td class="right">8</td>
+<td class="right">8</td>
+</tr>
+</tbody>
+</table>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Base1</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">val1</span>;
+};
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Base2</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">val2</span>;
+};
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Derived</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Base1</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Base2</span> {};
+<span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">func1</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #BFEBBF;">Derived</span>::* <span style="color: #DFAF8F;">dmp</span>, <span style="color: #7CB8BB;">Derived</span> * <span style="color: #DFAF8F;">pd</span>){
+  cout&lt;&lt;pd-&gt;*dmp&lt;&lt;endl;
+}
+<span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">func2</span>(<span style="color: #7CB8BB;">Derived</span>* <span style="color: #DFAF8F;">pd</span>){
+  <span style="color: #7CB8BB;">int</span> <span style="color: #BFEBBF;">Base2</span>::*<span style="color: #DFAF8F;">bmp</span> = &amp;<span style="color: #BFEBBF;">Base2</span>::val2;
+  func1(bmp, pd);
+}
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>(){
+    <span style="color: #7CB8BB;">Derived</span> <span style="color: #DFAF8F;">d</span>;
+
+  d.val1 = 1;
+  d.val2 = 2;
+
+  func2(&amp;d);
+}
+</pre>
+</div>
+<p>
+Output for GCC is 2.
+</p>
+
+<p>
+<code>int Derived::* dmp</code> means <code>bmp</code> is a pointer to any data member of type <code>int</code> in class <code>Derived</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Access of a Data Member</h3>
+<div class="outline-text-3" id="text-2-3">
+</div><div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> Static Data Members</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+Static Data Members are treated as if each were declared as a global variable, but with visibility limited to the scope of the class.
+</p>
+
+<p>
+By the way, access permission works on Static Data Members. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> Nonstatic Data Members</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+For a Nonstatic Data Member of struct, class, single inheritance hierarchy, or multiple inheritance hierarchy, access is equivalent 
+in performance no matter it is accessed by object directly or pointer(reference) to the object.
+</p>
+
+<p>
+For a Data Member of virtual base class, it is equivalent as above to access it by derived class object directly, but it is somewhat 
+slower to access it by pointer()reference) to derived class object.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Inheritance and the Data Member</h3>
+<div class="outline-text-3" id="text-2-4">
+</div><div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> Single inheritance</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+Normally, Single inheritance provides a form of "natural" polymophism regarding the conversion between base and derived types within the 
+inheritance hierarcy, because the base and derived class objects both begin at the same address, no need for compiler intervention.
+</p>
+
+<p>
+Placing the vptr at the begining of the class object breaks the natural polymorphism of single inheritance in the special case of a base 
+class without virtual functions and a derived class with them, so it needs compiler intervention.
+</p>
+
+<p>
+Both multiple and virtual inheritances, the need for compiler intervention is considerably more pronounced.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> Multiple inheritance</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point2d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point2d</span>();
+
+    <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">x</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">y</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_x</span>, <span style="color: #DFAF8F;">_y</span>;
+};
+<span style="color: #BFEBBF;">Point2d</span>::<span style="color: #93E0E3;">Point2d</span>(){_x=1;_y=2; cout&lt;&lt;<span style="color: #CC9393;">"&amp;_x:"</span>&lt;&lt;&amp;_x&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;<span style="color: #CC9393;">"&amp;_y:"</span>&lt;&lt;&amp;_y&lt;&lt;endl;}
+<span style="color: #7CB8BB;">float</span> <span style="color: #BFEBBF;">Point2d</span>::<span style="color: #93E0E3;">x</span>() {cout&lt;&lt;<span style="color: #CC9393;">"Point2d::x()"</span>&lt;&lt;endl;}
+<span style="color: #7CB8BB;">float</span> <span style="color: #BFEBBF;">Point2d</span>::<span style="color: #93E0E3;">y</span>() {cout&lt;&lt;<span style="color: #CC9393;">"Point2d::y()"</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Point2d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point3d</span>();
+
+    <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">z</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_z</span>;
+};
+<span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">Point3d</span>(){_z=3;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;_z:"</span>&lt;&lt;&amp;_z&lt;&lt;endl;}
+<span style="color: #7CB8BB;">float</span> <span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">z</span>() {cout&lt;&lt;<span style="color: #CC9393;">"Point2d::z()"</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex</span>();
+
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">e</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_e</span>;
+};
+<span style="color: #BFEBBF;">Vertex</span>::<span style="color: #93E0E3;">Vertex</span>(){_e=4;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;_e:"</span>&lt;&lt;&amp;_e&lt;&lt;endl;}
+<span style="color: #7CB8BB;">float</span> <span style="color: #BFEBBF;">Vertex</span>::<span style="color: #93E0E3;">e</span>(){cout&lt;&lt;<span style="color: #CC9393;">"Vertex::e()"</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Point3d</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Vertex</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex3d</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">m</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_m</span>;
+};
+<span style="color: #BFEBBF;">Vertex3d</span>::<span style="color: #93E0E3;">Vertex3d</span>() {_m=5;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;_m:"</span>&lt;&lt;&amp;_m&lt;&lt;endl;}
+<span style="color: #7CB8BB;">float</span> <span style="color: #BFEBBF;">Vertex3d</span>::<span style="color: #93E0E3;">m</span>(){cout&lt;&lt;<span style="color: #CC9393;">"Vertex3d::m()"</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">typedef</span> <span style="color: #7CB8BB;">void</span> (*<span style="color: #7CB8BB;">Fun</span>)();
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>(){
+  <span style="color: #7CB8BB;">Vertex3d</span> <span style="color: #DFAF8F;">v3d</span>;
+    <span style="color: #7CB8BB;">Func</span>* <span style="color: #DFAF8F;">vptr1</span> = *(<span style="color: #7CB8BB;">Func</span>**)&amp;v3d;
+  <span style="color: #7CB8BB;">Func</span>* <span style="color: #DFAF8F;">vptr2</span> = *((<span style="color: #7CB8BB;">Func</span>**)&amp;v3d+4);
+  cout&lt;&lt;<span style="color: #CC9393;">"sizeof(v3d):"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(v3d)&lt;&lt;<span style="color: #CC9393;">"bytes"</span>&lt;&lt;endl;
+  cout&lt;&lt;<span style="color: #CC9393;">"&amp;v3d:"</span>&lt;&lt;&amp;v3d&lt;&lt;endl;
+
+  vptr1[0](); 
+  vptr1[1]();
+  vptr1[2]();
+  vptr1[3]();
+
+  vptr2[0]();             
+
+    <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+}
+</pre>
+</div>
+<p>
+Output for GCC:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">&amp;_x:0x28ff24, &amp;_y:0x28ff28
+&amp;_z:0x28ff2c
+&amp;_e:0x28ff34
+&amp;_m:0x28ff38
+<span style="color: #93E0E3;">sizeof</span>(v3d):28bytes
+&amp;v3d:0x28ff20
+Point2d::x()
+Point2d::y()
+Point2d::z()
+Vertex3d::m()
+Vertex::e()
+</pre>
+</div>
+<p>
+The Standard does not require a specific ordering of the Point3d and Vertex base classes of Vertex3d, but, in practice, they are placed 
+in the order of declaration. 
+</p>
+
+<p>
+For a derived class with two base classes, and the second base class declares a virtual function while the first one does not, an optimization 
+under some compilers switch their order to save the generation of an additional vptr within the derived class object. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-3" class="outline-4">
+<h4 id="sec-2-4-3"><span class="section-number-4">2.4.3</span> Virtual inheritance</h4>
+<div class="outline-text-4" id="text-2-4-3">
+<p>
+A class containing one or more virtual base class subobjects is divided into two regions: an invariant region and a shared region.
+Data within the invariant region remains a fixed offset from the start of the object regardless of subsequent dirivations.
+The shared region represents the virtual base class subobjects. The location of data within the shared region fluctuates with each 
+derivation.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point2d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point2d</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_x</span>, <span style="color: #DFAF8F;">_y</span>;
+};
+<span style="color: #BFEBBF;">Point2d</span>::<span style="color: #93E0E3;">Point2d</span>(){_x=1;_y=2; cout&lt;&lt;<span style="color: #CC9393;">"&amp;Point2d::_x:"</span>&lt;&lt;&amp;_x&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;<span style="color: #CC9393;">"&amp;Point2d::_y:"</span>&lt;&lt;&amp;_y&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Point2d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point3d</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_z</span>;
+};
+<span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">Point3d</span>(){_z=3;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;Point3d::_z:"</span>&lt;&lt;&amp;_z&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Point2d</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_e</span>;
+};
+<span style="color: #BFEBBF;">Vertex</span>::<span style="color: #93E0E3;">Vertex</span>(){_e=4;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;Vertex::_e:"</span>&lt;&lt;&amp;_e&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Point3d</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Vertex</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex3d</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_m</span>;
+};
+<span style="color: #BFEBBF;">Vertex3d</span>::<span style="color: #93E0E3;">Vertex3d</span>() {_m=5;  cout&lt;&lt;<span style="color: #CC9393;">"&amp;_m:"</span>&lt;&lt;&amp;_m&lt;&lt;endl;}
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>() {
+  <span style="color: #7CB8BB;">Vertex3d</span>* <span style="color: #DFAF8F;">v3d</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Vertex3d</span>();
+    <span style="color: #7CB8BB;">int</span> * <span style="color: #DFAF8F;">t1</span> = *(<span style="color: #7CB8BB;">int</span> **)v3d;
+  <span style="color: #7CB8BB;">int</span> * <span style="color: #DFAF8F;">t2</span> = *((<span style="color: #7CB8BB;">int</span>**)v3d+2);
+
+  cout&lt;&lt;<span style="color: #CC9393;">"sizeof(v3d):"</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*v3d)&lt;&lt;<span style="color: #CC9393;">"bytes"</span>&lt;&lt;endl;
+  cout&lt;&lt;<span style="color: #CC9393;">"&amp;v3d:"</span>&lt;&lt;v3d&lt;&lt;endl;
+
+  cout&lt;&lt;t1[-3]&lt;&lt;endl; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">vbase_offset</span>
+  cout&lt;&lt;t1[-2]&lt;&lt;endl; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">top_offset</span>
+  cout&lt;&lt;t1[-1]&lt;&lt;endl; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ptr to typeinfo for Vertex3d</span>
+  cout&lt;&lt;t1[0]&lt;&lt;endl;  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ptr to virtual function</span>
+
+  cout&lt;&lt;t2[-3]&lt;&lt;endl;  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">vbase_offset</span>
+  cout&lt;&lt;t2[-2]&lt;&lt;endl;  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">top_offset</span>
+  cout&lt;&lt;t2[-1]&lt;&lt;endl;  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ptr to typeinfo for Vertex3d</span>
+  cout&lt;&lt;t2[0]&lt;&lt;endl;  <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">ptr to virtual function</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>GCC
+<ul class="org-ul">
+<li>Only pointer to virtual function table contained in object
+</li>
+<li>No pointer to virtual base class table contained in object
+</li>
+<li>Virtual base class table is just before the virtual function table.
+</li>
+<li><code>g++ -fdump-class-hierarchy -o [file] [file].cpp</code> to generate [file].cpp.class that contains object memory layout
+</li>
+</ul>
+</li>
+<li>VC
+<ul class="org-ul">
+<li>Pointer to virtual function table contained in object.
+</li>
+<li>Pointer to virtual base class table contained in object as well.
+</li>
+<li><code>cl [file].cpp /d1reportSingleClassLayout</code> to generate object memory layout.
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+One inheritance chain could have multiple virtual base class table, but only one virtual function table.
+</p>
+
+<p>
+Multiple inheritance could have multiple virtual function table, but only one virtual base class table.
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Semantics of Funtion</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+C++ supports three flavors of member functions: static, nonstatic, and virtual.
+</p>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> Varieties of Member Invocation</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+Assume a nonstatic member function
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">Point3d</span> <span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">normalize</span>() <span style="color: #F0DFAF; font-weight: bold;">const</span>
+{
+  <span style="color: #F0DFAF; font-weight: bold;">register</span> <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">mag</span> = magnitude();
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> Point3d(_x/mag, _y/mag, _z/mag);
+}
+</pre>
+</div>
+<p>
+Compiler internally transformes it into the equivalent nonmember instance. Steps shown below 
+</p>
+<ul class="org-ul">
+<li>Rewrite the signature to insert an additional argument to the member function that provides access to the invoking class object(this pointer).
+</li>
+<li>Rewrite each direct access of a nonstatic data member of the class to access the member through the this pointer.
+</li>
+<li>Rewrite the member function into an external function, mangling its name so that it's lexically unique within the program
+</li>
+</ul>
+<p>
+Finally, if Point3d has copy constructr and NRV is applied, the member function above becomes
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">normalize__7Point3dFv</span>( <span style="color: #F0DFAF; font-weight: bold;">register</span> <span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">Point3d</span> *<span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #F0DFAF; font-weight: bold;">this</span>, <span style="color: #7CB8BB;">Point3d</span> &amp;<span style="color: #DFAF8F;">__result</span> ){
+  <span style="color: #F0DFAF; font-weight: bold;">register</span> <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">mag</span> = <span style="color: #F0DFAF; font-weight: bold;">this</span>-&gt;magnitude();
+  <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">default constructor</span>
+  __result.<span style="color: #BFEBBF;">Point3d</span>::<span style="color: #DFAF8F;">Point3d</span>( <span style="color: #F0DFAF; font-weight: bold;">this</span>-&gt;_x/mag,  __result._y. <span style="color: #F0DFAF; font-weight: bold;">this</span>-&gt;_z/mag );
+  <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-1-1" class="outline-4">
+<h4 id="sec-3-1-1"><span class="section-number-4">3.1.1</span> Nonstatic Member Functions</h4>
+<div class="outline-text-4" id="text-3-1-1">
+<p>
+the call <code>obj.normalize()</code> is transformed into <code>normalize__7Point3dFv(&amp;obj)</code>.
+</p>
+
+<p>
+the call <code>ptr-&gt;normalize()</code> is transformed into <code>normalize__7Point3dFv(ptr)</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-1-2" class="outline-4">
+<h4 id="sec-3-1-2"><span class="section-number-4">3.1.2</span> Virtual Member Function</h4>
+<div class="outline-text-4" id="text-3-1-2">
+<p>
+If <code>normalize()</code> is a virtual function, the call <code>ptr-&gt;normalize()</code> is transformed into <code>(*ptr-&gt;vptr[1])(ptr)</code>.
+</p>
+<ul class="org-ul">
+<li><code>vptr</code> is pointer to virtual function table.
+</li>
+<li><code>1</code> is the index into the virtual table slot associated with <code>noemalize()</code>, tha is known during compiling.
+</li>
+</ul>
+<p>
+The invocation of a virtual function through a class object should always be resolved by compiler as an ordinary nonstatic member function.
+so the call <code>obj.normalize()</code> is transformed into <code>normalize__7Point3dFv(&amp;obj)</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3-1-3" class="outline-4">
+<h4 id="sec-3-1-3"><span class="section-number-4">3.1.3</span> Static Member Function</h4>
+<div class="outline-text-4" id="text-3-1-3">
+<p>
+the call <code>obj.normalize()</code> is transformed into <code>normalize__7Point3dSFv(&amp;obj)</code>.
+</p>
+
+<p>
+the call <code>ptr-&gt;normalize()</code> is transformed into <code>normalize__7Point3d1SFv(ptr)</code>.
+</p>
+<ul class="org-ul">
+<li><code>SFv</code> means, a static member function with an empty(<code>void</code>) argument list.
+</li>
+<li>static member can not be declared <code>const</code>, <code>volatile</code>, or <code>virtual</code>.
+</li>
+</ul>
+
+<p>
+Note, if it is static member function, it is type of <code>float (*)()</code>, if it is nonstatic member function, it is type of <code>float (Point3d::*)()</code>.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> Virtual Member Functions</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+In C++, the set of virtual functions capable of being invoked through an object of its class is known at compile time, moreover, this set is invariant.
+</p>
+
+<p>
+To support polymorphism, a pointer to virtual function table is inserted within each class object, each virtual function is assigned a fixed index within the table.
+</p>
+
+<p>
+When a class derives from a base class, it can 
+</p>
+<ul class="org-ul">
+<li>inherit the instance of the virtual function declared within the base class
+</li>
+<li>override the instance with one of its own
+</li>
+<li>introduce a new virtual function not present in the base class, then the virtual function table is grown by a slot.
+</li>
+</ul>
+<p>
+finally, the address of that instance is coppied into the associated slot in the derived class's virtual function table.
+</p>
+</div>
+<div id="outline-container-sec-3-2-1" class="outline-4">
+<h4 id="sec-3-2-1"><span class="section-number-4">3.2.1</span> Virtual Functions under Multiple Inheritance</h4>
+</div>
+<div id="outline-container-sec-3-2-2" class="outline-4">
+<h4 id="sec-3-2-2"><span class="section-number-4">3.2.2</span> Pointer to Member Functions</h4>
+<div class="outline-text-4" id="text-3-2-2">
+<p>
+Pointer to Static Member Function(<code>void (*pf)(int)</code>) is type of Pointer to Function, while Pointer to non-Static Mmeber Function(<code>void (className::*pcf)(int)</code>) is not,
+and they have different size, that is because the latter contains other information related to <code>this</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">WIN7 G++</span>
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Base1</span> { 
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Base1</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> ~<span style="color: #93E0E3;">Base1</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">speak</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">say</span>();
+  <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">talk</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">tell</span>();
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">b1</span>;
+};
+<span style="color: #BFEBBF;">Base1</span>::<span style="color: #93E0E3;">Base1</span>(){b1=1;  <span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"&amp;b1:"</span>&lt;&lt;&amp;b1&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #BFEBBF;">Base1</span>::~<span style="color: #93E0E3;">Base1</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Base1::Base1()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Base1</span>::<span style="color: #93E0E3;">speak</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Base1::speak()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Base1</span>::<span style="color: #93E0E3;">talk</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Base1::talk()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Base1</span>::<span style="color: #93E0E3;">say</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Base1::say()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Base1</span>::<span style="color: #93E0E3;">tell</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Base1::tell()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Derived</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Base1</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Derived</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> ~<span style="color: #93E0E3;">Derived</span>();
+  <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">talk</span>();
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">tell</span>();    
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">d</span>;
+};
+<span style="color: #BFEBBF;">Derived</span>::<span style="color: #93E0E3;">Derived</span>() {d=5;  <span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"&amp;d:"</span>&lt;&lt;&amp;d&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #BFEBBF;">Derived</span>::~<span style="color: #93E0E3;">Derived</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Derived::~Derived()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Derived</span>::<span style="color: #93E0E3;">talk</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Derived::talk()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Derived</span>::<span style="color: #93E0E3;">tell</span>(){<span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #CC9393;">"Derived::tell()"</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">typedef</span> <span style="color: #7CB8BB;">void</span> (<span style="color: #BFEBBF;">Base1</span>::*Func)();
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>() {
+  <span style="color: #7CB8BB;">Derived</span>* <span style="color: #DFAF8F;">pd</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Derived</span>();
+    <span style="color: #7CB8BB;">Func</span>* <span style="color: #DFAF8F;">vptr1</span> = *(<span style="color: #7CB8BB;">Func</span> **)pd;
+
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the length of non-static member function or nonstatic virtual member function is 8 bytes, while that of pointe is 4 bytes.</span>
+  <span style="color: #BFEBBF;">std</span>::cout&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(pd)&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt; <span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(&amp;<span style="color: #BFEBBF;">Base1</span>::speak)&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(&amp;<span style="color: #BFEBBF;">Base1</span>::talk)&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the address of non-static member function or nonstatic virtual member function is 1.</span>
+  <span style="color: #BFEBBF;">std</span>::cout&lt;&lt;&amp;<span style="color: #BFEBBF;">Base1</span>::speak&lt;&lt;<span style="color: #CC9393;">", "</span>&lt;&lt;<span style="color: #BFEBBF;">std</span>::hex&lt;&lt;&amp;<span style="color: #BFEBBF;">Base1</span>::talk&lt;&lt;<span style="color: #BFEBBF;">std</span>::endl;
+
+  <span style="color: #7CB8BB;">Func</span> <span style="color: #DFAF8F;">f1</span> = &amp;<span style="color: #BFEBBF;">Base1</span>::speak;
+  (pd-&gt;*f1)(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Base1::speak()</span>
+
+  <span style="color: #7CB8BB;">Func</span> <span style="color: #DFAF8F;">f2</span> = &amp;<span style="color: #BFEBBF;">Base1</span>::tell;
+  (pd-&gt;*f2)(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Derived::tell()</span>
+
+  <span style="color: #7CB8BB;">Func</span> <span style="color: #DFAF8F;">f3</span> = &amp;<span style="color: #BFEBBF;">Base1</span>::talk;
+  (pd-&gt;*f3)(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Base1::talk()</span>
+  pd-&gt;talk();   <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Derived::talk()</span>
+
+    (pd-&gt;*vptr1[1])(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Base1::speak()</span>
+  (pd-&gt;*vptr1[2])();  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Derived::tell()</span>
+    <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">where is say()? because each nonstatic member function is 8 bytes while it takes 4 bytes in Virtual Table.</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Semantics of Construction, Destruction and Copy</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Abstract_base</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> ~<span style="color: #93E0E3;">Abstract_base</span>() = 0; 
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">interface</span>() = 0; 
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">char</span>* <span style="color: #93E0E3;">mumble</span>() <span style="color: #F0DFAF; font-weight: bold;">const</span> {<span style="color: #F0DFAF; font-weight: bold;">return</span> _mumble;}
+<span style="color: #F0DFAF; font-weight: bold;">protected</span>:
+  <span style="color: #93E0E3;">Abstract_base</span>(<span style="color: #7CB8BB;">char</span>* <span style="color: #DFAF8F;">pc</span> = <span style="color: #BFEBBF;">NULL</span>);
+  <span style="color: #7CB8BB;">char</span> * <span style="color: #DFAF8F;">_mumble</span>;
+};
+<span style="color: #BFEBBF;">Abstract_base</span>::<span style="color: #93E0E3;">Abstract_base</span>(<span style="color: #7CB8BB;">char</span>* <span style="color: #DFAF8F;">pc</span>) { _mumble = pc; }
+<span style="color: #BFEBBF;">Abstract_base</span>::~<span style="color: #93E0E3;">Abstract_base</span>() { cout&lt;&lt;<span style="color: #CC9393;">"Abstract_base::~Abstract_base"</span>&lt;&lt;endl; }
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Abstract_base</span>::<span style="color: #93E0E3;">interface</span>() {cout&lt;&lt;<span style="color: #CC9393;">"Abstract_base::interface"</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Concrete_derived</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Abstract_base</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">interface</span>();
+};
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Concrete_derived</span>::<span style="color: #93E0E3;">interface</span>() {<span style="color: #BFEBBF;">Abstract_base</span>::interface(); cout&lt;&lt;<span style="color: #CC9393;">"Concrete_derived::interface"</span>&lt;&lt;endl;}
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>() {
+  <span style="color: #7CB8BB;">Concrete_derived</span> <span style="color: #DFAF8F;">cd</span>;
+  cd.interface();
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+<p>
+An abstract class could have constructor, but it would be better to make the constructor protected.
+</p>
+
+<p>
+A pure virtual function must be implemented by derived classes before the class can be instantiated, 
+no matter the function implemented in base class or not, but there is an exception, that is pure virtual destructor,
+the pure virtual destructor must be defined in base class, reason is, each derived class destructor is internally 
+argumented to statically invoke each of its virtual base and immediate base class destructor, the absence of a definition 
+of any of the base class destructors ingeneral results in a link-time error. A better design is to not declare a virtual 
+destructor as pure.
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> Object Construction</h3>
+<div class="outline-text-3" id="text-4-1">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span class="linenr"> 1: </span><span style="color: #7CB8BB;">Point</span> <span style="color: #DFAF8F;">global</span>;
+<span class="linenr"> 2: </span>
+<span class="linenr"> 3: </span><span style="color: #7CB8BB;">Point</span> <span style="color: #93E0E3;">foobar</span>() 
+<span class="linenr"> 4: </span>{
+<span class="linenr"> 5: </span>  <span style="color: #7CB8BB;">Point</span> <span style="color: #DFAF8F;">local</span>;
+<span class="linenr"> 6: </span>  <span style="color: #7CB8BB;">Point</span>* <span style="color: #DFAF8F;">heap</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Point</span>;
+<span class="linenr"> 7: </span>  *heap = local;
+<span class="linenr"> 8: </span>
+<span class="linenr"> 9: </span>  <span style="color: #F0DFAF; font-weight: bold;">delete</span> heap;
+<span class="linenr">10: </span>  <span style="color: #F0DFAF; font-weight: bold;">return</span> local;
+<span class="linenr">11: </span>}
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-4-1-1" class="outline-4">
+<h4 id="sec-4-1-1"><span class="section-number-4">4.1.1</span> Object Construction without Inheritance</h4>
+<div class="outline-text-4" id="text-4-1-1">
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">typedef</span> <span style="color: #F0DFAF; font-weight: bold;">struct</span> {
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>, <span style="color: #DFAF8F;">y</span>;
+} <span style="color: #7CB8BB;">Point</span>;
+</pre>
+</div>
+<p>
+No default constructor, destructor, copy constructor and copy assignment operator generated automaticallu.
+</p>
+
+<p>
+For variable <code>global</code>, the program behaves exactlly as it would in C, but, with a exception, in C++, it is defination 
+of <code>global</code>, while it is declaration of <code>global</code> in C.
+</p>
+
+<p>
+The variable <code>local</code> is neither constructed nor destructed as well.
+</p>
+
+<p>
+The initialization of <code>heap</code> on Line 6 is transformed into <code>Point* heap = __new(sizeof(Point));</code>, and not constructed, too.
+The deletion of <code>heap</code> is transformed into <code>__delete(heap);</code>, and no destructor called.
+</p>
+
+<p>
+The return of <code>local</code> does not trigger copy constructor, and, in practice, bitwise operation runs.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>=0.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>=0.0):_x(x), <span style="color: #7CB8BB;">_y</span>(<span style="color: #DFAF8F;">y</span>) {}
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_x</span>, <span style="color: #DFAF8F;">_y</span>;
+};
+</pre>
+</div>
+
+<p>
+The size of <code>Point</code> class object remains unchanged: the three contiguous corrdiante <code>float</code> members.
+</p>
+
+<p>
+We do not define either a copy constructor or copy operator because the default bitwise semantics are sufficient.
+Nor do we provide a destructor, the default program management of memory is sufficient.
+</p>
+
+<p>
+<code>Point::Point(0.0, 0.0, 0.0)</code> is applied to variable <code>global</code> and variable <code>local</code>.
+</p>
+
+<p>
+The initialiazation of <code>heap</code> on Line 6 is transformed into 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Pseudo C++ Code</span>
+<span style="color: #7CB8BB;">Point</span>* <span style="color: #DFAF8F;">heap</span> = __new(<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(Point));
+<span style="color: #F0DFAF; font-weight: bold;">if</span>(heap) 
+  heap-&gt;<span style="color: #BFEBBF;">Point</span>::<span style="color: #93E0E3;">Point</span>();
+</pre>
+</div>
+
+<p>
+Bitwise copy applied on the return of <code>local</code>.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>=0.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>=0.0):_x(x), <span style="color: #7CB8BB;">_y</span>(<span style="color: #DFAF8F;">y</span>) { cout&lt;&lt;<span style="color: #CC9393;">"asdf"</span>&lt;&lt;endl;}
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">float</span> <span style="color: #93E0E3;">z</span>();
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_x</span>, <span style="color: #DFAF8F;">_y</span>;
+};
+</pre>
+</div>
+<p>
+In addition to <code>vptr</code> added within the class object, the introduction of virtual function causes
+</p>
+
+<ul class="org-ul">
+<li>code added into constructors to initialize <code>vptr</code>, that is after invocation of any base class constructors, but before execution of any user code.
+</li>
+<li>both copy constructor and a copy operator synthesized, that can protect <code>vptr</code> from corruption by bitwise operation.
+</li>
+</ul>
+
+<p>
+The effect of initialization of <code>global</code>, initialization of  <code>heap</code>, and deletion of <code>heap</code> is the same as 
+that we mentioned above. <code>*heap = local;</code> may trigger the actual synthesize of the copy assignment operator.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-1-2" class="outline-4">
+<h4 id="sec-4-1-2"><span class="section-number-4">4.1.2</span> Object Construction with Inheritance</h4>
+<div class="outline-text-4" id="text-4-1-2">
+<p>
+Constructors can contain a great deal of hidden program code because the compiler arguments every constructors as below.
+</p>
+<ul class="org-ul">
+<li>The data member initialized in the member initialization list have to be entered within the body of the constructor in the order of their declaration.
+</li>
+<li>If a member class object is not present in the member initialization list but has an associated default constructor, the default constructor muse be invoked.
+</li>
+<li>Prior to that, if there is a virtual table pointer contained within the class object, it must be initialized with the address of the appropriate virtual table.
+</li>
+<li>Prior to that, all immediate base class constructors must be invoked in the order of base class declaration.
+<ul class="org-ul">
+<li>If the base class is listed within the member initialization list, the explicit arguments, if any, must be passed.
+</li>
+<li>If the base class is not listed within the member initialization list, the default constructor must be invoked, if present.
+</li>
+<li>If the base class is a second or subsequent base class, the <code>this</code> pointer must be adjusted.
+</li>
+</ul>
+</li>
+<li>Prior to that, all virtual base class constructors must be invoked in a left-to-right, depth-first search of the inheritance hierarchy defined by the derived class.
+<ul class="org-ul">
+<li>These constructors, however, may be invoked if, and only if, the class object represents the "most-derived class".
+</li>
+<li>If the virtual base class is listed within the member initialization list of the "most-derived class", the explicit arguments, if any, must be passed. 
+Otherwise, if there is a default constructor, it must be invoked.
+</li>
+<li>In addition, the offset of each virtual base class subobject within the class must somehow be made accessible at runtime.
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>=0.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>=0.0);
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">size</span>();
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_x</span>, <span style="color: #DFAF8F;">_y</span>;
+};
+<span style="color: #BFEBBF;">Point</span>::<span style="color: #93E0E3;">Point</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>):_x(x), _y(y) { cout&lt;&lt;<span style="color: #CC9393;">"Point::Point() "</span>&lt;&lt;<span style="color: #CC9393;">"_x: "</span>&lt;&lt;_x&lt;&lt;<span style="color: #CC9393;">", _y: "</span>&lt;&lt;_y&lt;&lt;<span style="color: #CC9393;">", &amp;_x: "</span>&lt;&lt;&amp;_x&lt;&lt;<span style="color: #CC9393;">", &amp;_y: "</span>&lt;&lt;&amp;_y&lt;&lt;endl; size();}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Point</span>::<span style="color: #93E0E3;">size</span>(){ cout&lt;&lt;<span style="color: #CC9393;">"Point size: "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*<span style="color: #F0DFAF; font-weight: bold;">this</span>)&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Point3d</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>=1.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>=1.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">z</span>=1.0);
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">size</span>();    
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_z</span>;
+};
+<span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">Point3d</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">z</span>): <span style="color: #93E0E3;">Point</span>(x,y), <span style="color: #93E0E3;">_z</span>(z){ cout&lt;&lt;<span style="color: #CC9393;">"Point3d::Point3d() "</span>&lt;&lt;<span style="color: #CC9393;">" _z: "</span>&lt;&lt;_z&lt;&lt;<span style="color: #CC9393;">", &amp;_z: "</span>&lt;&lt;&amp;_z&lt;&lt;endl; size();}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Point3d</span>::<span style="color: #93E0E3;">size</span>(){ cout&lt;&lt;<span style="color: #CC9393;">"Point3d size: "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*<span style="color: #F0DFAF; font-weight: bold;">this</span>)&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span>  <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>=2.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>=2.0, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">m</span> = 2.0);
+<span style="color: #5F7F5F;">//      </span><span style="color: #7F9F7F;">virtual void size();</span>
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_m</span>;
+};
+<span style="color: #BFEBBF;">Vertex</span>::<span style="color: #93E0E3;">Vertex</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">x</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">y</span>, <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">m</span>): <span style="color: #93E0E3;">Point</span>(x,y), <span style="color: #93E0E3;">_m</span>(m){ cout&lt;&lt;<span style="color: #CC9393;">"Vertex::Vertex() "</span>&lt;&lt;<span style="color: #CC9393;">"_m: "</span>&lt;&lt;_m&lt;&lt;<span style="color: #CC9393;">", &amp;_m: "</span>&lt;&lt;&amp;_m&lt;&lt;endl; size(); }
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">void Vertex::size(){cout&lt;&lt;"Vertex size: "&lt;&lt;sizeof(*this)&lt;&lt;endl;}</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Left</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Left</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">l</span>=3.0);
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">size</span>();
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_l</span>;
+};
+<span style="color: #BFEBBF;">Left</span>::<span style="color: #93E0E3;">Left</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">l</span>): <span style="color: #93E0E3;">_l</span>(l){ cout&lt;&lt;<span style="color: #CC9393;">"Left::Left() "</span>&lt;&lt;<span style="color: #CC9393;">"_l: "</span>&lt;&lt;_l&lt;&lt;<span style="color: #CC9393;">", &amp;_l: "</span>&lt;&lt;&amp;_l&lt;&lt;endl; size();}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Left</span>::<span style="color: #93E0E3;">size</span>(){ cout&lt;&lt;<span style="color: #CC9393;">"Left size: "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*<span style="color: #F0DFAF; font-weight: bold;">this</span>)&lt;&lt;endl;;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Right</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Right</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">r</span>=4.0);
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">size</span>();
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_r</span>;
+};
+<span style="color: #BFEBBF;">Right</span>::<span style="color: #93E0E3;">Right</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">r</span>) { cout&lt;&lt;<span style="color: #CC9393;">"Right::Right() "</span>&lt;&lt;<span style="color: #CC9393;">"r: "</span>&lt;&lt;r&lt;&lt;<span style="color: #CC9393;">", _r: "</span>&lt;&lt;_r&lt;&lt;<span style="color: #CC9393;">", &amp;_r: "</span>&lt;&lt;&amp;_r&lt;&lt;endl; size();}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Right</span>::<span style="color: #93E0E3;">size</span>(){ cout&lt;&lt;<span style="color: #CC9393;">"Right size: "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*<span style="color: #F0DFAF; font-weight: bold;">this</span>)&lt;&lt;endl;;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Left</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Point3d</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Vertex</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Right</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #93E0E3;">Vertex3d</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">v</span>=5.0);
+  <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">size</span>(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">if it is not defined here, compile error: reference to `size' is ambiguous</span>
+<span style="color: #F0DFAF; font-weight: bold;">private</span>:
+  <span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">_v</span>;
+};
+<span style="color: #BFEBBF;">Vertex3d</span>::<span style="color: #93E0E3;">Vertex3d</span>(<span style="color: #7CB8BB;">float</span> <span style="color: #DFAF8F;">v</span>): <span style="color: #93E0E3;">Point</span>(7.0,8.0), <span style="color: #93E0E3;">Right</span>(v) {cout&lt;&lt;<span style="color: #CC9393;">"Vertex3d::Vertex3d() "</span>&lt;&lt;<span style="color: #CC9393;">"&amp;_v: "</span>&lt;&lt;&amp;_v&lt;&lt;endl; size();}
+<span style="color: #7CB8BB;">void</span> <span style="color: #BFEBBF;">Vertex3d</span>::<span style="color: #93E0E3;">size</span>(){ cout&lt;&lt;<span style="color: #CC9393;">"Vertex3d size: "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(*<span style="color: #F0DFAF; font-weight: bold;">this</span>)&lt;&lt;endl;;}
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>() {
+  <span style="color: #7CB8BB;">Vertex3d</span> <span style="color: #DFAF8F;">v3d</span>; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Vertex3d is the "most-derived" class.</span>
+    <span style="color: #7CB8BB;">Left</span>* <span style="color: #DFAF8F;">pl</span> = (<span style="color: #7CB8BB;">Left</span>*)&amp;v3d;
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Vertex3d* pv = (Vertex3d*)pl; //error: cannot convert from base `Left' to derived type `Vertex3d' via virtual base `Left'</span>
+
+  cout&lt;&lt;<span style="color: #CC9393;">"&amp;v3d: "</span>&lt;&lt;&amp;v3d&lt;&lt;<span style="color: #CC9393;">", sizeof(v3d): "</span>&lt;&lt;<span style="color: #F0DFAF; font-weight: bold;">sizeof</span>(v3d)&lt;&lt;endl;
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+
+<span style="color: #5F7F5F;">/*</span>
+<span style="color: #7F9F7F;">Left::Left() _l: 3, &amp;_l: 0x28ff20</span>
+<span style="color: #7F9F7F;">Left size: 8</span>
+<span style="color: #7F9F7F;">Point::Point() _x: 7, _y: 8, &amp;_x: 0x28ff28, &amp;_y: 0x28ff2c</span>
+<span style="color: #7F9F7F;">Point size: 12</span>
+<span style="color: #7F9F7F;">Right::Right() r: 5, _r: 5.95458e-039, &amp;_r: 0x28ff34</span>
+<span style="color: #7F9F7F;">Right size: 8</span>
+<span style="color: #7F9F7F;">Point3d::Point3d()  _z: 1, &amp;_z: 0x28ff04</span>
+<span style="color: #7F9F7F;">Point3d size: 20</span>
+<span style="color: #7F9F7F;">Point::Point() _x: 2, _y: 2, &amp;_x: 0x28ff0c, &amp;_y: 0x28ff10</span>
+<span style="color: #7F9F7F;">Point size: 12</span>
+<span style="color: #7F9F7F;">Vertex::Vertex() _m: 2, &amp;_m: 0x28ff14</span>
+<span style="color: #7F9F7F;">Point size: 12</span>
+<span style="color: #7F9F7F;">Vertex3d::Vertex3d() &amp;_v: 0x28ff18</span>
+<span style="color: #7F9F7F;">*/</span>
+</pre>
+</div>
+
+
+<div class="figure">
+<p><img src="construction.png" alt="construction.png" />
+</p>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> Object Copy</h3>
+<div class="outline-text-3" id="text-4-2">
+<ul class="org-ul">
+<li>The copy assignment operator is not called by most-drived class directly.
+</li>
+<li>The synthesized copy assignment operator calls copy assginment operator of its base class.
+</li>
+<li>The copy assignment operator of base class is not called by user defined copy assignment operator automatically.
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-c++"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #7CB8BB;">Point</span>&amp; <span style="color: #F0DFAF; font-weight: bold;">operator</span><span style="color: #93E0E3;">=</span>(<span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">Point</span> &amp;<span style="color: #DFAF8F;">p</span>);
+};
+<span style="color: #7CB8BB;">Point</span>&amp; <span style="color: #BFEBBF;">Point</span>::<span style="color: #F0DFAF; font-weight: bold;">operator</span><span style="color: #93E0E3;">=</span>(<span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">Point</span> &amp;<span style="color: #DFAF8F;">p</span>){cout&lt;&lt;<span style="color: #CC9393;">"Point::operator="</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Point3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+  <span style="color: #7CB8BB;">Point3d</span>&amp; <span style="color: #F0DFAF; font-weight: bold;">operator</span><span style="color: #93E0E3;">=</span>(<span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">Point3d</span> &amp;<span style="color: #DFAF8F;">p</span>);   
+};
+<span style="color: #7CB8BB;">Point3d</span>&amp; <span style="color: #BFEBBF;">Point3d</span>::<span style="color: #F0DFAF; font-weight: bold;">operator</span><span style="color: #93E0E3;">=</span>(<span style="color: #F0DFAF; font-weight: bold;">const</span> <span style="color: #7CB8BB;">Point3d</span> &amp;<span style="color: #DFAF8F;">p</span>){cout&lt;&lt;<span style="color: #CC9393;">"Point3d::operator="</span>&lt;&lt;endl;}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">virtual</span> <span style="color: #7CB8BB;">Point</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+<span style="color: #5F7F5F;">//      </span><span style="color: #7F9F7F;">Vertex&amp; operator=(const Vertex &amp;p);     </span>
+};
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Vertex&amp; Vertex::operator=(const Vertex &amp;p){cout&lt;&lt;"Vertex::operator="&lt;&lt;endl;}</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Vertex3d</span>: <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Point3d</span>, <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Vertex</span> {
+<span style="color: #F0DFAF; font-weight: bold;">public</span>:
+<span style="color: #5F7F5F;">//      </span><span style="color: #7F9F7F;">Vertex3d&amp; operator=(const Vertex3d &amp;p); </span>
+};
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Vertex3d&amp; Vertex3d::operator=(const Vertex3d &amp;p){cout&lt;&lt;"Vertex3d::operator="&lt;&lt;endl;}</span>
+
+<span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">main</span>() {
+  <span style="color: #7CB8BB;">Vertex3d</span> <span style="color: #DFAF8F;">v1</span>;
+  <span style="color: #7CB8BB;">Vertex3d</span> <span style="color: #DFAF8F;">v2</span>=v1; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">Not trigger copy assignment operator</span>
+    cout&lt;&lt;<span style="color: #CC9393;">"+++++++++++"</span>&lt;&lt;endl;
+  v2 = v1;
+
+  <span style="color: #F0DFAF; font-weight: bold;">return</span> 0;
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> Object Destruction</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+If a destructor is not defined by a class, the compiler synthesizes one only if the class contains either a member or base 
+class with a destructor. it does not matter if it contains a virtual function or has virtual base class.
+</p>
+
+<p>
+A user-defined destructor is argumented in much the same way as are the constructoes, except in reverse order:
+</p>
+<ul class="org-ul">
+<li>If the object contains <code>vptr</code>, it is reset to the virtual table associated with the class whose destructor is running.
+</li>
+<li>The body of the destructor is executed.
+</li>
+<li>If the class has member class objects with destructors, these are invoked in the reverse order of their declaration.
+</li>
+<li>If there are any immediate nonvirtual base classes with destructors, these are invoked in the reverse order of their declaration.
+</li>
+<li>If there are any virtual base class with destructors and this class represents the most-derived class, these are invoked in the reverse order of their original construction.
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:55</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

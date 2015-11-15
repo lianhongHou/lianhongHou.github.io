@@ -1,0 +1,1311 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Java Class and Object</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java Class and Object</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Packages</a></li>
+<li><a href="#sec-2">2. Classes and Objects</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Access Control</a></li>
+<li><a href="#sec-2-2">2.2. Construction and Initialization</a>
+<ul>
+<li><a href="#sec-2-2-1">2.2.1. Constructor</a></li>
+<li><a href="#sec-2-2-2">2.2.2. Initialization Block</a></li>
+<li><a href="#sec-2-2-3">2.2.3. Static Block</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-3">2.3. Variables</a></li>
+<li><a href="#sec-2-4">2.4. Methods</a>
+<ul>
+<li><a href="#sec-2-4-1">2.4.1. overloading methods</a></li>
+<li><a href="#sec-2-4-2">2.4.2. Native Method</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-5">2.5. Inheritance</a></li>
+<li><a href="#sec-2-6">2.6. cloning objects</a></li>
+<li><a href="#sec-2-7">2.7. Abstract Class</a></li>
+<li><a href="#sec-2-8">2.8. Interface</a></li>
+<li><a href="#sec-2-9">2.9. Nested Classes and Interfaces</a>
+<ul>
+<li><a href="#sec-2-9-1">2.9.1. Static Nested Types</a></li>
+<li><a href="#sec-2-9-2">2.9.2. Inner Classes</a></li>
+<li><a href="#sec-2-9-3">2.9.3. Local Inner Classes</a></li>
+<li><a href="#sec-2-9-4">2.9.4. Anonymous Inner Classes</a></li>
+</ul>
+</li>
+<li><a href="#sec-2-10">2.10. Object Class</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Packages</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Example to place class inside a package(<i>com.horstman.corejava</i>):
+</p>
+<ul class="org-ul">
+<li>add directory, like <i>c:\classdir</i>, to environment variable <i>CLASSPATH</i> which contains one or more 
+directories that are used as roots in a search for <i>.class</i> files.
+</li>
+<li>make directory <i>com\horstman\corejava</i> in folder <i>c:\classdir</i>
+</li>
+<li>create file in <i>c:\classdir\com\horstman\corejava</i>
+
+<p>
+The file name must be the name of the public class in the file followed by <i>.java</i>, 
+so only one public class is allowed in the file.
+</p>
+</li>
+<li>put the name of the package at the top of the file, like <i>package com.horstman.corejava</i>, before the code that defines the classes.
+
+<p>
+The package must live in the directory indicated by its name, which must be a directory that is searchable starting 
+from the <i>CLASSPATH</i>.
+</p>
+</li>
+</ul>
+
+<p>
+A class can use all classes from its own package and all public classes from other package. To use public classes 
+in another package, yuo should use <code>import</code> statement or use the full package name.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Classes and Objects</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+Only the primitive types(numbers, characters, and <code>boolean</code> values) are not objects.
+</p>
+
+<p>
+Class names are nouns that start with an uppercase letter. 
+</p>
+
+<p>
+The return value of the <code>new</code> operator is a reference to an object stored in heap.
+</p>
+
+<p>
+Classes that cannot be extended are called <code>final</code> classes. If a class is declared <code>final</code>, only the methods, not the 
+fields, are automatically <code>final</code>. A <code>final</code> field cannot be changed after the object has been constructed.
+</p>
+
+<p>
+Since you can cast only within an inheritance hierarchy, you should use <code>instanceof</code> to check before casting from 
+a superclass to subclass, by the way, <code>null</code> is not instance of any type, <code>instanceof</code> for <code>null</code> always returns <code>false</code>.
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Access Control</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+Four access modifiers are
+</p>
+<ul class="org-ul">
+<li><code>private</code>, accessible only in the class itself.
+</li>
+<li>default access modifier, accessible in classes in the same package(not in subpackages or enclosing packages) and in the class itself
+</li>
+<li><code>protected</code>, accessible in subclasses of the class, in classes in the same package and in the class itself
+</li>
+<li><code>public</code>, accessible anywhere the class is accessible
+</li>
+</ul>
+<p>
+The <code>private</code> and <code>protected</code> apply only to members not to classes or interfaces(unless nested). For a member of 
+a class to be accessible, the class must first be accessible.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Construction and Initialization</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+Construction has 3 phases:
+</p>
+<ul class="org-ul">
+<li>invoking a superclass's constructor
+</li>
+<li>initialize the fields using their initializers and any initialization blocks
+
+<p>
+It is not allowed in c++.
+</p>
+</li>
+<li>execute the body of the constructor
+</li>
+</ul>
+
+<p>
+If you do not initialize a field, it is automatically initilized to default(0, <code>false</code> or <code>null</code>).
+</p>
+
+<p>
+The process of creating an object
+</p>
+<ul class="org-ul">
+<li>Intialize static field using their initializers and any static block when the class is loaded
+<ul class="org-ul">
+<li>class is loaded when a static method(including constructors) or a static field of that class is accessed
+</li>
+<li>For each subclass, its base class is loaded firstly
+</li>
+</ul>
+</li>
+<li>if it is a creation of new object
+<ul class="org-ul">
+<li>allocate memory on heap, and clear the memory(0 for numbers, <code>false</code> for <code>boolean</code>, and <code>null</code> for referenes)
+</li>
+<li>non-static field initializer and block intialization
+</li>
+<li>constructor
+</li>
+</ul>
+</li>
+</ul>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Employee</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">static</span> {
+    System.out.println(<span style="color: #CC9393;">"Employee static block"</span>);
+  }
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #93E0E3;">Employee</span>() {
+    System.out.println(<span style="color: #CC9393;">"Employee constructor"</span>);
+    }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Manager</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Employee</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">static</span> {
+    System.out.println(<span style="color: #CC9393;">"Manager static block"</span>);
+  }
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #93E0E3;">Manager</span>() {
+    System.out.println(<span style="color: #CC9393;">"Manager constructor"</span>);
+    }
+
+}
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Hello</span> {
+
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">main</span>(<span style="color: #7CB8BB;">String</span>[] <span style="color: #DFAF8F;">args</span>) {
+    <span style="color: #7CB8BB;">Manager</span> <span style="color: #DFAF8F;">m</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Manager</span>();
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">static</span> {
+    System.out.println(<span style="color: #CC9393;">"Hello static block"</span>);
+  }
+}
+<span style="color: #5F7F5F;">/* </span><span style="color: #7F9F7F;">output</span>
+<span style="color: #7F9F7F;">Hello static block</span>
+<span style="color: #7F9F7F;">Employee static block</span>
+<span style="color: #7F9F7F;">Manager static block</span>
+<span style="color: #7F9F7F;">Employee constructor</span>
+<span style="color: #7F9F7F;">Manager constructor</span>
+<span style="color: #7F9F7F;">*/</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-2-2-1" class="outline-4">
+<h4 id="sec-2-2-1"><span class="section-number-4">2.2.1</span> Constructor</h4>
+<div class="outline-text-4" id="text-2-2-1">
+<p>
+Classes could have constructors, constructors have same name as the class, are not methods and have no return type.
+Constructor are not inherited. Constructors(including copy constructor) are called with <code>new</code> operator.
+</p>
+
+<p>
+constructors can have any of the same access modifier as class member, have annotation.
+One constructor can invoke another constructor from the same class by using <code>this()</code>. 
+</p>
+
+<p>
+Copy constructor takes an argument of the current object type and constructs the new object to be a copy of the passed 
+in object.
+</p>
+
+<p>
+To invoke a superclass's constructor, <code>super(...)</code> should be used as the first statement.
+To invoke other constructor within the same class(not allowed in c++), <code>this(...)</code> should be used as the first statement.
+Apparently, they conflicted with each other, but that does not mean, it can skip to run a superclass's 
+constructor by calling other constructor of subclass.
+Also it is impossible to catch exceptions thrown by them.
+</p>
+
+<p>
+The <code>this</code> keyword:
+</p>
+<ul class="org-ul">
+<li>denote a reference to the implicit parameter
+</li>
+<li>call another constructor for the same class. Like, <code>this(...)</code>
+</li>
+</ul>
+<p>
+The <code>super</code> keyword:
+</p>
+<ul class="org-ul">
+<li>invoke a superclass method. Like, <code>super.method(...)</code>
+</li>
+<li>invoke a superclass constructor. Like <code>super(...)</code>
+</li>
+</ul>
+
+<p>
+If a constructor neither invoke a superclass's constructor nor invoke other constructor within the same class, 
+the superclass's no-arg constructor is automatically invoked as the first statement. 
+</p>
+
+<p>
+Constructors should avoid invoking overridable methods, the only safe methods to call inside a constrcutor are 
+those that are <code>final</code> in the base class. This also applies to <code>private</code> methods, which are automatically <code>final</code>.
+</p>
+
+<p>
+For a class without constructor declared, a no-argument constructor is provided to set all fieds to their defaullt 
+values(0, <code>false</code> or <code>null</code>). If a class supplies at least one constructor, then no-argument constructor is not 
+given automatically.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2-2" class="outline-4">
+<h4 id="sec-2-2-2"><span class="section-number-4">2.2.2</span> Initialization Block</h4>
+<div class="outline-text-4" id="text-2-2-2">
+<p>
+Initialization block can performs initialization of fields, it throws a checked exception only if all of the class's 
+constructors are declared to throw that exception. Multiple blocks executed in the order they appear in the class.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2-3" class="outline-4">
+<h4 id="sec-2-2-3"><span class="section-number-4">2.2.3</span> Static Block</h4>
+<div class="outline-text-4" id="text-2-2-3">
+<p>
+Static initialization can performs initialization of static fields, it can not throw any checked exceptions.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Variables</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+Variables includes fields, local variables in a code block, and parameters. 
+</p>
+
+<p>
+Annotations can be applied to any variable declaration. apart from annotations, the only modifier can be applied 
+to local variable(or parameter) is <code>final</code>.
+</p>
+
+<p>
+No default initialization value for local variables wheres fields have default initial values.
+</p>
+
+<p>
+The keyword <code>final</code> to denote a constant, that is, the <code>final</code> variable cannot refer to another object, but does 
+not means the object referred is constant unless the object is type of primitive or immutable class.
+A blank final field must be initialized within an initialization block or constructor. 
+</p>
+
+<p>
+Unlike c/c++, it does not support <code>static</code> local variables. To initialize a static field, either supply an initial 
+value or use a static initialization block. Static initialization occurs when the class is first loaded.
+</p>
+
+<p>
+Set up a class constant with the keyword <code>static final</code>. 
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-4" class="outline-3">
+<h3 id="sec-2-4"><span class="section-number-3">2.4</span> Methods</h3>
+<div class="outline-text-3" id="text-2-4">
+<p>
+The method header consists of an optional set of modifiers, an optional set of type parameters, the method return 
+type, the signature, and an optional <code>throws</code> clause listing the exceptions thrown by the method. The method signature 
+consists of the method name and the parameter type list enclosed in parenthese. All methods must have a return type and signature.
+</p>
+
+<p>
+All methods are defined inside the class itself.
+</p>
+
+<p>
+If you try to use local variable before assigning a value, the compiler will refuse to compile the program.
+</p>
+
+<p>
+The method modifiers consist of the following:
+</p>
+<ul class="org-ul">
+<li>annotations
+</li>
+<li>access modifiers
+</li>
+<li><code>abstract</code>, subclass is reponsible for providing a body of a abstract method
+</li>
+<li><code>static</code>, it has no <code>this</code> pointer. it can be called on an object, but not recomended.
+</li>
+<li><code>final</code>
+<ul class="org-ul">
+<li>For instance methods, it means the method cannot be overridden in a subclass
+</li>
+<li>For static methods, it means the method can be hidden
+</li>
+</ul>
+</li>
+<li><code>synchronized</code>, related to the control of cocurrent threads
+</li>
+<li><code>native</code>
+</li>
+<li><code>strict</code>
+</li>
+</ul>
+<p>
+An abstract method cannot be <code>static</code>, <code>final</code>, <code>synchronized</code>, or <code>strict</code>. A native method cannot be strict.
+</p>
+
+<p>
+The last parameter of a method can be declared as a sequence of parameters of a given type, that is called <i>varargs</i>. 
+For example, <code>String ...</code> is a sequence of zero or more <code>String</code> objects. Whenever a <i>varargs</i> is declared, one may 
+either pass a list of arguments to be implicitly packed into an array, or explicitly pass the array directly.
+</p>
+
+<p>
+All parameters to methods are passed "by value".
+</p>
+
+<p>
+It can declare method parameters to be <code>final</code>, meaning that the value of the parameter will not change while the 
+method is executing.
+</p>
+
+<p>
+Each class can have a <code>main</code> method for convinience to test the class. 
+The <code>main</code> method must be <code>public static void main(String[])</code>. 
+When running a program, the system locates and runs the <code>main</code> method of the program, not all <code>main</code> methods 
+in the involved classes. 
+</p>
+
+<p>
+Like c++, a method can access the private features of any object of its class.
+</p>
+</div>
+
+<div id="outline-container-sec-2-4-1" class="outline-4">
+<h4 id="sec-2-4-1"><span class="section-number-4">2.4.1</span> overloading methods</h4>
+<div class="outline-text-4" id="text-2-4-1">
+<p>
+If a Java base class has a method name that is overloaded several times, redefining that method name in the 
+derived class will not hide any of the base-classs versions(unlike C++). Thus overloading in Java works regardless 
+of whether the method was defined at this level or in a base class.
+</p>
+
+<p>
+A fixed-argument method will always be selected over a varargs method. for varargs methods, a sequence parameter 
+<code>T ...</code> is treated as being a parameter of type <code>T[]</code> for overloading purpose. if 2 signature differ only 
+because one declares a sequence and the other an array, then a compile error occurs.
+</p>
+
+<p>
+Even differences in the ordering of arguments are sufficient to distinguish two methods.
+</p>
+
+<p>
+The signature does not include the return type or the list of thrown exception, and you cannot overload methods based on these factors.
+</p>
+
+<ul class="org-ul">
+<li>find all the methods that have the same name, but different signature
+<ul class="org-ul">
+<li>the match is attempted without performing any boxing conversions, and without considering the possibility of a 
+variable number of arguments, but considering casting of class type and primitive.
+</li>
+<li>if no matches have been found, match is attempted again, but considering boxing conversions.
+</li>
+<li>if no matches have been found, the match is attempted again, but considering variable number of auguments.
+</li>
+</ul>
+</li>
+<li>find the best match
+<ul class="org-ul">
+<li>if any method in the set has parameter types that are all assignable to the corresponding parameters of any other 
+method in the set, then other method is removed from the set because it is a less specific method.
+</li>
+<li>if all remaining methods have the same signature then
+<ul class="org-ul">
+<li>if all are abstract, then one is chosen arbitrarily.
+</li>
+<li>if only one is not abstract, then it is chosen.
+</li>
+<li>otherwise, the invocation is ambiguous and invalid.
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Once a method has been selected, the method determines the expected return type and possible checked exceptions, 
+if they are not acceptable, then you will get a compile error.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-4-2" class="outline-4">
+<h4 id="sec-2-4-2"><span class="section-number-4">2.4.2</span> Native Method</h4>
+<div class="outline-text-4" id="text-2-4-2">
+<p>
+Native methods can be invoked from java but is written in a "native" language, usually c/c++. 
+</p>
+
+<p>
+They can be overloaded, overridden, <code>final</code>, <code>static</code>, <code>synchronized</code>, <code>public</code>, <code>protected</code>, or <code>private</code>.
+</p>
+
+<p>
+They can be implemented using API provided by the people who wrote the virtual machine.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-5" class="outline-3">
+<h3 id="sec-2-5"><span class="section-number-3">2.5</span> Inheritance</h3>
+<div class="outline-text-3" id="text-2-5">
+<p>
+All inheritance in Java is public inheritance.
+</p>
+
+<p>
+For overriding a method of superclass object, the signature must be identical but the return type can vary in a 
+particular way. if the return type is a reference type, then the overriding method can declare a return type that 
+is subtype of that declared by the superclass method. if the return type is primitive type, then the return type of 
+the overriding method must be identical to that of the superclass method.
+</p>
+
+<p>
+For overriding in a varargs method, a sequence parameter of type <code>T...</code> is treated as the same as <code>T[]</code>.
+</p>
+
+<p>
+The overriding method is also allowed to change method modifiers. the <code>synchronized</code>, <code>native</code>, and <code>strictfp</code> can 
+be freely varied. the overriding method can be <code>final</code> while the superclass method overridden can not be. The overriding method can 
+be <code>abstract</code> even though the superclass method was not. An instance method cannot have the same signature as an 
+inherited static method, and vice versa.
+</p>
+
+<p>
+A subclass can change if a parameter in an overriding method is <code>final</code>.
+The overriding method's exception list can be different from that of the superclass method's as long as every exception 
+type listed in the overriding method is the same as or a subtype of the exceptions listed in the superclass's methods.
+The exception list of an overriding method can have fewer types listed than the method in the superclass, or more 
+specific types, or both. the overriding method can even have no exception list.
+</p>
+
+<p>
+When you override a method, the subclass method must be at least as visible as the superclass method.
+</p>
+
+<p>
+Once a method is overriden in a subclass, you cannot invoke it on an instance of the subclass (except from within the 
+subclass, by using the <code>super</code> keyword).
+</p>
+
+<p>
+Fields cannot be overridden, they can only be hidden. 
+To access the hidden field of superclass, you can use <code>super</code>, that is similar to access the overriden method of superclass. 
+Also you can access the hidden field by casting the subclass instance to a superclass in which the field is not hidden.
+</p>
+
+<p>
+Dynamic binding is the default behavior, but it does not apply on method decorated with <code>private</code>, <code>static</code> or <code>final</code>.
+</p>
+
+<p>
+The type of the reference, not the actual class of the object, determines which class's field is accessed.
+The actual class of object, not the type of the reference, governs which version of the method is called.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Supershow</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">str</span> = <span style="color: #CC9393;">"superstr"</span>;
+  <span style="color: #93E0E3;">Supershow</span>() { str(); }
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">show</span>() {
+    str();
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">str</span>() {
+    system.out.println(<span style="color: #CC9393;">"Supershow: "</span> + str);                
+  }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Extendshow</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Supershow</span>{
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">string</span> <span style="color: #DFAF8F;">str</span> = <span style="color: #CC9393;">"Extendstr"</span>;
+  <span style="color: #93E0E3;">Extendshow</span>() {str();}
+
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">str</span>() {
+       <span style="color: #5F7F5F;">/*</span><span style="color: #7F9F7F;">a reference to a field always refers to the field declared in the class in which the method is declared,</span>
+<span style="color: #7F9F7F;">   or else to an inherited field if there is no declaration in that class*/</span>
+     system.out.println(<span style="color: #CC9393;">"Extendshow: "</span> + str);            
+  }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Hello</span> {    
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">main</span>(<span style="color: #7CB8BB;">string</span>[] <span style="color: #DFAF8F;">args</span>) <span style="color: #F0DFAF; font-weight: bold;">throws</span> <span style="color: #7CB8BB;">Exception</span> {
+    <span style="color: #7CB8BB;">Extendshow</span> <span style="color: #DFAF8F;">ext</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Extendshow</span>();
+    <span style="color: #7CB8BB;">Supershow</span> <span style="color: #DFAF8F;">sup</span> = ext;
+
+    ext.show();
+    sup.show();
+
+    system.out.println(<span style="color: #CC9393;">"sup.str = "</span> + sup.str);
+    system.out.println(<span style="color: #CC9393;">"ext.str = "</span> + ext.str);
+  }
+}
+
+<span style="color: #5F7F5F;">/*</span><span style="color: #7F9F7F;">output</span>
+<span style="color: #7F9F7F;">extendshow: null</span>
+<span style="color: #7F9F7F;">extendshow: extendstr</span>
+<span style="color: #7F9F7F;">extendshow: extendstr</span>
+<span style="color: #7F9F7F;">extendshow: extendstr</span>
+<span style="color: #7F9F7F;">sup.str = superstr</span>
+<span style="color: #7F9F7F;">ext.str = extendstr</span>
+<span style="color: #7F9F7F;">*/</span>
+</pre>
+</div>
+
+<p>
+A method can be overridden only if it is accessible. If the method is not accessible then it is not inherited, and 
+if it is not inherited it can't be overridden.
+</p>
+
+<p>
+Static members within a class, whether fields or methods, cannot be overridden, they are always hidden.
+</p>
+
+<p>
+An invocation of <code>super.method</code> always uses the implementation of <code>method</code> the superclass defines(or inherits), it 
+does not use any overriding implementation of that method further down the class hierarchy.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Base</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">protected</span> <span style="color: #7CB8BB;">string</span> <span style="color: #93E0E3;">name</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #CC9393;">"base"</span>;
+  }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">More</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Base</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">protected</span> <span style="color: #7CB8BB;">string</span> <span style="color: #93E0E3;">name</span>() {
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #CC9393;">"more"</span>;
+  }
+
+  <span style="color: #F0DFAF; font-weight: bold;">protected</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">printname</span>() {
+    <span style="color: #7CB8BB;">Base</span> <span style="color: #DFAF8F;">sref</span> = (<span style="color: #7CB8BB;">Base</span>) <span style="color: #F0DFAF; font-weight: bold;">this</span>;
+
+    system.out.println(<span style="color: #CC9393;">"this.name() = "</span> + <span style="color: #F0DFAF; font-weight: bold;">this</span>.name());
+    system.out.println(<span style="color: #CC9393;">"sref.name() = "</span> + sref.name());
+    system.out.println(<span style="color: #CC9393;">"super.name() = "</span> + <span style="color: #F0DFAF; font-weight: bold;">super</span>.name());
+  }
+}
+
+<span style="color: #5F7F5F;">/*</span><span style="color: #7F9F7F;">output</span>
+<span style="color: #7F9F7F;">this.name() = more</span>
+<span style="color: #7F9F7F;">sref.name() = more</span>
+<span style="color: #7F9F7F;">super.name() = base</span>
+<span style="color: #7F9F7F;">*/</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-6" class="outline-3">
+<h3 id="sec-2-6"><span class="section-number-3">2.6</span> cloning objects</h3>
+<div class="outline-text-3" id="text-2-6">
+<p>
+Three important factors in writing a clone method:
+</p>
+<ul class="org-ul">
+<li>empty <code>cloneable</code> interface, which you must implement to provide a clone method that can be used to clobe an object.
+</li>
+<li><code>clone</code> method implemented by the <code>Object</code> class, which copy all fields of the original object to the new one, it 
+may need to override the method.
+</li>
+<li><code>CloneNotSupportedException</code>, to signal a class's <code>clone</code> method should not have been invoked.
+</li>
+</ul>
+
+<p>
+To override <code>clone</code> method, you need to invoke <code>super.clone()</code> firstly, then write special code to deal 
+with fields for which copying the value is incorrect, like object of type <code>Array</code>, <code>String</code>, or other class.
+</p>
+
+<p>
+Ff <code>clone</code> method of a class does not use <code>super.clone()</code>, but use <code>new</code> to create an object of the class, 
+then the extended class's invocation of <code>super.clone()</code> would give an object of the base class, not anobject of 
+the correct, extended type.
+</p>
+
+<p>
+Cloning is an alternative form of construction but is not recognized as construction by the system, that means, 
+you have to be aware of using <i>blank finals</i> that can be set only in constructors, but, since <code>Object.clone()</code> 
+will be called eventually, the value of <code>final</code> field will be a copy of the value in the object being cloned.
+</p>
+
+<p>
+one advantage the copy constructor has is that it can deal with <code>final</code> fields in situations where <code>clone</code> cannot. 
+<code>Aclass a = new Aclass(objectOfAclass); Aclass a = objectOfAclass.clone();</code>
+</p>
+
+<p>
+Serialization can provide a way to make deeper copies than those provided by <code>Object.clone</code>.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-7" class="outline-3">
+<h3 id="sec-2-7"><span class="section-number-3">2.7</span> Abstract Class</h3>
+<div class="outline-text-3" id="text-2-7">
+<p>
+Abstract classes cannot be instantiated. You still can create object variable of an abstract class, but such a 
+variable should refer to an object of a nonabstract subclass.
+</p>
+
+<p>
+In addition to abstract methods, abstract classes can have fields and concrete methods.
+</p>
+
+<p>
+A class with one or more abstract methods must itself be declared <code>abstract</code>. A class can even be declared as <code>abstract</code> 
+even though it has no abstract methods.
+</p>
+
+<p>
+You can leave some or all of the abstract methods undefined in subclass, then you must tag the subclass as abstrct 
+as well.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-8" class="outline-3">
+<h3 id="sec-2-8"><span class="section-number-3">2.8</span> Interface</h3>
+<div class="outline-text-3" id="text-2-8">
+<p>
+An interface can extend one or more other interface using <code>extends</code>.
+</p>
+
+<p>
+While each class can have only one superclass(Abstract Class belong to class), classes can implement multiple interfaces.
+Just as you use <code>instanceof</code> to check if an object is of a specific class, you can use it to check if an 
+object implements an interface.
+</p>
+
+<p>
+The <code>instanceof</code> operator requires that if both operands are class types, one must be a subtype of the other, otherwise, 
+it will introduce of compile error.
+</p>
+
+<p>
+Interface modifiers:
+</p>
+<ul class="org-ul">
+<li>annotations
+</li>
+<li><code>public</code>, whithout it, an interface is only accessible within its own package
+</li>
+<li><code>abstract</code> by default
+</li>
+<li><code>strictfp</code>
+</li>
+</ul>
+
+<p>
+Reference of interface type can be used only to access members of that interface. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Comparable</span>&lt;<span style="color: #7CB8BB;">point</span>&gt; <span style="color: #DFAF8F;">obj</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Point</span>();
+<span style="color: #7CB8BB;">double</span> <span style="color: #DFAF8F;">dist</span> = obj.distance(p1); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">invalid: comparable has no distance method</span>
+</pre>
+</div>
+<p>
+in addition, it can also access method of <code>Object</code>, because no matter what interface the object implements, it is always an 
+<code>Object</code> and so has those methods.
+</p>
+
+<p>
+an interface can declare three kinds of members:
+</p>
+<ul class="org-ul">
+<li>constants(fields)
+
+<p>
+implicitly <code>public static final</code>. must have initializers, blank finals are not permitted.
+</p>
+</li>
+<li>methods
+
+<p>
+implicitly <code>abstract</code> and <code>public</code>. cannot be <code>final</code>, <code>static</code>, and other method modifiers. 
+</p>
+</li>
+<li>nested classes and interfaces
+
+<p>
+implicitly <code>public</code>.
+</p>
+</li>
+</ul>
+
+<p>
+If an interface declares a constant of the same name as an inherited constant, regardless of their types, then the 
+new constant hides the inherited one. the inherited constant can still be accessed through the interface name followd 
+by dot and then the constant name.
+</p>
+
+<p>
+the class's own <code>static</code> fields can hide the inherited fields of the interfaces it implements or the class it extends.
+</p>
+
+<p>
+As with overriding in class extension, the overriding method is not permitted to throw more checked exceptions than 
+the method it overrides.
+</p>
+
+<p>
+The eventual class implementation should provide a method body for each of the overloaded forms.
+</p>
+
+<p>
+When overriding, method in subinterface has the same signature as that in superinterface, and return type should 
+be the same(or covariant) as return type of method in superinterface. "the same, or covariant, return type" means, 
+if the return type of subinterface is a reference, then it should be subtype of return type of superinterface's 
+method; if the return type of subinterface is a primitive, then it must be identical to that of superinterface's 
+method. if two inherited methods differ only inreturn type where one type is not a subtype of the other, you will 
+get a compile-time error.
+</p>
+
+<p>
+Marker interfaces has neither methods nor constants, just to mark a class as having some general property, but they 
+are important.
+</p>
+
+<p>
+Two major different between interfaces and abstract classes:
+</p>
+<ul class="org-ul">
+<li>a class can implement multiple interfaces while it can only extends one other class, even if the class is abstract.
+</li>
+<li>a abstract class can have a partial implementation, protected parts, static methods, and so on, wheres interfaces 
+are limited to public constants and public methods with no implementation.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9" class="outline-3">
+<h3 id="sec-2-9"><span class="section-number-3">2.9</span> Nested Classes and Interfaces</h3>
+<div class="outline-text-3" id="text-2-9">
+<p>
+Normally, you cannot put any code inside an interface, but a nested class can be part of an interface, and any 
+class put inside an interface is automatically <code>public</code> and <code>static</code>.
+</p>
+
+<p>
+It does not matter how
+</p>
+</div>
+<div id="outline-container-sec-2-9-1" class="outline-4">
+<h4 id="sec-2-9-1"><span class="section-number-4">2.9.1</span> Static Nested Types</h4>
+<div class="outline-text-4" id="text-2-9-1">
+<p>
+Static nested classes are members of their enclosing type.
+</p>
+
+<p>
+The name of a nested type is <i>enclosingname.nestedname</i>, the nested type is accessible only if the enclosing type 
+is accessible. 
+</p>
+
+<p>
+For classes, a static nested class or interface could have private, package, protected, or public access.
+For interfaces, nested type are implicitely public.
+</p>
+
+<p>
+Static nested types can access all other members of the enclosing type including private one through an appropriate 
+object reference.
+</p>
+
+<p>
+Nested interfaces are always static, by convention, the <code>static</code> modifier is omitted.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9-2" class="outline-4">
+<h4 id="sec-2-9-2"><span class="section-number-4">2.9.2</span> Inner Classes</h4>
+<div class="outline-text-4" id="text-2-9-2">
+<p>
+Non-static nested classes are called inner classes, they are associated with instance of a enclosing class.
+</p>
+
+<p>
+Inner classes cannot have static members(including static nested types), except for final static fields that are 
+initialized to constants or expressions built up from constants.
+</p>
+
+<p>
+Inner classes can extend any other class including its enclosing class, implement any interface and be extended by 
+any other class.
+</p>
+
+<p>
+An inner class can be declared <code>final</code> and <code>abstract</code>, and have annotations.
+Only Inner classes(interfaces) can be <code>private</code>. When <code>protected</code> is applied to an inner class, nothing but outer 
+class, classes in the same package, and the inheritors of the outer class can access the inner class.
+</p>
+
+<p>
+A nested class can access all members of its enclosing class, no matter how deeply an inner class may be nested, 
+including private fields and methods without qualification. The enclosing class can access the private members 
+of the inner class, but only by an explicit reference to an inner class object.
+</p>
+
+<p>
+If the enclosing class of the inner subclass does not extend the enclosing class of the inner class, or if the inner 
+subclass is not itself an inner class, then an explicit reference to an object of the enclosing class of the inner 
+class must be supplied when the constructor of the inner class is invoked via <code>super</code> in constructor of the enclosing 
+class of the inner subclass. example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Outer</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Inner</span> {}
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Unrelated</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #BFEBBF;">Outer</span>.<span style="color: #7CB8BB;">Inner</span> {
+  <span style="color: #93E0E3;">unrelated</span>(<span style="color: #7CB8BB;">Outer</span> <span style="color: #DFAF8F;">ref</span>) {
+    ref.<span style="color: #F0DFAF; font-weight: bold;">super</span>();
+  }
+}
+</pre>
+</div>
+<p>
+<i>EnclosingClass.this</i> denotes the outer class reference. 
+</p>
+
+<p>
+An inner class's own fields and methods(and nested types) can hide those of the enclosing object by two ways:
+</p>
+<ul class="org-ul">
+<li>a field or method is declared in the inner class
+</li>
+<li>a field or method is inherited by the inner class
+</li>
+</ul>
+
+<p>
+An inner class method with the same name as an enclosing class method hides all overloaded forms of the enclosing 
+class method, even if the inner class itself does not declare those overload forms.
+</p>
+
+<p>
+Inner classes can be hidden from other classes in the same package.
+</p>
+
+<p>
+You must use an object of the enclosing class to make an object of the inner class.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Outer</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">v</span>;
+
+  <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Inner</span>{
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Outer</span> <span style="color: #93E0E3;">outer</span>(){
+      <span style="color: #F0DFAF; font-weight: bold;">return</span> Outer.<span style="color: #F0DFAF; font-weight: bold;">this</span>;
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">g</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">i</span>) { v = i; }
+  }
+
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">Inner</span> <span style="color: #93E0E3;">inner</span>(){
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Inner</span>();
+  }
+
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">f</span>() { System.out.println(<span style="color: #CC9393;">"v: "</span>+v); }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Hello</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">main</span>(<span style="color: #7CB8BB;">String</span>[] <span style="color: #DFAF8F;">args</span>) {
+    <span style="color: #7CB8BB;">Outer</span> <span style="color: #DFAF8F;">outer</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Outer</span>();
+    <span style="color: #BFEBBF;">Outer</span>.<span style="color: #7CB8BB;">Inner</span> <span style="color: #DFAF8F;">inner1</span> = outer.inner();
+    inner1.g(1);
+    inner1.outer().f(); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">v: 1</span>
+
+    <span style="color: #BFEBBF;">Outer</span>.<span style="color: #7CB8BB;">Inner</span> <span style="color: #DFAF8F;">inner2</span> = outer.<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Inner</span>();
+    inner2.g(2);
+    inner2.outer().f(); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">v: 2</span>
+    inner1.outer().f(); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">v: 2</span>
+  }
+}
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-9-3" class="outline-4">
+<h4 id="sec-2-9-3"><span class="section-number-4">2.9.3</span> Local Inner Classes</h4>
+<div class="outline-text-4" id="text-2-9-3">
+<p>
+Local inner classes are defined in code blocks, they are not member of the class of which the code is a part but are 
+local to that block, and completely inaccessible outside the block. They cannot have access modifiers, not can they 
+be declared <code>static</code>. they can have annotations. 
+</p>
+
+<p>
+They can access all the variables that are in scope where the class is defined, including local variables, method 
+parameters, instance variables, and static variables. The only restriction is that a local variable or method 
+parameter can be accessed only if it is declared <code>final</code>. They can have annotations.
+</p>
+
+<p>
+Members of local inner classes can hide the local variables and parameters of the block they are declared in, just 
+as they can hide instance fields and methods. Once a local variable or parameter has been hidden it is impossible 
+to refer to it.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-9-4" class="outline-4">
+<h4 id="sec-2-9-4"><span class="section-number-4">2.9.4</span> Anonymous Inner Classes</h4>
+<div class="outline-text-4" id="text-2-9-4">
+<p>
+Anonymous classes are defined in the <code>new</code> expression itself, as part of a statement. The type(interface or class) 
+specified to <code>new</code> is the supertype of the anonymous class, and if the supertype is class, then the construction 
+parameters can be given to the superclass constructor.
+</p>
+
+<p>
+An anonymous class cannot have an explicit <code>extends</code> or <code>implements</code> clause, nor can it have any modifiers, 
+including annotations. It cannot have explicit construction declared because they have no name to give the constructor. 
+It can have initialization blocks.
+</p>
+
+<p>
+<i>Double brace initialization</i>:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the inner braces are an object construction block</span>
+<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">String</span>&gt;(){{add(<span style="color: #CC9393;">"Harry"</span>); add(<span style="color: #CC9393;">"Tony"</span>)};};
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2-10" class="outline-3">
+<h3 id="sec-2-10"><span class="section-number-3">2.10</span> Object Class</h3>
+<div class="outline-text-3" id="text-2-10">
+<p>
+The <code>Object</code> class is the root of the class hierarchy, and it defines a number of methods, like
+<code>public boolean equals(Object obj)</code>, <code>public int hascode()</code>, <code>protected Object clone() throws CloneNotSupportedException</code>, 
+<code>public final Class&lt;?&gt; getClass()</code>, <code>public String toString()</code>.
+The <code>equals</code> method implemented in <code>Object</code> class determines if two object references are identical.
+</p>
+
+<p>
+The <code>clone</code> method of <code>Object</code> throws an exception if the object does not implement the interface <code>Cloneable</code>. By 
+the way, <code>Object</code> itself does not implements that interface.
+</p>
+
+<p>
+If <code>a.equals(b)</code>, then <i>a</i> and <i>b</i> must have the same hash code.
+Example to write the <code>equals</code> method and the <code>hasCode</code> method:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Employee</span>
+{
+   <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">name</span>;
+   <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #7CB8BB;">double</span> <span style="color: #DFAF8F;">salary</span>;
+   <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #7CB8BB;">Date</span> <span style="color: #DFAF8F;">hireDay</span>;
+
+   <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #93E0E3;">Employee</span>(<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">n</span>, <span style="color: #7CB8BB;">double</span> <span style="color: #DFAF8F;">s</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">year</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">month</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">day</span>)
+   {
+      name = n;
+      salary = s;
+      <span style="color: #7CB8BB;">GregorianCalendar</span> <span style="color: #DFAF8F;">calendar</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">GregorianCalendar</span>(year, month - 1, day);
+      hireDay = calendar.getTime();
+   }
+
+   <span style="color: #BFEBBF;">@Override</span> <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">boolean</span> <span style="color: #93E0E3;">equals</span>(<span style="color: #7CB8BB;">Object</span> <span style="color: #DFAF8F;">otherObject</span>)
+   {
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">a quick test to see if the objects are identical</span>
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> (<span style="color: #F0DFAF; font-weight: bold;">this</span> == otherObject) <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">true</span>;
+
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">must return false if the explicit parameter is null</span>
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> (otherObject == <span style="color: #BFEBBF;">null</span>) <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">false</span>;
+
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">if the classes don't match, they can't be equal</span>
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> (getClass() != otherObject.getClass()) <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">false</span>;
+
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">now we know otherObject is a non-null Employee</span>
+      <span style="color: #7CB8BB;">Employee</span> <span style="color: #DFAF8F;">other</span> = (<span style="color: #7CB8BB;">Employee</span>) otherObject;
+
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">test whether the fields have identical values</span>
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">"==" operator for primitives, Object.equals for object fields</span>
+      <span style="color: #F0DFAF; font-weight: bold;">return</span> Objects.equals(name, other.name) &amp;&amp; salary == other.salary &amp;&amp; Objects.equals(hireDay, other.hireDay);
+   }
+   <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">if you redefined the equals method, you should also need to redefine the hasCode method</span>
+   <span style="color: #BFEBBF;">@Override</span> <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">hashCode</span>()
+   {
+      <span style="color: #F0DFAF; font-weight: bold;">return</span> Objects.hash(name, salary, hireDay); 
+   }
+}
+
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Manager</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Employee</span>
+{
+   <span style="color: #F0DFAF; font-weight: bold;">private</span> <span style="color: #7CB8BB;">double</span> <span style="color: #DFAF8F;">bonus</span>;
+
+   <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #93E0E3;">Manager</span>(<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">n</span>, <span style="color: #7CB8BB;">double</span> <span style="color: #DFAF8F;">s</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">year</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">month</span>, <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">day</span>)
+   {
+      <span style="color: #F0DFAF; font-weight: bold;">super</span>(n, s, year, month, day);
+      bonus = 0;
+   }
+
+   <span style="color: #BFEBBF;">@Override</span> <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">boolean</span> <span style="color: #93E0E3;">equals</span>(<span style="color: #7CB8BB;">Object</span> <span style="color: #DFAF8F;">otherObject</span>)
+   {
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">if redefine equals in a subclass, call super.equals</span>
+      <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">and super.equals has checked they belong to the same class.</span>
+      <span style="color: #F0DFAF; font-weight: bold;">if</span> (<span style="color: #F0DFAF; font-weight: bold;">!</span><span style="color: #F0DFAF; font-weight: bold;">super</span>.equals(otherObject)) <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #BFEBBF;">false</span>;
+
+      <span style="color: #7CB8BB;">Manager</span> <span style="color: #DFAF8F;">other</span> = (<span style="color: #7CB8BB;">Manager</span>) otherObject;
+      <span style="color: #F0DFAF; font-weight: bold;">return</span> bonus == other.bonus;
+   }
+   <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">if you redefined the equals method, you should also need to redefine the hasCode method</span>
+   <span style="color: #BFEBBF;">@Override</span> <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">hashCode</span>()
+   {
+      <span style="color: #F0DFAF; font-weight: bold;">return</span> <span style="color: #F0DFAF; font-weight: bold;">super</span>.hashCode() + 17 * <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Double</span>(bonus).hashCode();
+   }
+}
+</pre>
+</div>
+
+<p>
+For every class, you need to decide if
+</p>
+<ul class="org-ul">
+<li>the default <code>clone</code> method is good enough
+</li>
+<li>the default <code>clone</code> method can be patched up by calling <code>clone</code> on the mutable subobjects
+</li>
+<li><code>clone</code> should not be attempted
+</li>
+</ul>
+<p>
+The third option is actually the default. To choose either the first or the second option, a class must 
+</p>
+<ul class="org-ul">
+<li>implement the <code>Cloneable</code> interface, and 
+</li>
+<li>redefine the <code>clone</code> method with the <code>public</code> access modifier.
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

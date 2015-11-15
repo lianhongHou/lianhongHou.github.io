@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Java Exceptions</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java Exceptions</h1>
+<p>
+An exception object is always an instance of a class derived from <code>Throwable</code>, 
+<code>Throwable</code> is splited into two branches: <code>Error</code> and <code>Exception</code>.
+</p>
+
+<p>
+There are two kinds of excepton: unckecked exceptions and checked exceptions. Exceptions of type 
+<code>RuntimeException</code>, <code>Error</code>, or subclasses of these types are unchecked exceptions and can be
+thrown anywhere without being declared, but it can be caught, like <code>RuntimeException</code>.
+Checked exceptions must be declared in a <code>throws</code> clause.
+</p>
+
+<p>
+Exception types are not allowed to be generic types.
+</p>
+
+<p>
+Static initializers and static initialization block cannot throw exceptions, either directly or by invoking a method 
+that throws an exception. non-static initializers and non-static initialization blocks are considered to be part of 
+the constructor, and so they are allowed to throw checked exceptions only if all the constructors declare those 
+checked exceptions.
+</p>
+
+<p>
+The constructors of subclass can throw new exceptions except those thrown by the constructors of the baseclass.
+</p>
+
+<p>
+The <code>throws</code> clause of the overriding method must be compatible with the <code>throws</code> clause of the inherited method. 
+It is ok to throw more specific exceptions, or not to throw any exceptions in the subclass method.
+If the superclass method throws no checked exception at all, neither can the subclass. 
+</p>
+
+<p>
+If a method declaration is multiply inherited, that is, it exists in more than one inherited interface, or in both 
+an inherited interface and a superclass, then the <code>throws</code> clause of that method must satisfy all the inherited 
+<code>throws</code> clauses, that means, a single implementation of a method can honor all the inhertited contracts.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">try</span>{
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">code that might throw exceptions</span>
+}
+<span style="color: #F0DFAF; font-weight: bold;">catch</span>(FileNotFoundException | UnknownHostException e)
+{
+  System.out.println(e.getMessage());
+}
+<span style="color: #F0DFAF; font-weight: bold;">finally</span>
+{}
+</pre>
+</div>
+
+<p>
+Rethrowing and Chaining Exceptions
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">try</span> {
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">access the database</span>
+}
+<span style="color: #F0DFAF; font-weight: bold;">catch</span>(<span style="color: #7CB8BB;">SQLException</span> <span style="color: #DFAF8F;">e</span>)
+{
+  <span style="color: #7CB8BB;">Throwable</span> <span style="color: #DFAF8F;">se</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ServletException</span>(<span style="color: #CC9393;">"Database error"</span>);
+  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">when it is caught, the original exception e can be retrieved by getCause()</span>
+  se.initCause(e);
+  <span style="color: #F0DFAF; font-weight: bold;">throw</span> se; 
+}
+</pre>
+</div>
+<p>
+You can catch the checked exception and wrap it into a runtime exception.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">it is ok, because compiler can track the fact the exeption is actually IOException</span>
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">show</span>() <span style="color: #F0DFAF; font-weight: bold;">throws</span> <span style="color: #7CB8BB;">IOException</span> { 
+  <span style="color: #F0DFAF; font-weight: bold;">try</span>{
+    <span style="color: #F0DFAF; font-weight: bold;">throw</span> <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">IOException</span>();
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">catch</span>(<span style="color: #7CB8BB;">Exception</span> <span style="color: #DFAF8F;">e</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">throw</span> e; <span style="color: #5F7F5F;">//</span>
+  }
+}
+</pre>
+</div>
+
+<p>
+It is a compile error for a <i>catch</i> clause to catch a checked exception type(like <i>IOException</i>) if the corresponding 
+<i>try</i> clause cannot throw an exception of some subtype of the checked exception type(<i>IOException</i>). However, <i>catch</i> 
+clause that catch <code>Exception</code> or <code>Throwable</code> are legal regardless of the contents of the corresponding <i>try</i> clause. 
+</p>
+
+<p>
+A <code>finally</code> clause can yield unexpected results when it contains <code>return</code> statements.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">int</span> <span style="color: #93E0E3;">f</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">n</span>) 
+{
+  <span style="color: #F0DFAF; font-weight: bold;">try</span>{
+    <span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">r</span> = n * n;
+    <span style="color: #F0DFAF; font-weight: bold;">return</span> r;
+  } 
+  <span style="color: #F0DFAF; font-weight: bold;">finally</span> {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(n==2) <span style="color: #F0DFAF; font-weight: bold;">return</span> 0; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">at last, it returns 0 instead of 4 for f(2)</span>
+  }
+}
+</pre>
+</div>
+<p>
+Never exit a <i>finally</i> block with a <code>return</code>, <code>break</code>, <code>continue</code>, or <code>throw</code>, and never allow a checked exception to 
+propagate out of a <i>finally</i> block. 
+</p>
+
+<p>
+Usually, we shoud use <i>try{}finally{}</i> block to read(write) from(to) a file, and put <code>close</code> method into 
+<code>finally</code> block so that the file can be closed when exceptions happen, but if the <code>close</code> method throws an 
+exception subsequently, how to hanle it? 
+</p>
+
+<p>
+To cope with the situation when the <i>try</i> block throws an exception and the <i>close</i> method in <i>finally</i> block also 
+throws an exception, the try-with-resourcds statement rethrows the original exception and suppresses the exception 
+thrown by <i>close</i> method(<i>getSuppressed</i> method yields an array of the suppressed exceptions from <i>close</i> method). 
+</p>
+
+<p>
+The <code>AutoCloseable</code> interface has a single method <code>void close() throws Exception</code>.
+For a resource belongs to a class that implements the <code>AutoCloseable</code> interface, you can use 
+Try-with-Resources statement, then when the <code>try</code> block exits, the <code>res.close()</code> is called automatically. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">try</span>(<span style="color: #7CB8BB;">Scanner</span> <span style="color: #DFAF8F;">in</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Scanner</span>(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">FileInputStream</span>(<span style="color: #CC9393;">"file.txt"</span>)), 
+  <span style="color: #DFAF8F;">PrintWriter</span> out = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">PrintWriter</span>(<span style="color: #CC9393;">"out.txt"</span>)) <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">multiple resources</span>
+{
+  <span style="color: #F0DFAF; font-weight: bold;">while</span>(in.hasNext())
+    out.println(in.next().toUpperCase());
+}
+</pre>
+</div>
+
+<p>
+java.lang.Throwable
+</p>
+<ul class="org-ul">
+<li>Throwable(Throwable cause)
+</li>
+<li>Throwable(String message, Throwable cause)
+</li>
+<li>Throwable initCause(Throwable cause)
+
+<p>
+sets the cause for this object or throws an exception if this object already has a cause.
+</p>
+</li>
+<li>Throwable getCause()
+
+<p>
+gets the exception object that was set as the cause for this object, or <i>null</i> if no cause was set
+</p>
+</li>
+<li>StackTraceElement[] getStackTrace()
+
+<p>
+gets the trace of the call stack at the time this object was constructed.
+</p>
+</li>
+<li>Throwable fillInStackTrace()
+
+<p>
+returns a Throwable object that it creates by stuffing the current stack information into the old exception object.
+</p>
+</li>
+<li>void addSuppressed(Throwable t)
+
+<p>
+adds a suppressed exception to this exception.
+</p>
+</li>
+<li>Throwable[] getSuppressed()
+
+<p>
+gets all suppressed exceptions of this exception.
+</p>
+</li>
+<li>void printStackTrace()
+</li>
+<li>void printStackTrace(PrintSteam s)
+</li>
+<li>void printStackTrace(PrintWriter s)
+</li>
+</ul>
+
+<p>
+java.lang.StackTraceElement
+</p>
+<ul class="org-ul">
+<li>String getFileName()
+</li>
+<li>int getLineNumber()
+</li>
+<li>String getClassName()
+</li>
+<li>String getMethodName()
+</li>
+<li>boolean isNativeMethod
+</li>
+<li>String toString()
+</li>
+</ul>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

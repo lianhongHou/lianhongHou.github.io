@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Java Reflection</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java Reflection</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. The Class Class</a></li>
+<li><a href="#sec-2">2. Classes</a>
+<ul>
+<li><a href="#sec-2-1">2.1. The Field Class</a></li>
+<li><a href="#sec-2-2">2.2. The Constructor Class</a></li>
+<li><a href="#sec-2-3">2.3. The Method Class</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Interfaces</a>
+<ul>
+<li><a href="#sec-3-1">3.1. The TypeVariable Interface</a></li>
+<li><a href="#sec-3-2">3.2. The WildcardType Interface</a></li>
+<li><a href="#sec-3-3">3.3. The ParameterizedType Interface</a></li>
+<li><a href="#sec-3-4">3.4. The GenericArrayType Interface</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. An Example</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> The Class Class</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+The <code>Class</code> object describes the properties of a particular class. 
+</p>
+
+<p>
+Three ways to get an instance of <code>Class</code> object
+</p>
+<ul class="org-ul">
+<li><code>class</code> literal
+<ul class="org-ul">
+<li>Does not trigger class loading. 
+</li>
+<li>Works with regular classes as well as interfaces, arays, and primitives. 
+</li>
+<li>The <code>Class</code> object is parameterized. Example, <code>Date.class</code> is of type <code>Class&lt;Date&gt;</code>.
+</li>
+</ul>
+</li>
+<li><code>Class.forName()</code>
+<ul class="org-ul">
+<li>Trigger class loading, but not constructors.
+</li>
+</ul>
+</li>
+<li><code>getClass</code> of <code>Object</code>
+<ul class="org-ul">
+<li>If it is invoked on a reference with type <i>T</i>, then it returns <code>Class&lt;? extends S&gt;</code> where <i>S</i> is the erasure of <i>T</i>.
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Examples to get an instance of <code>Class</code> type
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Date</span> <span style="color: #DFAF8F;">d</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Date</span>();
+<span style="color: #7CB8BB;">Class</span> <span style="color: #DFAF8F;">c1</span> = d.getClass();
+
+<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">className</span> = <span style="color: #CC9393;">"java.util.Date"</span>;
+<span style="color: #7CB8BB;">Class</span> <span style="color: #DFAF8F;">c2</span> = Class.forName(className);
+
+<span style="color: #7CB8BB;">Class</span> <span style="color: #DFAF8F;">c3</span> = Date.<span style="color: #F0DFAF; font-weight: bold;">class</span>;
+
+<span style="color: #7CB8BB;">Employee</span> <span style="color: #DFAF8F;">e2</span> = (<span style="color: #7CB8BB;">Employee</span>) <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Manager</span>();
+System.out.println(e2.getClass().getSimpleName()); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">output: Manager</span>
+
+<span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">as1</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">String</span>&gt;(){{add(<span style="color: #CC9393;">"Harry"</span>); add(<span style="color: #CC9393;">"Tony"</span>);}};
+System.out.println(as1.getClass().getSimpleName()); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">no output</span>
+</pre>
+</div>
+
+<p>
+To get the <code>Class</code> object of the current class
+</p>
+<ul class="org-ul">
+<li>in non static method, using <code>getClass()</code> directly
+</li>
+<li>in static method, using <code>new Object(){}.getClass().getEnclosingClass()</code>
+</li>
+</ul>
+
+<p>
+The VM manages a unique <code>Class</code> object for each type, so you can use the <i>==</i> operator to compare class objects. 
+</p>
+
+<p>
+You can use <code>newInstance</code> method on a <code>Class</code> object to call the no-argument constructor and to create an object. 
+</p>
+
+<p>
+You cannot perform casts involving parameterized type, how can you turn <code>Class&lt;?&gt;</code> into a known type? the solution 
+is the <code>public &lt;T&gt; Class&lt;? extends T&gt; asSubclass(Class&lt;T&gt; subType)</code> of <code>Class</code>.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Class</span>&lt;? <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">c3</span> = Class.forName(<span style="color: #CC9393;">"java.lang.String"</span>).asSubclass(String.<span style="color: #F0DFAF; font-weight: bold;">class</span>);
+</pre>
+</div>
+
+<ul class="org-ul">
+<li><code>TypeVariable[] getTypeParameters()</code>
+
+<p>
+gets the generic type variables if this type was declared as a generic type, or an array of length 0 otherwise.
+</p>
+</li>
+<li><code>Type getGenericSuperclass()</code>
+
+<p>
+gets the generic type of the superclass that was declared for this type, or null if this type is Object or not a class type
+</p>
+</li>
+<li><code>Type[] getGenericInterfaces()</code>
+
+<p>
+gets the generic types of the interfaces that were declared for this type, in declaration order, or an array of length 0 
+if this type does not implement interfaces
+</p>
+</li>
+<li><code>Constructor&lt;?&gt;[] getDeclaredConstructors()</code>
+</li>
+<li><code>Constructor&lt;T&gt; getDeclaredConstructor(Class&lt;?&gt;... parameterTypes)</code>
+
+<p>
+gets an array of Constructor object(s) reflecting all(or specified) constructor(s) declared by the class.
+</p>
+</li>
+<li><code>Method[] getDeclaredMethods()</code>
+</li>
+<li><code>Method getDeclaredMethod(String name, Class&lt;?&gt;... parameterTypes)</code>
+
+<p>
+gets an array of Method object(s) reflecting all(or specified) method(s) declared by the class or interface
+</p>
+</li>
+<li><code>Field[] getDeclaredFields()</code>
+</li>
+<li><code>Field get DeclaredField(String name)</code>
+
+<p>
+gets an array of Field object(s) reflecting all(or specified) field(s) declared by the class or interface
+</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Classes</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+All three classes <code>Field</code>, <code>Method</code> and <code>Constructor</code> have <code>String getName()</code> and <code>int getModifiers()</code>. 
+</p>
+
+<p>
+To override access control, invoke <code>setAccessible</code> method of <code>AccesssibleObject</code> class on a 
+<code>Field</code>, <code>Method</code> or <code>Constructor</code> object.
+</p>
+</div>
+
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> The Field Class</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+There are special circumstance, such as deserialization, where it makes sense to change the value of a <code>final</code> field, 
+You can do this via reflection only on instance fields, and only if <code>setAccessible(true)</code> has been invoked on the 
+<i>Field</i> object.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> The Constructor Class</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+An inner class(excluding local and anonymous inner classes) never has a non-arg constructor, since the compiler 
+transforms all inner class constructors to take a first parameter that is a reference to the enclosing object. That 
+means you can never use <code>Class.newInstance</code> to create an inner class object, so you must use <code>Constructor</code> objects. 
+The <code>Constructor</code> objects for an inner class reflect the transformed code, not the code written by the programmer. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Class</span>&lt;<span style="color: #7CB8BB;">Action</span>&gt; <span style="color: #DFAF8F;">ac</span> = Action.<span style="color: #F0DFAF; font-weight: bold;">class</span>;
+<span style="color: #7CB8BB;">Constructor</span>&lt;<span style="color: #7CB8BB;">Action</span>&gt; <span style="color: #DFAF8F;">con</span> = ac.getDeclaredConstructor(BankAccount.<span style="color: #F0DFAF; font-weight: bold;">class</span>, String.<span style="color: #F0DFAF; font-weight: bold;">class</span>, Long.<span style="color: #F0DFAF; font-weight: bold;">class</span>);
+<span style="color: #7CB8BB;">BankAccount</span> <span style="color: #DFAF8F;">acct</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">BankAccount</span>();
+<span style="color: #7CB8BB;">Action</span> <span style="color: #DFAF8F;">a</span> = con.newInstance(acct, <span style="color: #CC9393;">"Howard"</span>, 10000L);
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> The Method Class</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+It has an <code>Object invoke(Object obj, Object... args)</code>, the first parameter is the object of the class.
+</p>
+
+<ul class="org-ul">
+<li><code>TypeVariable[] getTypeParameters()</code>
+
+<p>
+gets the generic type variables if the method was declared as a generic method, or an array of length 0 otherwise.
+</p>
+</li>
+
+<li><code>Type[] getGenericParameterTypes()</code>
+
+<p>
+getsn array of Type objects that represent the formal parameter types, in declaration order. If the method has no parameters, an array of 
+length 0 is returned
+</p>
+</li>
+
+<li><code>Type getGenericReturnType()</code>
+
+<p>
+gets a Type object that represents the formal return type
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Interfaces</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<code>Type</code> is a marker interface, and it is superinterface of <code>GenericArrayType</code>, <code>ParameterizedType</code>, 
+<code>TypeVariable&lt;D&gt;</code>, <code>WildType</code>.
+</p>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> The TypeVariable Interface</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+It describes type variables, such as <code>T extends Comparable&lt;? super T&gt;</code>.
+</p>
+
+<ul class="org-ul">
+<li><code>String getName()</code>
+</li>
+<li><code>Type[] getBounds()</code>
+
+<p>
+gets the subclass bounds
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> The WildcardType Interface</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+It describes wildcards, such as <code>? super T</code>, <code>? extends T</code>, <code>?</code>.
+</p>
+
+<ul class="org-ul">
+<li><code>Type[] getUpperBounds()</code>
+
+<p>
+gets the subclass(<i>extends</i>) bounds
+</p>
+</li>
+
+<li><code>Type[] getLowerBounds()</code>
+
+<p>
+gets the superclass(<i>super</i>) bounds.
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-3" class="outline-3">
+<h3 id="sec-3-3"><span class="section-number-3">3.3</span> The ParameterizedType Interface</h3>
+<div class="outline-text-3" id="text-3-3">
+<p>
+It describes generic class or interface types, such as <code>Comparable&lt;? super T&gt;</code>.
+</p>
+
+<ul class="org-ul">
+<li><code>Type getRawType()</code>
+</li>
+<li><code>Type[] getActualTypeArguments()</code>
+
+<p>
+gets the type parameters(perhaps type of <code>TypeVariable</code>, <code>WildcardType</code> or <code>Class</code>) with which the parameterized typ was declared, 
+</p>
+</li>
+<li><code>Type getOwnerType()</code>
+
+<p>
+gets the enclosing class type if this is an inner type
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-3-4" class="outline-3">
+<h3 id="sec-3-4"><span class="section-number-3">3.4</span> The GenericArrayType Interface</h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+It describes generic arrays in which the component type is a parameterized type or a type variable. such as <code>T[]</code>.
+</p>
+
+<ul class="org-ul">
+<li><code>Type getGenericComponentType()</code>
+
+<p>
+gets the generic component type with which the array type was declared.
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> An Example</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Hello</span> {
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">main</span>(<span style="color: #7CB8BB;">String</span>[] <span style="color: #DFAF8F;">args</span>) {
+    <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">name</span> = <span style="color: #CC9393;">"java.util.ArrayList"</span>;
+
+    <span style="color: #F0DFAF; font-weight: bold;">try</span>{
+      <span style="color: #7CB8BB;">Class</span>&lt;?&gt; <span style="color: #DFAF8F;">cl</span> = Class.forName(name);
+      printClass(cl);
+      System.out.println();
+      <span style="color: #F0DFAF; font-weight: bold;">for</span>(<span style="color: #7CB8BB;">Method</span> <span style="color: #DFAF8F;">m</span> : cl.getDeclaredMethods()) {
+        printMethod(m);
+      }
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">catch</span>(<span style="color: #7CB8BB;">ClassNotFoundException</span> <span style="color: #DFAF8F;">e</span>) {
+      e.printStackTrace();
+    }
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">printClass</span>(<span style="color: #7CB8BB;">Class</span>&lt;?&gt; <span style="color: #DFAF8F;">cl</span>) {
+    System.out.println(cl); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">class java.util.ArrayList</span>
+    printTypes(cl.getTypeParameters(), <span style="color: #CC9393;">"&lt;"</span>, <span style="color: #CC9393;">", "</span>, <span style="color: #CC9393;">"&gt;"</span>, <span style="color: #BFEBBF;">true</span>); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">&lt;E&gt;</span>
+    <span style="color: #7CB8BB;">Type</span> <span style="color: #DFAF8F;">sc</span> = cl.getGenericSuperclass(); 
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(sc != <span style="color: #BFEBBF;">null</span>) { <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">extends AbstractList&lt;E&gt;</span>
+      System.out.print(<span style="color: #CC9393;">" extends "</span>);
+      printType(sc, <span style="color: #BFEBBF;">false</span>); 
+      System.out.println(<span style="color: #CC9393;">""</span>);
+    }
+    <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">implements List&lt;E&gt;, RandomAccess, Cloneable, Serializable</span>
+    printTypes(cl.getGenericInterfaces(), <span style="color: #CC9393;">" implements "</span>, <span style="color: #CC9393;">", "</span>, <span style="color: #CC9393;">""</span>, <span style="color: #BFEBBF;">false</span>);
+    System.out.println();
+  }
+
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">printMethod</span>(<span style="color: #7CB8BB;">Method</span> <span style="color: #DFAF8F;">m</span>) {
+    <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">name</span> = m.getName();
+    System.out.print(Modifier.toString(m.getModifiers()));
+    System.out.print(<span style="color: #CC9393;">" "</span>);
+    printTypes(m.getTypeParameters(), <span style="color: #CC9393;">"&lt;"</span>, <span style="color: #CC9393;">", "</span>, <span style="color: #CC9393;">"&gt;"</span>, <span style="color: #BFEBBF;">true</span>);
+
+    printType(m.getGenericReturnType(), <span style="color: #BFEBBF;">false</span>);
+    System.out.print(<span style="color: #CC9393;">" "</span>);
+    System.out.print(name);
+    System.out.print(<span style="color: #CC9393;">"("</span>);
+    printTypes(m.getGenericParameterTypes(), <span style="color: #CC9393;">""</span>, <span style="color: #CC9393;">", "</span>, <span style="color: #CC9393;">""</span>, <span style="color: #BFEBBF;">false</span>);
+    System.out.println(<span style="color: #CC9393;">")"</span>);
+
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">printTypes</span>(<span style="color: #7CB8BB;">Type</span>[] <span style="color: #DFAF8F;">types</span>, <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">pre</span>, <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">sep</span>, <span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">suf</span>, <span style="color: #7CB8BB;">boolean</span> <span style="color: #DFAF8F;">isDefinition</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(pre.equals(<span style="color: #CC9393;">" extends "</span>) &amp;&amp; Arrays.equals(types, <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Type</span>[]{Object.<span style="color: #F0DFAF; font-weight: bold;">class</span>})) <span style="color: #F0DFAF; font-weight: bold;">return</span>;
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(types.length&gt;0) System.out.print(pre);
+    <span style="color: #F0DFAF; font-weight: bold;">for</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">i</span>=0; i&lt;types.<span style="color: #7CB8BB;">length</span>; i++) {
+      <span style="color: #F0DFAF; font-weight: bold;">if</span>(i&gt;0) System.out.print(sep);
+      printType(types[i], isDefinition);
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(types.length&gt;0) System.out.print(suf);
+  }
+
+    <span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">printType</span>(<span style="color: #7CB8BB;">Type</span> <span style="color: #DFAF8F;">type</span>, <span style="color: #7CB8BB;">boolean</span> <span style="color: #DFAF8F;">isDefinition</span>) {
+    <span style="color: #F0DFAF; font-weight: bold;">if</span>(type <span style="color: #F0DFAF; font-weight: bold;">instanceof</span> Class) {
+      <span style="color: #7CB8BB;">Class</span>&lt;?&gt; <span style="color: #DFAF8F;">t</span> = (<span style="color: #7CB8BB;">Class</span>&lt;?&gt;) type;
+      System.out.print(t.getSimpleName());
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span>(type <span style="color: #F0DFAF; font-weight: bold;">instanceof</span> TypeVariable) {
+      <span style="color: #7CB8BB;">TypeVariable</span>&lt;?&gt; <span style="color: #DFAF8F;">t</span> = (<span style="color: #7CB8BB;">TypeVariable</span>&lt;?&gt;) type;
+      System.out.print(t.getName());
+      <span style="color: #F0DFAF; font-weight: bold;">if</span>(isDefinition){
+        printTypes(t.getBounds(), <span style="color: #CC9393;">" extends "</span>, <span style="color: #CC9393;">" &amp; "</span>, <span style="color: #CC9393;">""</span>, <span style="color: #BFEBBF;">false</span>);
+      }                       
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span>(type <span style="color: #F0DFAF; font-weight: bold;">instanceof</span> WildcardType){
+      <span style="color: #7CB8BB;">WildcardType</span> <span style="color: #DFAF8F;">t</span> = (<span style="color: #7CB8BB;">WildcardType</span>) type;
+      System.out.print(<span style="color: #CC9393;">"?"</span>);
+      printTypes(t.getUpperBounds(), <span style="color: #CC9393;">" extends "</span>, <span style="color: #CC9393;">" &amp; "</span>, <span style="color: #CC9393;">""</span>, <span style="color: #BFEBBF;">false</span>);
+      printTypes(t.getLowerBounds(), <span style="color: #CC9393;">" super "</span>, <span style="color: #CC9393;">" &amp; "</span>, <span style="color: #CC9393;">""</span>, <span style="color: #BFEBBF;">false</span>);
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span>(type <span style="color: #F0DFAF; font-weight: bold;">instanceof</span> ParameterizedType){
+      <span style="color: #7CB8BB;">ParameterizedType</span> <span style="color: #DFAF8F;">t</span> = (<span style="color: #7CB8BB;">ParameterizedType</span>) type;
+      <span style="color: #7CB8BB;">Type</span> <span style="color: #DFAF8F;">owner</span> = t.getOwnerType();
+      <span style="color: #F0DFAF; font-weight: bold;">if</span>(owner!=<span style="color: #BFEBBF;">null</span>) {
+        printType(owner, <span style="color: #BFEBBF;">false</span>);
+        System.out.print(<span style="color: #CC9393;">"."</span>);
+      }
+      printType(t.getRawType(), <span style="color: #BFEBBF;">false</span>);
+      printTypes(t.getActualTypeArguments(), <span style="color: #CC9393;">"&lt;"</span>, <span style="color: #CC9393;">", "</span>, <span style="color: #CC9393;">"&gt;"</span>, <span style="color: #BFEBBF;">false</span>);
+    }
+    <span style="color: #F0DFAF; font-weight: bold;">else</span> <span style="color: #F0DFAF; font-weight: bold;">if</span>(type <span style="color: #F0DFAF; font-weight: bold;">instanceof</span> GenericArrayType){
+      <span style="color: #7CB8BB;">GenericArrayType</span> <span style="color: #DFAF8F;">t</span> = (<span style="color: #7CB8BB;">GenericArrayType</span>) type;
+      System.out.print(<span style="color: #CC9393;">""</span>);
+      printType(t.getGenericComponentType(), isDefinition);
+      System.out.print(<span style="color: #CC9393;">"[]"</span>);
+    }
+
+    }
+
+}
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

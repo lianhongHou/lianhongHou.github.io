@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Java Collections</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java Collections</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Collection Interface</a></li>
+<li><a href="#sec-2">2. Iterator Interface</a></li>
+<li><a href="#sec-3">3. List</a>
+<ul>
+<li><a href="#sec-3-1">3.1. ArrayList</a></li>
+<li><a href="#sec-3-2">3.2. LinkedList</a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4. Set</a>
+<ul>
+<li><a href="#sec-4-1">4.1. HashSet</a></li>
+<li><a href="#sec-4-2">4.2. LinkedHashSet</a></li>
+<li><a href="#sec-4-3">4.3. CopyOnWriteArraySet</a></li>
+<li><a href="#sec-4-4">4.4. TreeSet</a></li>
+<li><a href="#sec-4-5">4.5. SortedSet and NavigableSet</a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5. Maps</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Collection Interface</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+<code>Iterator&lt;E&gt; iterator()</code> returns an object that implements the <code>Iterator</code> interface.
+</p>
+
+<p>
+In addition, it delcares quite a few methods, <code>int size()</code>, <code>boolean isEmpty()</code>, <code>boolean contains(Object obj)</code>, 
+<code>boolean containsAll(Collection&lt;?&gt; c)</code>, <code>boolean equals(Object oth)</code>, <code>boolean add(E c)</code>, 
+<code>boolean addAll(Collection&lt;? extends E&gt; f)</code>, <code>boolean remove(Object obj)</code>, <code>boolean removeAll(Collection&lt;?&gt; c)</code>, 
+<code>void clear()</code>, <code>Object[] toArray()</code>. 
+There is no <code>get</code> method.
+</p>
+
+<p>
+To simple the implemetation, abstract class <code>AbstractCollection</code> implements 
+all of them except <code>size</code> method and <code>iterator</code> method.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Iterator Interface</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+It has three methods
+</p>
+<ul class="org-ul">
+<li><code>E next()</code>  to get the elements one by one, throws <code>NoSuchElementException</code> if you reach its end.
+</li>
+<li><code>boolean hasNext()</code> to check if has more elements in it.
+</li>
+<li><code>void remove()</code> to remove element returned by the last call to <code>next</code> method
+
+<p>
+Usually, iterator has been replaced by <i>foreach</i> statement, which uses iterator implicitly. But you cannot remove 
+element in <i>foreach</i> block, you have to use <i>remove</i> method of iterator. 
+</p>
+</li>
+</ul>
+
+<p>
+You should invoke <code>hasNext</code> method before <code>next</code> method.
+</p>
+
+<p>
+Unlike iterator in c++, iterator in Java does not support "++" operation.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> List</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<i>ArrayList</i> and <i>LinkedList</i> are both types of <i>List</i>, they both hold elements in the order in which elements are 
+inserted, the difference is not only performs for certain tyoes of operation, but also that <i>LinkedList</i> contains 
+more operations than <i>ArrayList</i>.
+</p>
+
+<p>
+<i>Vector</i> and <i>Stack</i> are randomly used, but you may see them in old code.
+</p>
+
+<p>
+<code>Arrays.asList(T...)</code> (<i>Arrays</i> is subclass of <i>Object</i>) produces a <i>List</i> that is backed by a fixed-size array, 
+it makes sense that the only supported operations are the one that do not change the size of the array. You can
+always pass the result of it as a constructor argument to any <i>Collection</i>.
+</p>
+
+<p>
+The "unmodifiable" methods(like <code>unmodifiableList</code>, <code>unmodifiableMap</code>, etc) in the <i>Collections</i> class wrap the 
+container(like <i>List</i>, <i>Map</i>, etc) in a proxy that produces an <i>UnsupprtedOperationException</i> if you perfprm any 
+operation that modifies the container in any way.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">a</span> = Arrays.asList(<span style="color: #CC9393;">"qwe"</span>, <span style="color: #CC9393;">"234"</span>);
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">a.add("12"); //UnsupportedOperationException                  </span>
+<span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">t</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">LinkedList</span>&lt;<span style="color: #7CB8BB;">String</span>&gt;(a); 
+t.add(<span style="color: #CC9393;">"12dd"</span>);
+<span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">String</span>&gt; <span style="color: #DFAF8F;">q</span> = Collections.unmodifiableList(t);
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">q.add("asdf"); //UnsupportedOperationException</span>
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-3-1" class="outline-3">
+<h3 id="sec-3-1"><span class="section-number-3">3.1</span> ArrayList</h3>
+<div class="outline-text-3" id="text-3-1">
+<p>
+The capacity of an object of ArrayList can be automatically adjusted when adding or removing elements.
+</p>
+
+<p>
+If you already know how many elements you want to store, call <code>ensureCapacity</code> method before filling the array list. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">Employee</span>&gt; <span style="color: #DFAF8F;">staff</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">Employee</span>&gt;();
+
+staff.ensureCapacity(100);
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">use the add method to fill up</span>
+staff.add(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Employee</span>())
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">use the set method  only to replace a previously added element</span>
+<span style="color: #F0DFAF; font-weight: bold;">if</span>(i&lt;staff.<span style="color: #7CB8BB;">size</span>())
+  staff.set(i, <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Employee</span>());
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">returns the actual number of elements in the array list.</span>
+staff.size();
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">reduce the storage capacity of the array list to its current size</span>
+staff.trimToSize(); 
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">copy the elements into an array</span>
+<span style="color: #7CB8BB;">Employee</span>[] <span style="color: #DFAF8F;">e</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Employee</span>[staff.size()];
+staff.toArray(a);
+</pre>
+</div>
+
+<p>
+It is recomended to use an <i>ArrayList</i> instead of a <i>Vector</i> whenever you do not need synchronization.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3-2" class="outline-3">
+<h3 id="sec-3-2"><span class="section-number-3">3.2</span> LinkedList</h3>
+<div class="outline-text-3" id="text-3-2">
+<p>
+It is expensive to remove an element from the middle of an array or array list.
+</p>
+
+<p>
+<code>add</code> method addes an element at the end of a linked list.
+<code>listIteratoe</code> method return a suninterface <i>ListIterator</i>. While <i>Iterator</i> can only move foward, 
+<i>ListIterator</i> is bidirectional. <i>ListIterator</i> extends Iterator, and has methods 
+<code>void add(E e)</code>, <code>E previous()</code> and <code>boolean hasPrevious()</code>. You can use this <code>add</code> method to add an element 
+just before the element returned by the last call to <code>next</code> method(perhaps in the middle of a linked list), but 
+the iterator keeps at the position of the element returned by <code>next</code> method.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Set</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+A <i>Set</i> only holds one of each identical item, so the elements added to it must at least define <i>equals</i> method.
+</p>
+</div>
+<div id="outline-container-sec-4-1" class="outline-3">
+<h3 id="sec-4-1"><span class="section-number-3">4.1</span> HashSet</h3>
+<div class="outline-text-3" id="text-4-1">
+<p>
+Elements must define <i>hashCode</i> method. 
+</p>
+
+<p>
+There is no guarantee as to the order in which the elements will be returned when traversing the set.
+</p>
+
+<p>
+It is unsychronized and not thread-safe.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Set</span>&lt;<span style="color: #7CB8BB;">Character</span>&gt; <span style="color: #DFAF8F;">s1</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">HashSet</span>&lt;<span style="color: #7CB8BB;">Character</span>&gt;(8);
+s1.add(<span style="color: #CC9393;">'a'</span>);
+s1.add(<span style="color: #CC9393;">'b'</span>);
+s1.add(<span style="color: #CC9393;">'j'</span>);
+</pre>
+</div>
+
+<div class="figure">
+<p><img src="./image/JavaHashTable.png" alt="JavaHashTable.png" />
+</p>
+<p><span class="figure-number">Figure 1:</span> hash table</p>
+</div>
+
+<p>
+When traversing the set, the order in which elements are returned depends on their hash code, 
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-2" class="outline-3">
+<h3 id="sec-4-2"><span class="section-number-3">4.2</span> LinkedHashSet</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+It keeps the objects in the order in which they were added. Elements must define <i>hashCode</i> method.
+</p>
+
+<p>
+It guarantees that its iterator will return their elements in the order in which the elements added.
+</p>
+
+<p>
+It is unsychronized and not thread-safe.
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">Set</span>&lt;<span style="color: #7CB8BB;">Character</span>&gt; <span style="color: #DFAF8F;">s2</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">LinkedHashSet</span>&lt;<span style="color: #7CB8BB;">Character</span>&gt;(8);
+Collections.addAll(s2, <span style="color: #CC9393;">'a'</span>, <span style="color: #CC9393;">'b'</span>, <span style="color: #CC9393;">'j'</span>);
+</pre>
+</div>
+
+<div class="figure">
+<p><img src="./image/JavaLinkedHashTable.png" alt="JavaLinkedHashTable.png" />
+</p>
+<p><span class="figure-number">Figure 2:</span> linked hash table</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-4-3" class="outline-3">
+<h3 id="sec-4-3"><span class="section-number-3">4.3</span> CopyOnWriteArraySet</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+It is implemented as a thin wrapper around an instance of <i>CopyOnWriteArrayList</i>, which in turn is backed by 
+an immutable array. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4-4" class="outline-3">
+<h3 id="sec-4-4"><span class="section-number-3">4.4</span> TreeSet</h3>
+<div class="outline-text-3" id="text-4-4">
+<p>
+The interface <i>Comparator</i> has two methods: <code>int compare(T o1, T o2)</code> and <code>boolean equals(Object obj)</code>. 
+The interface <i>Comparable</i> has one method: <code>int compareTo(T o)</code>. 
+</p>
+
+<p>
+<i>TreeSet</i> keeps the objects 
+</p>
+<ul class="org-ul">
+<li>in the order specified by <i>Comparator</i> which can be provided when constructing an empty tree set. or, 
+</li>
+<li>in natural ordering of its elements. Elements must implement <i>Comparable</i> interface.
+</li>
+</ul>
+
+<p>
+<i>TreeSet</i> is unsynchronized and not thread-safe.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4-5" class="outline-3">
+<h3 id="sec-4-5"><span class="section-number-3">4.5</span> SortedSet and NavigableSet</h3>
+<div class="outline-text-3" id="text-4-5">
+<p>
+<i>TreeSet</i> has implemented <i>NavigableSet</i>, which extends <i>SortedSet</i>.
+</p>
+
+<p>
+<i>SortedSet</i> will use <i>compare</i> method of its <i>Comparator</i> - or, if it does not have one, the <i>compareTo</i> 
+method of its elements-instead of the elements's <i>equals</i> method to determine when elements are distinct. 
+</p>
+
+<p>
+Methods declared by the <i>SortedSet</i> interface:
+</p>
+<ul class="org-ul">
+<li>Getting the first and last elements
+<ul class="org-ul">
+<li>E first()
+</li>
+<li>E last()
+
+<p>
+if the set is empty, these operations throw <i>NoSuchElementException</i>.
+</p>
+</li>
+</ul>
+</li>
+<li>Retrieving the <i>Comparator</i>
+<ul class="org-ul">
+<li>Comparator&lt;? super E&gt; comparator()
+
+<p>
+returns the set's comparator if it has been given at the construction time. 
+</p>
+
+<p>
+<code>Comparator&lt;? super E&gt;</code> is used because <i>SortedSet</i> can rely on a <i>Comparator</i> defined on any super type of <i>E</i>.
+</p>
+</li>
+</ul>
+</li>
+<li>Getting range views
+
+<p>
+What you do in the view will be reflected in the original set.
+</p>
+
+<p>
+The arguments to these methods do not themselves have to be members of the set.
+</p>
+<ul class="org-ul">
+<li>SortedSet&lt;E&gt; subSet(E from, E to)
+
+<p>
+returns a view containing every element of the original set that is greater than or equal to <i>from</i> and less than <i>to</i>
+</p>
+</li>
+<li>SortedSet&lt;E&gt; headSet(E to)
+
+<p>
+returns a view containing every element of the original set that is less than <i>to</i>.
+</p>
+</li>
+<li>SortedSet&lt;E&gt; tailSet(E from)
+
+<p>
+returns a view containing every element of the original set that is greater than or equal to <i>from</i>.  
+</p>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Methods declared by <i>NavigableSet</i>:
+</p>
+<ul class="org-ul">
+<li>Getting and removing the first and last elements
+<ul class="org-ul">
+<li>E pollFirst()
+</li>
+<li>E pollLast()
+</li>
+</ul>
+</li>
+<li>Getting range views
+<ul class="org-ul">
+<li>NavigableSet&lt;E&gt; subSet(E from, boolean fromInclusive, E to, boolean toInclusive)
+</li>
+<li>NavigableSet&lt;E&gt; headSet(E to, boolean toInclusive) 
+</li>
+<li>NavigableSet&lt;E&gt; tailSet(E from, boolean fromInclusive)
+</li>
+</ul>
+</li>
+<li>Getting closest matches
+<ul class="org-ul">
+<li>E ceiling(E e)
+
+<p>
+returns the least element greater than, or equal to e
+</p>
+</li>
+<li>E floor(E e)
+
+<p>
+returns the greatest element less than, or equal to e
+</p>
+</li>
+<li>E higher(E e)
+
+<p>
+returns the least element strictly greater than e
+</p>
+</li>
+<li>E lower(E e)
+
+<p>
+returns the greatest element strictly less than e
+</p>
+</li>
+</ul>
+</li>
+<li>Navigating the set in reverse order
+<ul class="org-ul">
+<li>NavigableSet&lt;E&gt; descendingSet()
+
+<p>
+returns a reverse-order view
+</p>
+</li>
+<li>Iterable&lt;E&gt; descendingIterator()
+
+<p>
+returns a reverse-order iterator
+</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Maps</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+<i>LinkedHashMap</i>, <i>HashMap</i> and <i>TreeMap</i> implement the <i>Map</i> interface. <i>HashMap</i> provides the fastest lookpup 
+technique, and does not hold elements in any apparent order. <i>TreeMap</i> keeps the keys sorted by ascending comparison 
+order. <i>LinkedHashMap</i> keeps the keys in insertion order while retaining the lookup speed of the <i>HashMap</i>.
+</p>
+
+<p>
+Any key must have an <i>equals</i> method. If the key is used in a hashed <i>Map</i>, it must also have a proper <i>hashCode</i> 
+method. If the key is used in a <i>TreeMap</i>, it must implements <i>Comparable</i> interface.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

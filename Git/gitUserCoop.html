@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Git用户协作</title>
+<!-- 2015-11-15 Sun 15:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Git用户协作</h1>
+<p>
+问题引出
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git init --bare ./git-share.git
+Initialized empty Git repository in c:/Documents and Settings/lhou/git-share.git/
+$ git clone ./git-share.git/ git-user1
+Cloning into 'git-user1'...
+warning: You appear to have cloned an empty repository.
+done.
+$ git clone ./git-share.git/ git-user2
+Cloning into 'git-user2'...
+warning: You appear to have cloned an empty repository.
+done.
+$ cd git-user1/
+$ echo user1 &gt; user1.txt
+$ git add .
+$ git commit -m "user1.txt"
+[master (root-commit) 55a3ee5] user1.txt
+ 1 file changed, 1 insertion(+)
+ create mode 100644 user1.txt
+$ git push origin master
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 221 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To c:/Documents and Settings/lhou/./git-share.git/
+ * [new branch]      master -&gt; master
+$ cd ../git-user2
+$ echo user2 &gt; user2.txt
+$ git add .
+$ git commit -m "user2.txt"
+[master (root-commit) ae6e8ee] user2.txt
+ 1 file changed, 1 insertion(+)
+ create mode 100644 user2.txt
+$ git push origin master
+To c:/Documents and Settings/lhou/./git-share.git/
+ ! [rejected]        master -&gt; master (non-fast-forward)
+error: failed to push some refs to 'c:/Documents and Settings/lhou/./git-share.git/'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+hint: before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+</pre>
+</div>
+<p>
+为什么git-user2向共享的版b本库推送(git push)其最新更新时，失败了呢？ 
+</p>
+
+<p>
+因为这是非快进式推送（non-fast-forward）！ 
+快进式推送指要推送的本地版本库的提交是建立在远程版本库相应分支的现有提交基础上的，也即远程版本库相应分支的最新提交应该是本地版本库最新提交的祖先提交。 
+</p>
+
+<p>
+详情如下，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log
+commit ae6e8ee8c49c14b864911b2acf782d075da09875
+Author: tech-note &lt;Email Addr&gt;
+Date:   Thu Feb 28 11:00:39 2013 +0800
+
+    user2.txt
+$ cd ../git-share.git/
+$ git log
+commit 55a3ee5f6f2c4c6d7e591ccb500bcd8707798f1d
+Author: tech-note &lt;Lianhong.Hou@calix.com&gt;
+Date:   Thu Feb 28 10:58:11 2013 +0800
+
+    user1.txt
+</pre>
+</div>
+<p>
+上面输出显示，git-share.git的最新提交是55a3ee,而git-user2并没有看到这个提交，因为根本没有在git-user2中执行git pull或类似的操作，所以55a3ee这个提交就没有成为git-user2最新提交ae6e8e的祖先提交，故这是非快进式提交。 
+</p>
+
+<p>
+解决办法就是合并后在提交。具体如下，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ cd ../git-user2/
+$ git pull
+warning: no common commits
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From c:/Documents and Settings/lhou/./git-share
+ * [new branch]      master     -&gt; origin/master
+Merge made by the 'recursive' strategy.
+ user1.txt | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 user1.txt
+$ git log
+commit 053877fbc6f6a32cbd3ce7879f40213b4d31b373
+Merge: ae6e8ee 55a3ee5
+Author: tech-note &lt;Lianhong.Hou@calix.com&gt;
+Date:   Thu Feb 28 12:22:46 2013 +0800
+
+    Merge branch 'master' of c:/Documents and Settings/lhou/./git-share
+
+commit ae6e8ee8c49c14b864911b2acf782d075da09875
+Author: tech-note &lt;Lianhong.Hou@calix.com&gt;
+Date:   Thu Feb 28 11:00:39 2013 +0800
+
+    user2.txt
+
+commit 55a3ee5f6f2c4c6d7e591ccb500bcd8707798f1d
+Author: tech-note &lt;Lianhong.Hou@calix.com&gt;
+Date:   Thu Feb 28 10:58:11 2013 +0800
+
+    user1.txt
+$ git log --graph --oneline
+\*   053877f Merge branch 'master' of c:/Documents and Settings/lhou/./git-share
+|\
+| * 55a3ee5 user1.txt
+\* ae6e8ee user2.txt
+$ git push
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+Counting objects: 6, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (5/5), 526 bytes, done.
+Total 5 (delta 0), reused 0 (delta 0)
+To c:/Documents and Settings/lhou/./git-share.git/
+   55a3ee5..053877f  master -&gt; master
+</pre>
+</div>
+<p>
+可以看出，
+</p>
+<ul class="org-ul">
+<li>git pull包含了两个动作
+<ul class="org-ul">
+<li>获取远程版本库的最新提交ae6e8ee
+</li>
+<li>与本地提交合并,合并的提交ID是053877
+</li>
+</ul>
+</li>
+<li>git push成功完成推送
+</li>
+</ul>
+<p>
+事实上，在非快进式推送不成功的情况下，可以通过-f参数来强制推送的，但这是不建议的，那么如何禁止非快进式推送（包括强制推送）呢？
+</p>
+<ul class="org-ul">
+<li>配置版本库
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ pwd
+/c/Documents and Settings/lhou/git-share.git
+$ git --git-dir=. config receive.denyNonFastForward true
+</pre>
+</div>
+<ul class="org-ul">
+<li>通过版本库的钩子脚本实现, 可实现精细的授权控制，比如
+<ul class="org-ul">
+<li>只对部分用户进行限制
+</li>
+<li>允许特定用户执行非快进式推送
+</li>
+<li>只允许某些分支可以进行强制提交
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 15:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

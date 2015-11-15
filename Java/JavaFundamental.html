@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Fundamental Programming Structures in Java</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+<script type="text/javascript" src="http://orgmode.org/mathjax/MathJax.js"></script>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+    MathJax.Hub.Config({
+        // Only one of the two following lines, depending on user settings
+        // First allows browser-native MathML display, second forces HTML/CSS
+        //  config: ["MMLorHTML.js"], jax: ["input/TeX"],
+            jax: ["input/TeX", "output/HTML-CSS"],
+        extensions: ["tex2jax.js","TeX/AMSmath.js","TeX/AMSsymbols.js",
+                     "TeX/noUndefined.js"],
+        tex2jax: {
+            inlineMath: [ ["\\(","\\)"] ],
+            displayMath: [ ['$$','$$'], ["\\[","\\]"], ["\\begin{displaymath}","\\end{displaymath}"] ],
+            skipTags: ["script","noscript","style","textarea","pre","code"],
+            ignoreClass: "tex2jax_ignore",
+            processEscapes: false,
+            processEnvironments: true,
+            preview: "TeX"
+        },
+        showProcessingMessages: true,
+        displayAlign: "center",
+        displayIndent: "2em",
+
+        "HTML-CSS": {
+             scale: 100,
+             availableFonts: ["STIX","TeX"],
+             preferredFont: "TeX",
+             webFont: "TeX",
+             imageFont: "TeX",
+             showMathMenu: true,
+        },
+        MMLorHTML: {
+             prefer: {
+                 MSIE:    "MML",
+                 Firefox: "MML",
+                 Opera:   "HTML",
+                 other:   "HTML"
+             }
+        }
+    });
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Fundamental Programming Structures in Java</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Comment</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Documentation Comments</a>
+<ul>
+<li><a href="#sec-1-1-1">1.1.1. Packages</a></li>
+<li><a href="#sec-1-1-2">1.1.2. public classes and interfaces</a></li>
+<li><a href="#sec-1-1-3">1.1.3. public and protected constructors and methods</a></li>
+<li><a href="#sec-1-1-4">1.1.4. General Comments</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Built-in Types</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Enumeration Classes</a></li>
+<li><a href="#sec-2-2">2.2. Boxing Type</a></li>
+<li><a href="#sec-2-3">2.3. Array</a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3. Operators, Statements and Control Flow</a></li>
+<li><a href="#sec-4">4. String</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Comment</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+Three styles of comment
+</p>
+<ul class="org-ul">
+<li>single line comment after //
+</li>
+<li>multiple line comment between <i>\* and *\</i>
+</li>
+<li>documentation comment between <i>\** and *\</i>
+</li>
+</ul>
+</div>
+
+<div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Documentation Comments</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+<code>javac</code> generates HTML documentation from source files. It extracts infomation for the following items:
+</p>
+</div>
+<div id="outline-container-sec-1-1-1" class="outline-4">
+<h4 id="sec-1-1-1"><span class="section-number-4">1.1.1</span> Packages</h4>
+</div>
+
+<div id="outline-container-sec-1-1-2" class="outline-4">
+<h4 id="sec-1-1-2"><span class="section-number-4">1.1.2</span> public classes and interfaces</h4>
+<div class="outline-text-4" id="text-1-1-2">
+<p>
+The class comment must be placed after any <code>import</code> statements, directly before the <code>class</code> defination.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-1-3" class="outline-4">
+<h4 id="sec-1-1-3"><span class="section-number-4">1.1.3</span> public and protected constructors and methods</h4>
+<div class="outline-text-4" id="text-1-1-3">
+<p>
+The method comment must immediately precede the method that it describes. All <code>@param</code> tags for one method 
+must kept together one by one. <code>@return</code> tag return type of the method. <code>@throws</code> tag for exceptions of the method.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-1-1-4" class="outline-4">
+<h4 id="sec-1-1-4"><span class="section-number-4">1.1.4</span> General Comments</h4>
+<div class="outline-text-4" id="text-1-1-4">
+<p>
+The following tags can be used in class documentation comments:
+</p>
+<ul class="org-ul">
+<li>multiple <code>@author</code> tags, one for each author
+</li>
+<li><code>@version</code> for current version
+</li>
+</ul>
+<p>
+The following tags can be used in all documentation comments:
+</p>
+<ul class="org-ul">
+<li><code>@since</code> describes the version that introduced this feature. 
+
+<p>
+Example, <code>@since version 1.7.1</code>
+</p>
+</li>
+<li><code>@see</code> to add a hyperlink. 
+
+<p>
+Example, <code>@see com.horstman.corejava.Emplyee#raiseSalary(double)</code>, 
+<i>#</i> is used to separate the class from the method or variable name.
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Built-in Types</h2>
+<div class="outline-text-2" id="text-2">
+<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+
+
+<colgroup>
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+
+<col  class="left" />
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="left">Type</th>
+<th scope="col" class="left">Storage Requirement</th>
+<th scope="col" class="left">Default</th>
+<th scope="col" class="left">Boxing Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="left">int</td>
+<td class="left">4 bytes</td>
+<td class="left">0</td>
+<td class="left">Integer</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">short</td>
+<td class="left">2 bytes</td>
+<td class="left">(short)0</td>
+<td class="left">Short</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">long</td>
+<td class="left">8 bytes</td>
+<td class="left">0L</td>
+<td class="left">Long</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">byte</td>
+<td class="left">1 bytes</td>
+<td class="left">(byte)0</td>
+<td class="left">Byte</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">float</td>
+<td class="left">4 bytes</td>
+<td class="left">0.0f</td>
+<td class="left">Float</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">double</td>
+<td class="left">8 bytes</td>
+<td class="left">0.0d</td>
+<td class="left">Double</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">char</td>
+<td class="left">2 bytes</td>
+<td class="left">'\u0000'(null)</td>
+<td class="left">Character</td>
+</tr>
+</tbody>
+<tbody>
+<tr>
+<td class="left">boolean</td>
+<td class="left">-</td>
+<td class="left">false</td>
+<td class="left">Boolean</td>
+</tr>
+</tbody>
+</table>
+
+<p>
+All of <code>byte</code>, <code>short</code>, <code>int</code> and <code>long</code> are signed.
+</p>
+
+<p>
+The <code>Char</code> type describes a code unit for representing Unicode code points in the UTF-16 encoding, 
+and is used to describe individual characters.
+</p>
+
+<p>
+Java does not specify the storage usage of <code>boolean</code> variables, most popular JVM store it as an interger. 
+It has two values, <code>true</code> and <code>false</code>. Unlike c/c++, the value <i>0</i> is neither <code>false</code> nor <code>true</code>, also the 
+expression <i>x=0</i> does not return boolean.
+</p>
+
+<p>
+An integer division by 0 raises an exception, whereas floating-point division by 0 yields an infinite or NaN result. 
+</p>
+
+<p>
+Although <code>null</code> is subtype of every reference type, the <code>instanceof</code> operator is defined to return <code>false</code> when its 
+left operand is <code>null</code>.
+</p>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Enumeration Classes</h3>
+<div class="outline-text-3" id="text-2-1">
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Actually a class with 3 instances, no possibility to construct new onjects.</span>
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">enum</span> <span style="color: #7CB8BB;">Size</span> {<span style="color: #DFAF8F;">SMALL</span>, <span style="color: #DFAF8F;">MEDIUM</span>, <span style="color: #DFAF8F;">LARGE</span>};
+
+<span style="color: #BFEBBF;">Size</span>.SMALL.toString();<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">returns "SMALL"</span>
+<span style="color: #7CB8BB;">Size</span> <span style="color: #DFAF8F;">s</span> = Enum.valueOf(Size.<span style="color: #F0DFAF; font-weight: bold;">class</span>, <span style="color: #CC9393;">"SMALL"</span>); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">returns Size.SMALL</span>
+<span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">to return array with elements Size.SMALL, Size.MEDIUM, Size.LARGE</span>
+<span style="color: #7CB8BB;">Size</span>[] <span style="color: #DFAF8F;">vs</span> = <span style="color: #BFEBBF;">Size</span>.Values(); 
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">idx</span> = <span style="color: #BFEBBF;">Size</span>.MEDIUM.ordinal(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the position of Size.MEDIUM, starting from 0</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> Boxing Type</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+The autoboxing specification requires that <code>boolean</code>, <code>byte</code>, <code>char=&lt;=127, =short</code> and <code>int</code> between -128 and 127 
+are boxed into fixed objects, that is, if both <i>a</i> and <i>b</i> are type of <i>Integer</i>, and have value <i>100</i>, then 
+they refer to the same object.
+</p>
+
+<p>
+The objects of Boxing classes are imutable, you cannot change their values. 
+The Boxing classes are <code>final</code>, you cannot extend it.
+</p>
+
+<p>
+All of Boxing Types have <code>valueOf</code> method to convert from corresponding primitive type to it. 
+Also all of Boxing Types have <i>xxxValue</i> method to returns variable of <i>xxx</i> primitive type.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> Array</h3>
+<div class="outline-text-3" id="text-2-3">
+<p>
+The array identifier is actually a reference to a true object that is created on the heap, and holds the references 
+to other objects or the primitive values directly if the elements are primitives.
+</p>
+
+<p>
+Array bounds overflow can never happen since java allocates a small amount of memory overhead on each array as 
+well as verifying index at run time.
+</p>
+
+<p>
+Each array nested in an array can can have different size.
+</p>
+
+<p>
+Array initialization:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">String</span>[] <span style="color: #DFAF8F;">attrs</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">String</span>[12]; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">No construtor of String called</span>
+<span style="color: #7CB8BB;">String</span>[] <span style="color: #DFAF8F;">dangers</span> = {<span style="color: #CC9393;">"Lions"</span>, <span style="color: #CC9393;">"Tigers"</span>};
+printStr(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">String</span>[] {<span style="color: #CC9393;">"Lions"</span>, <span style="color: #CC9393;">"Tigers"</span>});
+</pre>
+</div>
+
+<p>
+The array length need not be a constant. Once you create an array, you cannot change its size.
+</p>
+
+<p>
+When you create an array of numbers, all elements are initialized with zero. Arrays of <code>bpplean</code> are initialized 
+with <code>false</code>. Arrays of objects are initialized with the special value <code>null</code>.
+</p>
+
+<p>
+You can copy one array variable into another, but then both variables refer to the same array. Example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">int</span>[] <span style="color: #DFAF8F;">lna</span> = spa;
+lna[2] = 10; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">now, spa[2] is also 10</span>
+</pre>
+</div>
+
+<p>
+Arrays of subclass reference can be converted to arrays of superclass references without a cast, and then cast 
+it back, but arrays still remember the element type with which they were created. Example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Employee</span>{}
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Manager</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Employee</span> {}
+
+<span style="color: #7CB8BB;">Manager</span>[] <span style="color: #DFAF8F;">m</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Manager</span>[3];
+<span style="color: #7CB8BB;">Employee</span>[] <span style="color: #DFAF8F;">e</span> = m;
+e[0] = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Employee</span>(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ArrayStoreException </span>
+m = (<span style="color: #7CB8BB;">Manager</span>[]) e; <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">ok, because e actually is Manager[]</span>
+
+<span style="color: #7CB8BB;">Employee</span>[] <span style="color: #DFAF8F;">e1</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Employee</span>[2];
+<span style="color: #7CB8BB;">Manager</span>[] <span style="color: #DFAF8F;">m1</span> = (<span style="color: #7CB8BB;">Manager</span>[]) e1; <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ClassCastException, because e1 actually is Employee[]</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Operators, Statements and Control Flow</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+Operators <code>&amp;</code>, <code>|</code>, and <code>^</code> are logical operators when their operands are boolean values and 
+bitwise operators when their operands are integer values.
+</p>
+
+<p>
+Operators <code>||</code> and <code>&amp;&amp;</code> are logical operators, and can only be used when boolean operands. They are short-cut 
+operators whereas <code>&amp;</code>, <code>|</code> are not.
+</p>
+
+<p>
+Operator == to check if two varaibles refer to the same object.
+</p>
+
+<p>
+Unlike c/c++, Java has not comma operator, but you can yse a comma separated list of expressions in the first and third slot 
+of a <code>for</code> statement.
+</p>
+
+<p>
+There is no <i>goto</i>, but there is a "labeled" version of <code>break</code> that you can use to break out of a nested loop.
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> String</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Java does not have a built-in string type, instead, the standard Java Library provides it.
+</p>
+
+<p>
+<code>String</code> object has a <code>length</code> method while <code>Array</code> object has a <code>length</code> attribute.
+</p>
+
+<p>
+<code>charAt</code> method of <code>String</code> object takes an integer index and returns the character at the index.
+</p>
+
+<p>
+Strings are immutable.
+</p>
+
+<p>
+A <code>String</code> variable can also hold a special value, called <code>null</code>, that indicates that no object is currently 
+associated with the variable.
+</p>
+
+<p>
+Java strings are implementedc as sequence of <code>char</code> values, and <code>char</code> data type is a code unit for representing 
+Unicode code points in the UTF-16 encoding, the most commonly used Unicode characters can be represented with a 
+single code unit, but there are some other characters that requires a pair of code units. 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">greeting</span> = <span style="color: #CC9393;">"greeting"</span>;
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">n</span> = greeting.length(); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">the number of code units</span>
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">cpCnt</span> = greeting.codePointCount(0, n); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the true length, that is the number of code points</span>
+<span style="color: #7CB8BB;">char</span> <span style="color: #DFAF8F;">c</span> = greeting.chatAt(2); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">2nd code unit</span>
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">cp</span> = greeting.codePointAt(2); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">the 2nd code point</span>
+<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">i</span> = 0;
+
+<span style="color: #F0DFAF; font-weight: bold;">while</span>(i&lt;<span style="color: #7CB8BB;">n</span>) { <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">traverse a string</span>
+  cp = greeting.codePointAt(i);
+  <span style="color: #F0DFAF; font-weight: bold;">if</span>(Character.isSupplementaryCodePoint(cp)){
+    i += 2;
+  }
+  <span style="color: #F0DFAF; font-weight: bold;">else</span> {
+    i++;
+  }
+}
+</pre>
+</div>
+
+<p>
+It is inefficient to concatenate strings with operator <i>+</i>, instead, you should use <code>StringBuilder</code>. Example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">StringBuilder</span> <span style="color: #DFAF8F;">b</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">StringBuilder</span>();
+
+b.append(singleChar);
+b.append(str);
+<span style="color: #7CB8BB;">String</span> <span style="color: #DFAF8F;">s</span> = b.toString();
+</pre>
+</div>
+<p>
+<code>StringBuffer</code> is slightly less efficient, but it allows multiple threads to add or remove characters, and 
+it has not implemented <code>equals</code> method. 
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,1219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Git基本命令</title>
+<!-- 2015-11-14 Sat 20:38 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Git基本命令</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 操纵git的配置文件</a></li>
+<li><a href="#sec-2">2. 差异比较</a></li>
+<li><a href="#sec-3">3. 查看文件修改状态</a></li>
+<li><a href="#sec-4">4. 查看提交日志</a></li>
+<li><a href="#sec-5">5. 以对象ID为参数查看对象信息</a></li>
+<li><a href="#sec-6">6. 浏览目录树</a>
+<ul>
+<li><a href="#sec-6-1">6.1. ls-tree</a></li>
+<li><a href="#sec-6-2">6.2. ls-files</a></li>
+</ul>
+</li>
+<li><a href="#sec-7">7. 查看文件信息</a></li>
+<li><a href="#sec-8">8. add</a>
+<ul>
+<li>
+<ul>
+<li><a href="#sec-8-0-1">8.0.1. Commands <b>*</b></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-9">9. 文件忽略</a></li>
+<li><a href="#sec-10">10. reset</a>
+<ul>
+<li><a href="#sec-10-1">10.1. 重置</a></li>
+<li><a href="#sec-10-2">10.2. 恢复</a></li>
+</ul>
+</li>
+<li><a href="#sec-11">11. checkout</a>
+<ul>
+<li><a href="#sec-11-1">11.1. 检出</a></li>
+<li><a href="#sec-11-2">11.2. 切换分支</a></li>
+<li><a href="#sec-11-3">11.3. 拉分支</a></li>
+</ul>
+</li>
+<li><a href="#sec-12">12. stash</a>
+<ul>
+<li><a href="#sec-12-1">12.1. 命令简介</a></li>
+<li><a href="#sec-12-2">12.2. 实例</a>
+<ul>
+<li><a href="#sec-12-2-1">12.2.1. 只为工作区状态保存进度</a></li>
+<li><a href="#sec-12-2-2">12.2.2. 同时为工作区和暂存区状态保存进度</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#sec-13">13. 文件追溯</a></li>
+<li><a href="#sec-14">14. 二分查找</a>
+<ul>
+<li><a href="#sec-14-1">14.1. 手动进行</a></li>
+<li><a href="#sec-14-2">14.2. 自动进行</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 操纵git的配置文件</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+有三个配置文件，依据优先级从高到低排序，
+</p>
+<ul class="org-ul">
+<li>打开当前项目的配置文件, <code>$ git config -e</code>
+</li>
+<li>打开全局配置文件, <code>$ git config -e --global</code>
+</li>
+<li>打开系统配置文件, <code>$ git config -e --system</code>
+</li>
+</ul>
+<p>
+以全局配置文件为例，介绍配置中属性的查询和修改。
+</p>
+<ul class="org-ul">
+<li>查询, <code>$ git config --global section.attribute</code>
+</li>
+<li>增加及修改, <code>$ git config --global section.attribute value</code>
+</li>
+<li>删除, <code>$ git config --unset --global section.attribute</code>
+</li>
+</ul>
+<p>
+如果全局配置文件包含以下内容， 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">[x &#8220;y&#8221;]
+   z = something
+</pre>
+</div>
+<p>
+相应分别命令是，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git config --global x.y.z
+$ git config --global x.y.z value
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 差异比较</h2>
+<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>工作区与暂存区, <code>$ git diff</code>
+</li>
+<li>工作区与HEAD（当前工作分支）, <code>$ git diff HEAD</code>
+</li>
+<li>暂存区与HEAD（当前工作分支）, <code>$ git diff --staged</code>
+</li>
+<li>不同版本, <code>$ git diff &lt;commit1&gt; &lt;commit2&gt; &lt;path&gt;</code>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 查看文件修改状态</h2>
+<div class="outline-text-2" id="text-3">
+<div class="org-src-container">
+
+<pre class="src src-git">$ git status -s
+MM welcome.txt
+</pre>
+</div>
+<p>
+输出中，第一个M表示版本库和暂存区的文件相比较，有改动；第二个M表示工作区和暂存区的文件相比较，有改动。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> 查看提交日志</h2>
+<div class="outline-text-2" id="text-4">
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --pretty=oneline
+f4ad1bdeb9d813a25cb87149dcc03b2a6509e4b7 For browse git directory
+20dde90b990a801ed9b30da237a98c98d25ca478 Append a nice line
+6575a00938b9f37d047b090d295de3c69e9f8e8a initialize git-exercise
+
+$ git log --pretty=raw --graph f4ad
+\* commit f4ad1bdeb9d813a25cb87149dcc03b2a6509e4b7
+| tree 0a58c2b5df45b779fba20395ecd9ee47215dae7e
+| parent 20dde90b990a801ed9b30da237a98c98d25ca478
+| author tech-note &lt;Email Addr&gt; 1361255086 +0800
+| committer tech-note &lt;Email Addr&gt; 1361255086 +0800
+|
+|     For browse git directory
+|
+\* commit 20dde90b990a801ed9b30da237a98c98d25ca478
+| tree e5c730d67c1fa9b37927a50341e22314e7c240fb
+| parent 6575a00938b9f37d047b090d295de3c69e9f8e8a
+| author tech-note &lt;Email Addr&gt; 1361250374 +0800
+| committer tech-note &lt;Email Addr&gt; 1361250374 +0800
+|
+|     Append a nice line
+|
+\* commit 6575a00938b9f37d047b090d295de3c69e9f8e8a
+  tree d53e0ada312de31f102c8adea3a60caf7df72ff0
+  author tech-note &lt;Email Addr&gt; 1361249827 +0800
+  committer tech-note &lt;Email Addr&gt; 1361249827 +0800
+
+      initialize git-exercise
+</pre>
+</div>
+
+<p>
+其中，命令行参数
+</p>
+
+<ul class="org-ul">
+<li>–pretty=raw: 使得commit ID（本次提交）, tree ID（本次提交对应的目录树）, parent ID（本次提交的上一次提交）都被打印出来
+</li>
+<li>–graph: 显示跟踪链（父子关系）
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> 以对象ID为参数查看对象信息</h2>
+<div class="outline-text-2" id="text-5">
+<ul class="org-ul">
+<li>commit 对象
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p f4ad
+tree 0a58c2b5df45b779fba20395ecd9ee47215dae7e
+parent 20dde90b990a801ed9b30da237a98c98d25ca478
+author tech-note &lt;Email Addr&gt; 1361255086 +0800
+committer tech-note &lt;Email Addr&gt; 1361255086 +0800
+</pre>
+</div>
+<ul class="org-ul">
+<li>tree 对象
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p 0a58
+040000 tree 6e2abf3eb71d7653b25989abb549b0ee18974e0e    a
+100644 blob 41ea8a4f322ac2a4daafd21b14eaced6fbac7ee7    welcome.txt
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6" class="outline-2">
+<h2 id="sec-6"><span class="section-number-2">6</span> 浏览目录树</h2>
+<div class="outline-text-2" id="text-6">
+</div><div id="outline-container-sec-6-1" class="outline-3">
+<h3 id="sec-6-1"><span class="section-number-3">6.1</span> ls-tree</h3>
+<div class="outline-text-3" id="text-6-1">
+<ul class="org-ul">
+<li>浏览版本库的目录树
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git ls-tree -l -rt HEAD
+040000 tree 6e2abf3eb71d7653b25989abb549b0ee18974e0e       -    a
+040000 tree c8e1fc145a80521374ef3909c05155568fca0ae1       -    a/b
+040000 tree 003e4f14fee402a23ab7586016dad1bbc45e67a9       -    a/b/c
+100644 blob 25735f595470e0e6894159694a4238a3ee8a3df0       7    a/b/c/hello.txt
+100644 blob 41ea8a4f322ac2a4daafd21b14eaced6fbac7ee7      25    welcome.txt
+</pre>
+</div>
+<ul class="org-ul">
+<li>浏览暂存区的目录树
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git write-tree
+0a58c2b5df45b779fba20395ecd9ee47215dae7e
+$ git ls-tree -l -rt 0a58
+040000 tree 6e2abf3eb71d7653b25989abb549b0ee18974e0e       -    a
+040000 tree c8e1fc145a80521374ef3909c05155568fca0ae1       -    a/b
+040000 tree 003e4f14fee402a23ab7586016dad1bbc45e67a9       -    a/b/c
+100644 blob 25735f595470e0e6894159694a4238a3ee8a3df0       7    a/b/c/hello.txt
+100644 blob 41ea8a4f322ac2a4daafd21b14eaced6fbac7ee7      25    welcome.txt
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-6-2" class="outline-3">
+<h3 id="sec-6-2"><span class="section-number-3">6.2</span> ls-files</h3>
+<div class="outline-text-3" id="text-6-2">
+<ul class="org-ul">
+<li>浏览暂存区的目录树
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ mkdir -p a/b/c
+$ echo "Where do I hide" &gt; ./a/b/c/hide.txt
+$ git add .
+$ git ls-files
+a/b/c/hide.txt
+hack-1.txt
+welcome.txt
+who.txt
+</pre>
+</div>
+<ul class="org-ul">
+<li>浏览工作区的目录树
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git ls-tree HEAD
+100644 blob dc71c5dca28bb97be915d47ae3549456ef5fdd75    welcome.txt
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-7" class="outline-2">
+<h2 id="sec-7"><span class="section-number-2">7</span> 查看文件信息</h2>
+<div class="outline-text-2" id="text-7">
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p HEAD:welcome.txt
+hello.
+Nice to meet you.
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-8" class="outline-2">
+<h2 id="sec-8"><span class="section-number-2">8</span> add</h2>
+<div class="outline-text-2" id="text-8">
+<p>
+工作区向暂存区增加修改的命令。
+</p>
+<ul class="org-ul">
+<li><code>git add -u</code>, 将本地有变动（包括修改、删除）的文件都标记到暂存区。
+</li>
+<li><code>git add -i</code>, 进入交互界面，然后输入a，就可以有选择地添加工作区中未被跟踪的文件。
+</li>
+</ul>
+<p>
+#+begin<sub>src</sub> git
+$ git add -i
+           staged     unstaged path
+</p>
+</div>
+<div id="outline-container-sec-8-0-1" class="outline-4">
+<h4 id="sec-8-0-1"><span class="section-number-4">8.0.1</span> Commands <b>*</b></h4>
+<div class="outline-text-4" id="text-8-0-1">
+<p>
+  1: [s]tatus     2: [u]pdate     3: [r]evert     4: [a]dd untracked
+  5: [p]atch      6: [d]iff       7: [q]uit       8: [h]elp
+What now&gt;
+#+end<sub>src</sub>
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-9" class="outline-2">
+<h2 id="sec-9"><span class="section-number-2">9</span> 文件忽略</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+对工作区某个目录或文件设置了忽略后，使用git status -s时，被忽略的文件即使存在也不会显示为未跟踪状态，使用git add -A和git add .都无法把被忽略的文件或目录添加到暂存区。 
+</p>
+
+<p>
+文件忽略功能是通过文件.gitignore实现的，把要忽略的文件及目录记录在该文件中，该文件的语法见下。
+</p>
+<ul class="org-ul">
+<li>空行或以#开始的行会被忽略
+</li>
+<li>支持通配符
+</li>
+<li>以/开头的，表示要忽略的文件就在此目录下，而非子目录下的文件
+</li>
+<li>以/结尾的，表示要忽略的是整个目录，同名文件不忽略，否则同名的文件和目录都忽略
+</li>
+<li>以!开头的，表示不忽略
+</li>
+</ul>
+<p>
+.gitignore的作用范围是其所处的目录及子目录。 
+</p>
+
+<p>
+可以把该文件添加到版本库，如果不希望将.gitignore添加到版本库中，可以在该文件中忽略自己。 
+</p>
+
+<p>
+注意，忽略只对未跟踪的文件有效，若一个文件已被添加到暂存区了，那么再在.gitignore中忽略也无效了。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-10" class="outline-2">
+<h2 id="sec-10"><span class="section-number-2">10</span> reset</h2>
+<div class="outline-text-2" id="text-10">
+</div><div id="outline-container-sec-10-1" class="outline-3">
+<h3 id="sec-10-1"><span class="section-number-3">10.1</span> 重置</h3>
+<div class="outline-text-3" id="text-10-1">
+<ul class="org-ul">
+<li><code>git reset [-q] [&lt;commit&gt;] [--] &lt;path&gt;</code>
+
+<p>
+不会改变引用，也不会改变工作区，对于暂存区，会用指定提交状态（&lt;commit&gt;）下的文件（&lt;path&gt;）替换掉暂存区中的相应文件。&lt;commit&gt;可省略，默认为HEAD。
+</p>
+<ul class="org-ul">
+<li>撤销暂存区中未提交的修改
+<div class="org-src-container">
+
+<pre class="src src-git">$ echo "cancel modification staged but have not committed" &gt;&gt; welcome.txt
+$ git add welcome.txt
+warning: LF will be replaced by CRLF in welcome.txt.
+The file will have its original line endings in your working directory.
+lhou@NAN-LHOU ~/git-exercise (master)
+$ git diff --staged
+diff --git a/welcome.txt b/welcome.txt
+index 41ea8a4..3dafc72 100644
+--- a/welcome.txt
++++ b/welcome.txt
+@@ -1,2 +1,3 @@
+hello.
+Nice to meet you.
++cancel modification staged but have not committed
+$ git reset HEAD welcome.txt
+Unstaged changes after reset:
+M       welcome.txt
+$ git diff --staged
+</pre>
+</div>
+</li>
+</ul>
+</li>
+<li><code>git reset [--soft | --mixed | --hard] [-q] [&lt;commit&gt;]</code>
+
+<p>
+肯定会重置引用
+</p>
+<ul class="org-ul">
+<li><code>git reset --soft &lt;commit&gt;</code>  只改变引用，不改变暂存区和工作区
+</li>
+<li><code>git reset --mixed &lt;commit&gt;</code>  改变引用，改变暂存区，暂存区的内容将会和引用指向的目录树一致。–mixed 可省略
+</li>
+<li><code>git reset --hard &lt;commit&gt;</code>  改变引用，改变暂存区，改变工作区，工作区中的内容将会和暂存区的一致，也和引用指向得分目录树一致
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-10-2" class="outline-3">
+<h3 id="sec-10-2"><span class="section-number-3">10.2</span> 恢复</h3>
+<div class="outline-text-3" id="text-10-2">
+<ul class="org-ul">
+<li>重置前
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --graph --oneline
+* [#C] 3ef2a2d add a file for undo after git reset
+* f4ad1bd For browse git directory
+* 20dde90 Append a nice line
+* 6575a00 initialize git-exercise
+$ cat .git/refs/heads/master
+3ef2a2dd8f7d416b9d77ffe8fea653d22a723a26
+</pre>
+</div>
+</li>
+<li>重置
+<div class="org-src-container">
+
+<pre class="src src-git">$ git reset --hard 20dde90
+HEAD is now at 20dde90 Append a nice line
+</pre>
+</div>
+</li>
+<li>恢复后
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --graph --oneline
+* 20dde90 Append a nice line
+* 6575a00 initialize git-exercise
+$ cat .git/refs/heads/master
+20dde90b990a801ed9b30da237a98c98d25ca478
+$ ls
+welcome.txt
+</pre>
+</div>
+</li>
+</ul>
+<p>
+查看对master分支的所有变更(包括重置)
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git reflog show master
+20dde90 master@{0}: reset: moving to 20dde90
+3ef2a2d master@{1}: commit: add a file for undo after git reset
+f4ad1bd master@{2}: commit: For browse git directory
+20dde90 master@{3}: commit: Append a nice line
+6575a00 master@{4}: commit (initial): initialize git-exercise
+</pre>
+</div>
+<p>
+&lt;refname&gt;@{&lt;n&gt;} 表示分支&lt;refname&gt;第&lt;n&gt;次改变时情况。 
+</p>
+
+<p>
+第一行结果，表示重置之后，master分支指向的commit ID为20dde90，等同于，第四行结果（commit: Append a nice line之后的master分支指向）的commit ID。
+</p>
+<ul class="org-ul">
+<li>恢复重置前
+<div class="org-src-container">
+
+<pre class="src src-git">$ git reset --hard master@{1}
+HEAD is now at 3ef2a2d add a file for undo after git reset
+</pre>
+</div>
+</li>
+<li>恢复后
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --graph --oneline
+* 3ef2a2d add a file for undo after git reset
+* f4ad1bd For browse git directory
+* 20dde90 Append a nice line
+* 6575a00 initialize git-exercise
+$ cat .git/refs/heads/master
+3ef2a2dd8f7d416b9d77ffe8fea653d22a723a26
+$ ls
+a  newcommit.txt  welcome.txt
+</pre>
+</div>
+</li>
+</ul>
+<p>
+可以发现以上输出与重置前完全一致。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git reflog show master
+3ef2a2d master@{0}: reset: moving to master@{1}
+20dde90 master@{1}: reset: moving to 20dde90
+3ef2a2d master@{2}: commit: add a file for undo after git reset
+f4ad1bd master@{3}: commit: For browse git directory
+20dde90 master@{4}: commit: Append a nice line
+6575a00 master@{5}: commit (initial): initialize git-exercise
+</pre>
+</div>
+<p>
+通过上述内容，仍然可以看到两次重置，并且第二次重置是对第一次重置的恢复。
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-11" class="outline-2">
+<h2 id="sec-11"><span class="section-number-2">11</span> checkout</h2>
+<div class="outline-text-2" id="text-11">
+</div><div id="outline-container-sec-11-1" class="outline-3">
+<h3 id="sec-11-1"><span class="section-number-3">11.1</span> 检出</h3>
+<div class="outline-text-3" id="text-11-1">
+<p>
+<code>git checkout [-q] [&lt;commit&gt;] [--] &lt;path&gt;</code>
+</p>
+<ul class="org-ul">
+<li>参数 &lt;commit&gt; 被省略时，暂存区的文件覆盖工作区的文件
+</li>
+<li>参数 &lt;commit&gt; 存在时， 用指定提交（&lt;commit&gt;）中的文件覆盖暂存区和工作区的文件
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-11-2" class="outline-3">
+<h3 id="sec-11-2"><span class="section-number-3">11.2</span> 切换分支</h3>
+<div class="outline-text-3" id="text-11-2">
+<p>
+<code>git checkout branch</code>
+</p>
+
+<p>
+更新HEAD以指向branch分支，并用branch分支指向的树更新暂存区和工作区 
+分离头指针：HEAD头指针指向的是一个具体的commit ID，而不是一个引用（分支）
+</p>
+</div>
+</div>
+<div id="outline-container-sec-11-3" class="outline-3">
+<h3 id="sec-11-3"><span class="section-number-3">11.3</span> 拉分支</h3>
+<div class="outline-text-3" id="text-11-3">
+<p>
+<code>git checkout [-m] [[--b | --orphan] &lt;new_branch&gt;] [&lt;start_point&gt;]</code>
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-12" class="outline-2">
+<h2 id="sec-12"><span class="section-number-2">12</span> stash</h2>
+<div class="outline-text-2" id="text-12">
+</div><div id="outline-container-sec-12-1" class="outline-3">
+<h3 id="sec-12-1"><span class="section-number-3">12.1</span> 命令简介</h3>
+<div class="outline-text-3" id="text-12-1">
+<ul class="org-ul">
+<li><code>git stash [save [-k|--keep-index] [&lt;message&gt;]]</code>
+
+<p>
+保存当前的工作进度，会分别对暂存区和工作区的状态进行保存，并重置工作区和暂存区。 
+</p>
+
+<p>
+参数–keep-index，保存进度后不会重置暂存区。
+</p>
+</li>
+<li><code>git stash list</code>
+
+<p>
+显示保存的进度列表。
+</p>
+</li>
+<li><code>git stash pop [--index] [&lt;stash&gt;]</code> 
+
+<p>
+恢复工作进度&lt;stash&gt;，若未提供参数&lt;stash&gt;，则默认恢复最新的工作进度。恢复之后，将已恢复的工作进度从进度列表中删除。 
+</p>
+
+<p>
+参数–index，除了恢复工作区之外，还会恢复暂存区。
+</p>
+</li>
+<li><code>git stash apply [--index] [&lt;stash&gt;]</code>
+
+<p>
+除了不删除恢复的进度外，等同于git stash pop。
+</p>
+</li>
+<li><code>git stash drop [&lt;stash&gt;]</code>
+
+<p>
+删除一个存储的进度，默认为删除最新的进度。
+</p>
+</li>
+<li><code>git stash clear</code>
+
+<p>
+删除存储的所有进度。
+</p>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-12-2" class="outline-3">
+<h3 id="sec-12-2"><span class="section-number-3">12.2</span> 实例</h3>
+<div class="outline-text-3" id="text-12-2">
+</div><div id="outline-container-sec-12-2-1" class="outline-4">
+<h4 id="sec-12-2-1"><span class="section-number-4">12.2.1</span> 只为工作区状态保存进度</h4>
+<div class="outline-text-4" id="text-12-2-1">
+<ul class="org-ul">
+<li>工作区变更前
+<div class="org-src-container">
+
+<pre class="src src-git">$ git init
+Initialized empty Git repository in /cygdrive/d/git-exercise/.git/
+$ echo "Hello" &gt; welcome.txt
+$ git add .
+$ git commit -m "welcome.txt: Hello"
+[master (root-commit) 1362aed] welcome.txt: Hello
+ 1 files changed, 1 insertions(+), 0 deletions(-)
+ create mode 100644 welcome.txt
+$ git log
+commit 1362aeddba817069ad7116ec3242df84d08dacfb
+Author: tech-note &lt;Email Addr&gt;
+Date:   Sat Feb 23 14:30:28 2013 +0800
+
+   welcome.txt: Hello
+</pre>
+</div>
+</li>
+<li>变更工作区
+<div class="org-src-container">
+
+<pre class="src src-git">$ echo "Nice to meet you" &gt;&gt; welcome.txt
+</pre>
+</div>
+</li>
+<li>保存进度
+<div class="org-src-container">
+
+<pre class="src src-git">$ git stash save "Nice to meet you"
+Saved working directory and index state On master: Nice to meet you
+HEAD is now at 1362aed welcome.txt: Hello
+</pre>
+</div>
+</li>
+<li>查看保存的进度
+<div class="org-src-container">
+
+<pre class="src src-git">$ git stash list
+stash@{0}: On master: Nice to meet you
+$ git reflog show refs/stash
+927dbfe refs/stash@{0}: On master: Nice to meet you
+</pre>
+</div>
+</li>
+<li>分析进度保存的实质
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log
+commit 1362aeddba817069ad7116ec3242df84d08dacfb
+Author: tech-note &lt;Email Addr&gt;
+Date:   Sat Feb 23 14:30:28 2013 +0800
+   welcome.txt: Hello
+$ git diff HEAD       
+$ git diff        
+$ cat welcome.txt
+Hello
+</pre>
+</div>
+<p>
+当前的引用没有发生改变，最新的commit ID认为1362ae。工作区被重置，也即，welcome.txt的内容与工作区变更之前相比，未发生改变。 
+</p>
+
+<p>
+在保存进度之前，在welcome.txt中，新增的内容Nice to meet you到那里了呢？
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --graph --pretty=raw refs/stash
+\*   commit 927dbfe8708087d5a11e3a874d8368ec0994064e
+|\  tree 26675b461c4e320dc98efb1ea8f2c33ddf4aa117
+| | parent 1362aeddba817069ad7116ec3242df84d08dacfb
+| | parent ed767841071ff35b079320f5a77a20f8c51db48b
+| | author tech-note &lt;Email Addr&gt; 1361601464 +0800
+| | committer tech-note &lt;Email Addr&gt; 1361601464 +0800
+| |
+| |     On master: Nice to meet you
+| |
+| * commit ed767841071ff35b079320f5a77a20f8c51db48b
+|/  tree 6222d0694ffcab4de64f6a43d8d480afdecb4d35
+|   parent 1362aeddba817069ad7116ec3242df84d08dacfb 
+|   author tech-note &lt;Email Addr&gt; 1361601464 +0800
+|   committer tech-note &lt;Email Addr&gt; 1361601464 +0800
+|
+|       index on master: 1362aed welcome.txt: Hello
+|
+\* commit 1362aeddba817069ad7116ec3242df84d08dacfb
+  tree 6222d0694ffcab4de64f6a43d8d480afdecb4d35
+  author tech-note &lt;Email Addr&gt; 1361601028 +0800
+  committer tech-note &lt;Email Addr&gt; 1361601028 +0800
+
+     welcome.txt: Hello
+Administrator@2013-0106-1533 /cygdrive/d/git-exercise
+$ git cat-file -p 26675b
+100644 blob dc71c5dca28bb97be915d47ae3549456ef5fdd75    welcome.txt
+Administrator@2013-0106-1533 /cygdrive/d/git-exercise
+$ git cat-file -p dc71c5
+Hello
+Nice to meet you
+</pre>
+</div>
+<p>
+可见，更新后的welcome.txt被保存在了tree ID为26675b下面的blob对象中，该blob对象的ID为dc71cd。注意到，commit ID为ed7678的提交同commit ID为1362ae的提交一样，都指向了tree ID为6222d0的树，继续查看该树，
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p 6222d0
+100644 blob e965047ad7c57865823c7d992b1d046ea66edf78    welcome.txt
+$ git cat-file -p e96504
+Hello
+</pre>
+</div>
+</li>
+<li>修改工作区后，尝试使用git checkout恢复
+<div class="org-src-container">
+
+<pre class="src src-git">$ echo "Bye-Bye" &gt;&gt; welcome.txt
+$ git stash apply
+error: Your local changes to the following files would be overwritten by merge:
+       welcome.txt
+Please, commit your changes or stash them before you can merge.
+Aborting
+$ cat welcome.txt
+Hello
+Bye-Bye
+</pre>
+</div>
+<p>
+恢复失败！既然使用git stash保存工作进度时，其实就是创建了一个新的提交（如上面的commit ID: 927dbf）,那么可不可以使用该提交恢复呢？
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git checkout 927dbf welcome.txt
+$ cat welcome.txt
+Hello
+Nice to meet you
+$ git diff
+$ git diff HEAD
+diff --git a/welcome.txt b/welcome.txt
+index e965047..dc71c5d 100644
+--- a/welcome.txt
++++ b/welcome.txt
+@@ -1 +1,2 @@
+ Hello
++Nice to meet you
+</pre>
+</div>
+<p>
+可见，工作区被恢复了，同时也将工作区的改变更新到暂存区了，但版本库没有被更新，这与git checkout [&lt;commit&gt;] &#x2013; path命令的作用是吻合的。
+</p>
+</li>
+<li>修改工作区，并将新的修改提交后，尝试恢复。
+<ul class="org-ul">
+<li>恢复到最初的状态。
+<div class="org-src-container">
+
+<pre class="src src-git">$ git reset --hard 1362ae
+HEAD is now at 1362aed welcome.txt: Hello
+$ cat welcome.txt
+Hello
+</pre>
+</div>
+</li>
+<li>再次开始恢复之旅
+<div class="org-src-container">
+
+<pre class="src src-git">$ echo "Bye-Bye" &gt;&gt; welcome.txt
+$ git stash apply
+error: Your local changes to the following files would be overwritten by merge:
+       welcome.txt
+Please, commit your changes or stash them before you can merge.
+Aborting
+$ git add welcome.txt
+$ git stash apply
+Auto-merging welcome.txt
+CONFLICT (content): Merge conflict in welcome.txt
+$ git commit -m "Bye-Bye"
+U       welcome.txt
+error: 'commit' is not possible because you have unmerged files.
+hint: Fix them up in the work tree,
+hint: and then use 'git add/rm &lt;file&gt;' as
+hint: appropriate to mark resolution and make a commit,
+hint: or use 'git commit -a'.
+fatal: Exiting because of an unresolved conflict.
+</pre>
+</div>
+<p>
+可见，哪怕是在把进度保存后的最新提交了之后，也还是不能使用git stash apply|pop恢复进度，因为这里引入了冲突。
+</p>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-12-2-2" class="outline-4">
+<h4 id="sec-12-2-2"><span class="section-number-4">12.2.2</span> 同时为工作区和暂存区状态保存进度</h4>
+<div class="outline-text-4" id="text-12-2-2">
+<ul class="org-ul">
+<li>修改工作区和暂存区
+<div class="org-src-container">
+
+<pre class="src src-git">$ echo "Bye, Bye" &gt;&gt; welcome.txt
+$ echo "hello, hacker" &gt;&gt; hack-1.txt
+$ git add hack-1.txt
+$ cat welcome.txt
+Hello
+Nice to meet you
+Bye, Bye
+$ cat hack-1.txt
+hello, hacker
+$ cat hack-1.txt
+hello, hacker
+</pre>
+</div>
+</li>
+<li>保存进度
+<div class="org-src-container">
+
+<pre class="src src-git">$ git stash save "WIP:append a line in welcome.txt, index:add a new file hack-1.txt"
+Saved working directory and index state On master: WIP:append a line in welcome.txt, index:add a new file    hack-1.txt
+HEAD is now at 0b9df67 Nice to meet you
+</pre>
+</div>
+</li>
+<li>工作区、暂存区的变化
+<div class="org-src-container">
+
+<pre class="src src-git">$ ls
+welcome.txt
+$ cat welcome.txt
+Hello
+Nice to meet you
+</pre>
+</div>
+<p>
+可见，工作区被重置。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git write-tree
+26675b461c4e320dc98efb1ea8f2c33ddf4aa117
+$ git ls-tree 26675b
+100644 blob dc71c5dca28bb97be915d47ae3549456ef5fdd75    welcome.txt
+</pre>
+</div>
+<p>
+可见，暂存区也被重置。
+</p>
+</li>
+<li>寻找刚才保存的进度
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log --graph --pretty=raw stash
+\*   commit 1a2d7f398a33e3fed3f96c1bbea5d78913b8a1c2
+|\  tree 6ef577094edce68c6a558587994b00eca8a018ee
+| | parent 0b9df67988a5cb0d0f20a5d510b0343559ebcf07
+| | parent e616f66136960582ac783864a350758865ea7ae3
+| | author tech-note &lt;Email Addr&gt; 1361706859 +0800
+| | committer tech-note &lt;Email Addr&gt; 1361706859 +0800
+| |
+| |     On master: WIP:append a line in welcome.txt, index:add a new file hack-1.txt
+| |
+| * commit e616f66136960582ac783864a350758865ea7ae3
+|/  tree bbf4b46eea10a3ddcd628f42a638d49878b11c5e
+|   parent 0b9df67988a5cb0d0f20a5d510b0343559ebcf07
+|   author tech-note &lt;Email Addr&gt; 1361706858 +0800
+|   committer tech-note &lt;Email Addr&gt; 1361706858 +0800
+|
+|       index on master: 0b9df67 Nice to meet you
+|
+\* commit 0b9df67988a5cb0d0f20a5d510b0343559ebcf07
+| tree 26675b461c4e320dc98efb1ea8f2c33ddf4aa117
+| parent 1362aeddba817069ad7116ec3242df84d08dacfb
+| author tech-note &lt;Email Addr&gt; 1361679000 +0800
+| committer tech-note &lt;Email Addr&gt; 1361679000 +0800
+|
+|     Nice to meet you
+|
+\* commit 1362aeddba817069ad7116ec3242df84d08dacfb
+  tree 6222d0694ffcab4de64f6a43d8d480afdecb4d35
+  author tech-note &lt;Email Addr&gt; 1361601028 +0800
+  committer tech-note &lt;Email Addr&gt; 1361601028 +0800
+
+     welcome.txt: Hello
+</pre>
+</div>
+<p>
+上面输出中的index on master:表示该提交代表的是暂存区， On master:表示该提交代表的是工作区。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p bbf4b4
+100644 blob 1d6d547beac3b9fe58ca216ee3cbe3548937efe3    hack-1.txt
+100644 blob dc71c5dca28bb97be915d47ae3549456ef5fdd75    welcome.txt
+$ git cat-file -p 1d6d54
+hello, hacker
+$ git cat-file -p dc71c5
+Hello
+Nice to meet you
+$ git cat-file -p 26675b
+100644 blob dc71c5dca28bb97be915d47ae3549456ef5fdd75    welcome.txt
+</pre>
+</div>
+<p>
+可见，tree ID为bbf4b4的树下有两个blob对象，其中，commit ID为1d6d54的blob对象中保存的正好是暂存区刚更新的内容，而另一个blob对象的commit ID为1d6d54，正好等同于tree ID为26675b的树下的welcome.txt的commit ID，这是因为暂存区的welcome.txt没有更新。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git cat-file -p 6ef577
+100644 blob 1d6d547beac3b9fe58ca216ee3cbe3548937efe3    hack-1.txt
+100644 blob b4c6a5378547e7ab0831a360cf27ad2dba3e91a4    welco me.txt
+$ git cat-file -p 1d6d54
+hello, hacker
+$ git cat-file -p b4c6a5
+Hello
+Nice to meet you
+Bye, Bye
+</pre>
+</div>
+<p>
+可见，tree ID为6ef577的树下有两个blob对象，其中，hack-1.txt的commit ID和上面我们看到的该文件在暂存区中的commit ID一样，welcome.txt的commit ID不再和我们上面看到的一样了，因为这里的welcome.txt记录了我们在工作区中修改的welcome.txt的内容。
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-13" class="outline-2">
+<h2 id="sec-13"><span class="section-number-2">13</span> 文件追溯</h2>
+<div class="outline-text-2" id="text-13">
+<div class="org-src-container">
+
+<pre class="src src-git">$ cat welcome.txt
+hello.
+$ echo "Nice " &gt;&gt; welcome.txt
+$ git add .
+$ git commit -m "Nice"
+$ echo "bye" &gt;&gt; welcome.txt
+$ git add .
+$ echo "end" &gt;&gt; welcome.txt
+$ git blame welcome.txt
+^6575a00 (tech-note         2013-02-19 12:57:07 +0800 1) hello.
+5ff0e5cb (tech-note         2013-02-26 08:12:47 +0800 2) Nice
+00000000 (Not Committed Yet 2013-02-26 08:13:35 +0800 3) bye
+00000000 (Not Committed Yet 2013-02-26 08:13:35 +0800 4) end
+$ git blame -L 2,+3 welcome.txt
+5ff0e5cb (tech-note         2013-02-26 08:12:47 +0800 2) Nice
+00000000 (Not Committed Yet 2013-02-26 08:20:04 +0800 3) bye
+00000000 (Not Committed Yet 2013-02-26 08:20:04 +0800 4) end
+</pre>
+</div>
+<p>
+<code>git blame</code>, 逐行显示文件，指明每行最早是在什么版本中引入的，由谁引入，时间，行号。也可以只关注某些行。
+</p>
+</div>
+</div>
+
+
+<div id="outline-container-sec-14" class="outline-2">
+<h2 id="sec-14"><span class="section-number-2">14</span> 二分查找</h2>
+<div class="outline-text-2" id="text-14">
+<p>
+用途：利用二分法在没有问题的“好版本”和有问题的“坏版本”之间查找是哪一个版本引入了问题。
+</p>
+
+<p>
+相关命令有：
+</p>
+</div>
+<div id="outline-container-sec-14-1" class="outline-3">
+<h3 id="sec-14-1"><span class="section-number-3">14.1</span> 手动进行</h3>
+<div class="outline-text-3" id="text-14-1">
+<ul class="org-ul">
+<li><code>git bisect start</code>
+</li>
+<li><code>git bisect bad HEAD</code>
+
+<p>
+将当前版本标记为“提交”
+</p>
+</li>
+<li><code>git bisect good &lt;commit&gt;</code>
+
+<p>
+标记一个坏版本， 并按二分查找自动切换到需要验证的下一个提交
+</p>
+</li>
+<li><code>git bisect &lt;good|bad&gt;</code>
+
+<p>
+将新的当前版本标记为“好提交”或“坏提交”，并按二分查找自动切换到需要验证的下一个提交 
+</p>
+
+<p>
+继续迭代执行这一步，直到打印出提示：”&lt;commit ID&gt; is the first bad commit”。
+</p>
+</li>
+<li><code>git checkout bisect/bad</code>
+
+<p>
+切换到最终找到的“坏提交”，然后进行修改
+</p>
+</li>
+<li><code>git bisect reset</code>
+
+<p>
+撤销二分查找产生的临时文件和引用，并将版本库切换回查找之前所在的分支
+</p>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-14-2" class="outline-3">
+<h3 id="sec-14-2"><span class="section-number-3">14.2</span> 自动进行</h3>
+<div class="outline-text-3" id="text-14-2">
+<ul class="org-ul">
+<li>测试脚本 <code>good-or-bad.sh</code>
+<div class="org-src-container">
+
+<pre class="src src-sh"><span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">!/bin/</span><span style="color: #F0DFAF; font-weight: bold;">sh</span>
+[ -f doc/B.txt ] &amp;&amp; <span style="color: #F0DFAF; font-weight: bold;">exit</span> 1
+<span style="color: #F0DFAF; font-weight: bold;">exit</span> 0
+</pre>
+</div>
+<p>
+文件B.txt存在返回错误码1，否则返回0
+</p>
+</li>
+<li><code>git bisect start master &lt;bad commit&gt;</code>
+
+<p>
+从已知的“坏提交”master和“好提交”&lt;bad commit&gt;开始
+</p>
+</li>
+<li><code>git bisect run sh good-or-bad.sh</code>
+</li>
+<li><code>git bisect describe refs/bisect/bad</code>
+
+<p>
+打印出最终定位到的“坏提交”
+</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:38</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

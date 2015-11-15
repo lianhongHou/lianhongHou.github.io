@@ -1,0 +1,579 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Cucumber 实例</title>
+<!-- 2015-11-15 Sun 16:33 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Cucumber 实例</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 创建feature文件</a></li>
+<li><a href="#sec-2">2. 创建step definition文件</a>
+<ul>
+<li><a href="#sec-2-1">2.1. Transform</a></li>
+<li><a href="#sec-2-2">2.2. 为World添加ruby自定义方法</a></li>
+<li><a href="#sec-2-3">2.3. 组织代码</a>
+<ul>
+<li><a href="#sec-2-3-1">2.3.1. 剥离ruby代码</a></li>
+<li><a href="#sec-2-3-2">2.3.2. 剥离Transform</a></li>
+<li><a href="#sec-2-3-3">2.3.3. 剥离World Module</a></li>
+<li><a href="#sec-2-3-4">2.3.4. 分离step defination</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 创建feature文件</h2>
+<div class="outline-text-2" id="text-1">
+<div class="org-src-container">
+
+<pre class="src src-sh">$ cd ./cucumber-exercise/
+$ cucumber
+You don<span style="color: #CC9393;">'t have a '</span>features<span style="color: #CC9393;">' directory.  Please create one to get started.</span>
+<span style="color: #CC9393;">See http://cukes.info/ for more information.</span>
+</pre>
+</div>
+<p>
+依照提示，需要建立目录features
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">$ mkdir features
+$ cucumber
+0 scenarios
+0 steps
+0m0.000s
+</pre>
+</div>
+<p>
+建立一个文件./features/cash\<sub>withdrawal</sub>.feature, 内容为:
+</p>
+<div class="org-src-container">
+
+<pre class="src src-cucumber">Feature: Cash Withdrawal
+  Scenario: Successful withdrawal from an account in credit
+    Given I have deposited $100 in my account
+    When I request $20  
+    Then $20 should be dispensed
+</pre>
+</div>
+<p>
+cucumber关键字，
+</p>
+<ul class="org-ul">
+<li>Feature, 可从下一行开始添加对Feature的说明文字，直到遇到其他的cucumber关键字。
+</li>
+<li>Scenario, 说明文字的添加。一个Feature可包含多个Scenario,每个Scenario运行时，都会自动创建一个World，World是Scenario中每个step的运行环境，相当于包含了该Scenario所有方法的一个ruby类。
+</li>
+<li>step, 一个Scenario包含多个step,需要为每个step都定义step defination。
+<ul class="org-ul">
+<li>Given
+</li>
+<li>When
+</li>
+<li>Then
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 创建step definition文件</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+在./features目录，建立文件夹step-definations(可改)。cucumber默认会在./feature目录下搜寻匹配的step definition。
+</p>
+
+<p>
+创建Ruby脚本文件./features/step-definations/steps.rb,内容：
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #7CB8BB;">Given</span> <span style="color: #CC9393;">/^I have deposited \$(\d+) in my account$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |arg1|
+  pending <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">express the regexp above with the code you wish you had</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">When</span> <span style="color: #CC9393;">/^I request \$(\d+)$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |arg1|
+  pending <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">express the regexp above with the code you wish you had</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Then</span> <span style="color: #CC9393;">/^\$(\d+) should be dispensed$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |arg1|
+  pending <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">express the regexp above with the code you wish you had</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+<p>
+脚本文件中，使用正则表达式来匹配feature文件中对应关键字后面的字符串（自动过滤掉开始和结尾的空白字符），正则表达式的括弧用于提取原字符串中字符，用以作为函数定义的实参。 
+添加实际功能。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Account</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">deposit</span>(amount)
+    <span style="color: #DFAF8F;">@balance</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">balance</span>
+    <span style="color: #DFAF8F;">@balance</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Teller</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">initialize</span>(cash_slot)
+    <span style="color: #DFAF8F;">@cash_slot</span> = cash_slot
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">withdraw_from</span>(account, amount)
+    <span style="color: #DFAF8F;">@cash_slot</span>.dispense(amount)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">CashSlot</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">contents</span>
+    <span style="color: #DFAF8F;">@contents</span> <span style="color: #F0DFAF; font-weight: bold;">or</span> <span style="color: #DCDCCC; font-weight: bold;">raise</span>(<span style="color: #CC9393;">"I'm empty!"</span>)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">dispense</span>(amount)
+    <span style="color: #DFAF8F;">@contents</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Given</span> <span style="color: #CC9393;">/^I have deposited \$(\d+) in my account$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@my_account</span> = <span style="color: #7CB8BB;">Account</span>.new
+  <span style="color: #DFAF8F;">@my_account</span>.deposit(amount.to_i)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">When</span> <span style="color: #CC9393;">/^I request \$(\d+)$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@cash_slot</span> = <span style="color: #7CB8BB;">CashSlot</span>.new
+  teller = <span style="color: #7CB8BB;">Teller</span>.new(<span style="color: #DFAF8F;">@cash_slot</span>)
+  teller.withdraw_from(<span style="color: #DFAF8F;">@my_account</span>, amount.to_i)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Then</span> <span style="color: #CC9393;">/^\$(\d+) should be dispensed$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@cash_slot</span>.contents.should == amount.to_i
+</pre>
+</div>
+</div>
+<div id="outline-container-sec-2-1" class="outline-3">
+<h3 id="sec-2-1"><span class="section-number-3">2.1</span> Transform</h3>
+<div class="outline-text-3" id="text-2-1">
+<p>
+上述代码，多次将匹配的参数由字符串转换为整型，即多次使用方法amount.to\<sub>i。cucumber方法Transform用于去除这些累赘。Transform之后的结果：</sub>
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Account</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">deposit</span>(amount)
+    <span style="color: #DFAF8F;">@balance</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">balance</span>
+    <span style="color: #DFAF8F;">@balance</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Teller</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">initialize</span>(cash_slot)
+    <span style="color: #DFAF8F;">@cash_slot</span> = cash_slot
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">withdraw_from</span>(account, amount)
+    <span style="color: #DFAF8F;">@cash_slot</span>.dispense(amount)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">CashSlot</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">contents</span>
+    <span style="color: #DFAF8F;">@contents</span> <span style="color: #F0DFAF; font-weight: bold;">or</span> <span style="color: #DCDCCC; font-weight: bold;">raise</span>(<span style="color: #CC9393;">"I'm empty!"</span>)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">dispense</span>(amount)
+    <span style="color: #DFAF8F;">@contents</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">CAPTURE_NUMBER</span> = <span style="color: #7CB8BB;">Transform</span> /^\d+<span style="color: #DCDCCC; font-weight: bold;">$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |str|
+  str.to_i
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Given</span> <span style="color: #CC9393;">/^I have deposited \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) in my account$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@my_account</span> = <span style="color: #7CB8BB;">Account</span>.new
+  <span style="color: #DFAF8F;">@my_account</span>.deposit(amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">When</span> <span style="color: #CC9393;">/^I request \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">)$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@cash_slot</span> = <span style="color: #7CB8BB;">CashSlot</span>.new
+  teller = <span style="color: #7CB8BB;">Teller</span>.new(<span style="color: #DFAF8F;">@cash_slot</span>)
+  teller.withdraw_from(<span style="color: #DFAF8F;">@my_account</span>, amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Then</span> <span style="color: #CC9393;">/^\$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) should be dispensed$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #DFAF8F;">@cash_slot</span>.contents.should == amount
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+<p>
+在为feature中的step匹配step defination过程中，会检查是否有匹配的Transform，有的话，会返回Transform执行后的结果，这里将该结果给了代码块作为形参amount。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-2" class="outline-3">
+<h3 id="sec-2-2"><span class="section-number-3">2.2</span> 为World添加ruby自定义方法</h3>
+<div class="outline-text-3" id="text-2-2">
+<p>
+再一次说明，World是Scenario的运行环境，可理解为一个ruby类，其中包括了该Scenario所有方法（包括step defination）及类变量等。每个World都是因某个Scenario 而生，随着这个Scenario而亡。
+</p>
+
+<p>
+为了为World添加ruby自定义方法，需要定义一个ruby module（如，KnowsTheDomain），然后，使用cucumber的方法World将该ruby module混入World。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Account</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">deposit</span>(amount)
+    <span style="color: #DFAF8F;">@balance</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">balance</span>
+    <span style="color: #DFAF8F;">@balance</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">Teller</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">initialize</span>(cash_slot)
+    <span style="color: #DFAF8F;">@cash_slot</span> = cash_slot
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">withdraw_from</span>(account, amount)
+    <span style="color: #DFAF8F;">@cash_slot</span>.dispense(amount)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">CashSlot</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">contents</span>
+    <span style="color: #DFAF8F;">@contents</span> <span style="color: #F0DFAF; font-weight: bold;">or</span> <span style="color: #DCDCCC; font-weight: bold;">raise</span>(<span style="color: #CC9393;">"I'm empty!"</span>)
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">dispense</span>(amount)
+    <span style="color: #DFAF8F;">@contents</span> = amount
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">CAPTURE_NUMBER</span> = <span style="color: #7CB8BB;">Transform</span> /^\d+<span style="color: #DCDCCC; font-weight: bold;">$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |str|
+  str.to_i
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">module</span> <span style="color: #7CB8BB;">KnowsTheDomain</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">my_account</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">Using ||= ensures that the new Account will be created only once,</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">even though method my_account is called serveral times here. </span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "cash_slot"</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "my_account"</span>
+    <span style="color: #DFAF8F;">@my_account</span> ||= <span style="color: #7CB8BB;">Account</span>.new
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">teller</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "teller"</span>
+    <span style="color: #DFAF8F;">@teller</span> ||= <span style="color: #7CB8BB;">Teller</span>.new(cash_slot) <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">call module's method "cash_slot"</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">cash_slot</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "cash_slot"</span>
+    <span style="color: #DFAF8F;">@cash_slot</span> ||= <span style="color: #7CB8BB;">CashSlot</span>.new
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+World(<span style="color: #7CB8BB;">KnowsTheDomain</span>)
+
+<span style="color: #7CB8BB;">Given</span> <span style="color: #CC9393;">/^I have deposited \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) in my account$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts self #discover all modules mixed into this "World"</span>
+  my_account.deposit(amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">When</span> <span style="color: #CC9393;">/^I request \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">)$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  teller.withdraw_from(my_account, amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+<span style="color: #7CB8BB;">Then</span> <span style="color: #CC9393;">/^\$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) should be dispensed$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  cash_slot.contents.should == amount
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3" class="outline-3">
+<h3 id="sec-2-3"><span class="section-number-3">2.3</span> 组织代码</h3>
+<div class="outline-text-3" id="text-2-3">
+</div><div id="outline-container-sec-2-3-1" class="outline-4">
+<h4 id="sec-2-3-1"><span class="section-number-4">2.3.1</span> 剥离ruby代码</h4>
+<div class="outline-text-4" id="text-2-3-1">
+<p>
+将三个类剪切到新创建的./features/../nice\<sub>bank</sub>.rb中，然后，
+</p>
+<ul class="org-ul">
+<li>在./features/steps.rb中添加：
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">require File.join(File.dirname(__FILE__), <span style="color: #CC9393;">'..'</span>, <span style="color: #CC9393;">'..'</span>, <span style="color: #CC9393;">'lib'</span>, <span style="color: #CC9393;">'nice_bank'</span>)
+</pre>
+</div>
+<ul class="org-ul">
+<li>./features/support 
+</li>
+</ul>
+<p>
+当cucumber开始运行一个feature，会在加载step defination之前，把./features/support目录下的所有ruby文件都加载（注意，这些ruby文件之间不应该有依赖关系）。有一点需注意，./features/support/env.rb总是第一个被加载进去。 
+这里，可以将
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #DCDCCC; font-weight: bold;">require</span> <span style="color: #7CB8BB;">File</span>.join(<span style="color: #7CB8BB;">File</span>.dirname(<span style="color: #DCDCCC; font-weight: bold;">__FILE__</span>), <span style="color: #CC9393;">'..'</span>, <span style="color: #CC9393;">'..'</span>, <span style="color: #CC9393;">'lib'</span>, <span style="color: #CC9393;">'nice_bank'</span>)
+</pre>
+</div>
+<p>
+放入./features/support/env.rb。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2-3-2" class="outline-4">
+<h4 id="sec-2-3-2"><span class="section-number-4">2.3.2</span> 剥离Transform</h4>
+<div class="outline-text-4" id="text-2-3-2">
+<p>
+将以下代码从./features/steps.rb中剪切到新建的./features/support/transform.rb中。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #7CB8BB;">CAPTURE_NUMBER</span> = <span style="color: #7CB8BB;">Transform</span> /^\d+<span style="color: #DCDCCC; font-weight: bold;">$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |str|
+  str.to_i
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3-3" class="outline-4">
+<h4 id="sec-2-3-3"><span class="section-number-4">2.3.3</span> 剥离World Module</h4>
+<div class="outline-text-4" id="text-2-3-3">
+<p>
+将以下代码从./features/steps.rb中剪切到新建的./features/support/world<sub>extentions</sub>.rb中。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #F0DFAF; font-weight: bold;">module</span> <span style="color: #7CB8BB;">KnowsTheDomain</span>
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">my_account</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">Using ||= ensures that the new Account will be created only once,</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">even though method my_account is called serveral times here. </span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "cash_slot"</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "my_account"</span>
+    <span style="color: #DFAF8F;">@my_account</span> ||= <span style="color: #7CB8BB;">Account</span>.new
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">teller</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "teller"</span>
+    <span style="color: #DFAF8F;">@teller</span> ||= <span style="color: #7CB8BB;">Teller</span>.new(cash_slot) <span style="color: #5F7F5F;">#</span><span style="color: #7F9F7F;">call module's method "cash_slot"</span>
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+  <span style="color: #F0DFAF; font-weight: bold;">def</span> <span style="color: #93E0E3;">cash_slot</span>
+    <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts "cash_slot"</span>
+    <span style="color: #DFAF8F;">@cash_slot</span> ||= <span style="color: #7CB8BB;">CashSlot</span>.new
+  <span style="color: #F0DFAF; font-weight: bold;">end</span>
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+
+World(<span style="color: #7CB8BB;">KnowsTheDomain</span>)
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2-3-4" class="outline-4">
+<h4 id="sec-2-3-4"><span class="section-number-4">2.3.4</span> 分离step defination</h4>
+<div class="outline-text-4" id="text-2-3-4">
+<p>
+最好是将众多的step defination以实体(domain entity)为单位分别放到不同的文件中。这里，将用以下3个文件替代./features/steps.rb。
+</p>
+<ul class="org-ul">
+<li>./features/step\<sub>definitions</sub>/account\<sub>steps</sub>.rb
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #7CB8BB;">Given</span> <span style="color: #CC9393;">/^I have deposited \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) in my account$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">puts self #discover all modules mixed into this "World"</span>
+  my_account.deposit(amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+<ul class="org-ul">
+<li>./features/step\<sub>definitions</sub>/teller\<sub>steps</sub>.rb
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #7CB8BB;">When</span> <span style="color: #CC9393;">/^I request \$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">)$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  teller.withdraw_from(my_account, amount)
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+<ul class="org-ul">
+<li>./features/step\<sub>definitions</sub>/cash\<sub>slot\</sub><sub>steps</sub>.rb
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-ruby"><span style="color: #7CB8BB;">Then</span> <span style="color: #CC9393;">/^\$(</span><span style="color: #DFAF8F;">#{CAPTURE_NUMBER}</span><span style="color: #CC9393;">) should be dispensed$/</span> <span style="color: #F0DFAF; font-weight: bold;">do</span> |amount|
+  cash_slot.contents.should == amount
+<span style="color: #F0DFAF; font-weight: bold;">end</span>
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 16:33</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

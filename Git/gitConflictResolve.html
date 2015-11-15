@@ -1,0 +1,492 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<title>Git冲突解决</title>
+<!-- 2015-11-15 Sun 15:49 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Git冲突解决</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. 自动合并</a>
+<ul>
+<li><a href="#sec-1-1">1.1. 修改不同的文件</a></li>
+<li><a href="#sec-1-2">1.2. 修改相同文件的不同部分</a></li>
+<li><a href="#sec-1-3">1.3. 同时更改文件名及其内容</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. 冲突合并</a></li>
+<li><a href="#sec-3">3. 树合并</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> 自动合并</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> 修改不同的文件</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+参考博文<a href="http://tech-note.github.com/blog/2013/02/28/git-user-cooperation/">git用户协作</a>
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> 修改相同文件的不同部分</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+略
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> 同时更改文件名及其内容</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+如果一个用户将某文件改名或移动到其他目录，另外一个用户针对被重命名前的文件进行了修改，git还是能自动解决冲突、并实现合并的。
+</p>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> 冲突合并</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+若两个用户修改了同一文件的同一区域，则git不能完成自动合并。这种情况下，git pull在完成git fetch的操作后，也会在执行git merge时失败中断的。 
+最好的解决办法是使用图形工具解决冲突。这里使用了kdiff3。 
+安装配置过程如下，
+</p>
+<ul class="org-ul">
+<li>下载<a href="http://sourceforge.net/projects/kdiff3/">kdiff3</a>
+</li>
+<li>安装：一路回车
+</li>
+<li>为git指定kdiff3作为merge工具，在全局配置文件（git config -e &#x2013;global）中，添加
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">[merge]
+        tool = kdiff3
+[mergetool <span style="color: #CC9393;">"kdiff3"</span>]
+        path = C:/Program Files/KDiff3/kdiff3.exe
+        keepBackup = false
+        trustExitCode = false
+</pre>
+</div>
+<ul class="org-ul">
+<li>使用kdiff3进行merge的命令是git mergetool，之后，需要执行git commit和git push操作。
+</li>
+<li>也可将kdiff3作为比较工具使用，需要在全局配置文件中，添加
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-sh">[diff]
+        tool = kdiff3
+[difftool <span style="color: #CC9393;">"kdiff3"</span>]
+        path = C:/Program Files/KDiff3/kdiff3.exe
+        keepBackup = false
+        trustExitCode = false
+</pre>
+</div>
+<ul class="org-ul">
+<li>使用kdiff3作比较的命令，如git difftool -y, git difftool -v HEAD
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> 树合并</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+当两个用户为同一个文件更名时，git是无法对这两个用户的提交进行合并的，这种冲突称为树冲突。 
+</p>
+
+<p>
+树冲突是不能使用图形化的工具解决的，可以通过git mergetool以命令行交互式的方法解决。下面介绍个例子。 
+</p>
+
+<p>
+先进行一些准备工作,初始化一个裸版本库（git-share.git），及两个用户工作目录（git-user1,git-user2），并通过git-user1向其中添加了一个文件（README）,供我们随后使用。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git init --bare git-share.git
+Initialized empty Git repository in c:/Documents and Settings/lhou/git-share.git/
+$ git clone ./git-share.git git-user1
+Cloning into 'git-user1'...
+warning: You appear to have cloned an empty repository.
+done.
+$ git clone ./git-share.git git-user2
+Cloning into 'git-user2'...
+warning: You appear to have cloned an empty repository.
+done.
+$ cd ./git-user1/
+$ echo hello &gt; README
+$ git add .
+$ git commit -m "initialize"
+[master (root-commit) 4942175] initialize
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README
+$ git push origin master
+Counting objects: 3, done.
+Writing objects: 100% (3/3), 219 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To c:/Documents and Settings/lhou/./git-share.git
+ * [new branch]      master -&gt; master
+$ cd ../git-user2/
+$ git pull
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (3/3), done.
+From c:/Documents and Settings/lhou/./git-share
+ * [new branch]      master     -&gt; origin/master
+</pre>
+</div>
+<p>
+先由git-user2进行改名
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ pwd
+/c/Documents and Settings/lhou/git-user2
+$ git mv README user2
+$ git commit -m "README-&gt;user2"
+[master 7bd2b3c] README-&gt;user2
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename README =&gt; user2 (100%)
+$ git push
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+Counting objects: 3, done.
+Writing objects: 100% (2/2), 240 bytes, done.
+Total 2 (delta 0), reused 0 (delta 0)
+To c:/Documents and Settings/lhou/./git-share.git
+   4942175..7bd2b3c  master -&gt; master
+</pre>
+</div>
+<p>
+改名成功，下面git-user1开始改名
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ cd ../git-user1/
+$ git ls-tree HEAD
+100644 blob ce013625030ba8dba906f756967f9e9ca394464a    README
+$ git mv README user1
+$ git commit -m "README-&gt;user1"
+[master b35daac] README-&gt;user1
+ 1 file changed, 0 insertions(+), 0 deletions(-)
+ rename README =&gt; user1 (100%)
+$ git push
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+To c:/Documents and Settings/lhou/./git-share.git
+ ! [rejected]        master -&gt; master (non-fast-forward)
+error: failed to push some refs to 'c:/Documents and Settings/lhou/./git-share.g
+it'
+hint: Updates were rejected because the tip of your current branch is behind
+hint: its remote counterpart. Merge the remote changes (e.g. 'git pull')
+hint: before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+</pre>
+</div>
+<p>
+改名失败了！ 提示说，这里的git push是<a href="http://tech-note.github.com/blog/2013/02/28/git-user-cooperation/">非快进式推送</a>, 应该先执行git pull。好，那就先执行git pull。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git pull
+remote: Counting objects: 3, done.
+remote: Total 2 (delta 0), reused 0 (delta 0)
+Unpacking objects: 100% (2/2), done.
+From c:/Documents and Settings/lhou/./git-share
+   4942175..7bd2b3c  master     -&gt; origin/master
+CONFLICT (rename/rename): Rename "README"-&gt;"user1" in branch "HEAD" rename "README"-&gt;"user2" in "7bd2b3c3ca452085aefe8702e4bfb398711aba79"
+Automatic merge failed; fix conflicts and then commit the result.
+</pre>
+</div>
+<p>
+可见，git pull已完成git fetch的工作，但是执行git merge工作时失败了！直到这时就可以开始使用git mergetool交互式的解决树冲突了！
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git mergetool
+Merging:
+README
+user1
+user2
+
+mv: cannot stat `README': No such file or directory
+cp: cannot stat `./README.BACKUP.8036': No such file or directory
+Deleted merge conflict for 'README':
+  {local}: deleted
+  {remote}: deleted
+Use (m)odified or (d)eleted file, or (a)bort? d
+</pre>
+</div>
+<p>
+这里，选择d回车，表示删除文件README。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">Deleted merge conflict for <span style="color: #CC9393;">'user1'</span>:
+  {local}: created file
+  {remote}: deleted
+<span style="color: #93E0E3;">Use</span> (c)reated or (d)eleted file, or (a)bort? c
+</pre>
+</div>
+<p>
+这里，选择c回车，表示创建文件user1，让我们的这次改名成功，覆盖之前的git-user2改名。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-sh">Deleted merge conflict for <span style="color: #CC9393;">'user2'</span>:
+  {local}: deleted
+  {remote}: created file
+<span style="color: #93E0E3;">Use</span> (c)reated or (d)eleted file, or (a)bort? d
+</pre>
+</div>
+<p>
+这里，选择d回车，表示删除文件user2。 
+</p>
+
+<p>
+整个交互过程可见
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git mergetool
+Merging:
+README
+user1
+user2
+
+mv: cannot stat `README': No such file or directory
+cp: cannot stat `./README.BACKUP.8036': No such file or directory
+Deleted merge conflict for 'README':
+  {local}: deleted
+  {remote}: deleted
+Use (m)odified or (d)eleted file, or (a)bort? d
+
+Deleted merge conflict for 'user1':
+  {local}: created file
+  {remote}: deleted
+Use (c)reated or (d)eleted file, or (a)bort? c
+
+Deleted merge conflict for 'user2':
+  {local}: deleted
+  {remote}: created file
+Use (c)reated or (d)eleted file, or (a)bort? d
+</pre>
+</div>
+<p>
+查看状态，发现除了尚未清理的临时文件，已没冲突了！
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git status -s
+?? user1.orig
+</pre>
+</div>
+<p>
+下面提交，并推送到共享的裸版本库。
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git commit -m "fix tree conflict"
+[master c5b59d4] fix tree conflict
+$ git push
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+Counting objects: 5, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (2/2), done.
+Writing objects: 100% (3/3), 362 bytes, done.
+Total 3 (delta 1), reused 0 (delta 0)
+To c:/Documents and Settings/lhou/./git-share.git
+   7bd2b3c..c5b59d4  master -&gt; master
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 15:49</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

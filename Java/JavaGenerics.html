@@ -1,0 +1,523 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Java Generics</title>
+<!-- 2015-11-14 Sat 20:52 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Java Generics</h1>
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Declarations</a>
+<ul>
+<li><a href="#sec-1-1">1.1. Constructors</a></li>
+<li><a href="#sec-1-2">1.2. Static Members</a></li>
+<li><a href="#sec-1-3">1.3. Nested Classes</a></li>
+</ul>
+</li>
+<li><a href="#sec-2">2. Type Parameters</a></li>
+<li><a href="#sec-3">3. Wildcards</a></li>
+<li><a href="#sec-4">4. Erasure</a></li>
+<li><a href="#sec-5">5. Overloading Methods</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Declarations</h2>
+<div class="outline-text-2" id="text-1">
+</div><div id="outline-container-sec-1-1" class="outline-3">
+<h3 id="sec-1-1"><span class="section-number-3">1.1</span> Constructors</h3>
+<div class="outline-text-3" id="text-1-1">
+<p>
+Type parameters are declared in the header of the class, not in the constructors, however, actual type parameters are 
+passed to the constructors whenever it is invoked.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-2" class="outline-3">
+<h3 id="sec-1-2"><span class="section-number-3">1.2</span> Static Members</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+Because of <i>erasure</i>, static members of a generic class are shared across all instatiations of that class, including 
+instantiations at different types. Static members of a class cannot refer to the type parameter of a generic class, 
+and when acessing a static member the class name should not be parameterized.
+</p>
+</div>
+</div>
+<div id="outline-container-sec-1-3" class="outline-3">
+<h3 id="sec-1-3"><span class="section-number-3">1.3</span> Nested Classes</h3>
+<div class="outline-text-3" id="text-1-3">
+<p>
+If the outer class has type parameters and the inner class is not static, then type parameters of the outer class 
+are visible whithin the inner class.
+</p>
+
+<p>
+Any parameterized types that a class (or interface) extends (or implements) must be concrete types in which the 
+immediate type argument is not a wildcard. Example, you cannot define a class that implements <code>List&lt;?&gt;</code>, but the 
+class can implement <code>List&lt;List&lt;?&gt;&gt;</code>.
+</p>
+
+<p>
+you can extend a non-generic type to produce either a generic or non-generic subtype. You can extend a generic type to produce 
+a generic type. You can extend a specific parameterized type to yield a non-generic subtype.
+</p>
+</div>
+</div>
+</div>
+
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> Type Parameters</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+You can declare a generic method by defining type variables between the method modifiers and the method return 
+type, much as you would declare type variables for a generic class or interface. To call a generic method, you can 
+place the actual types, enclosed in angle brackets, just before the method name.
+</p>
+
+<p>
+Working with a generic class, you must specify the type parameters when you instantiate the class, but working with 
+a generic method, you do not usually have to specify the parameter types. The way to specify the type in a generic 
+method is placing the type in angle brackets after the dot and immediately preceding the method name.
+</p>
+
+<p>
+A nested type(including anonymous inner classes) can also be declared as a generic type with its own type variables. 
+Type variables in a static nested type is distinct from any type variables in the enclosing type, even if they have 
+the same name.
+</p>
+
+<p>
+If the nested type is an inner class, then the type variables of the enclosing class declaration are accessible to 
+it and can be used directly. A type variable in the inner class can hide any type variables with the same name in 
+the enclosing class.
+</p>
+
+<p>
+As with inner generic types, if a generic method declares a type variable of the same name as that of a type variable 
+in the method's class or interface, the outer name is hidden.
+</p>
+
+<p>
+Within a generic class defination, a type parameter can appear in any non-static declaration, like a field 
+declaration, a method return type or paramter type declaration, a local variable declaration, or a nested type 
+declaration. Type parameters cannot be intstantiated with primitive types.
+</p>
+
+<p>
+The keyword <code>extends</code> is used in bounded type paramters to mean either "extends" or "implements". A type bound can 
+extends one class or interface followed by an <i>&amp;</i> separated list of additional interfaces. Considering the type
+variables are erased and replaced by their first bounding type(or <code>Object</code> for variables without bounds), you 
+should place the class bounding type as the first one in the bounds list, also should put marker interfaces
+(interfaces without methods) at the end of thr bounds list.
+</p>
+
+<p>
+Unlike wildcards, type variables must always be bounded using <i>extends</i>, never <i>super</i>.
+</p>
+
+<p>
+<code>List&lt;Integer&gt;</code> is not subtype of <code>List&lt;Number&gt;</code>, not subtype of Collection&lt;Number&gt;, but subtype of Collection&lt;Integer&gt;. 
+It is always ok to convert a parameterized type to a raw type. 
+</p>
+</div>
+</div>
+
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Wildcards</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+<code>The wildcard in =? extends Employee</code> is restricted to subclass of <code>Employee</code>, whereas the wildcard in 
+<code>? super Manager</code> is restricted to supertypes of <code>Manager</code>. 
+</p>
+
+<p>
+Unlike a bounded type variable, a bounded wildcard(use type argument wildcard <i>?</i>) can have only a single bound 
+type either an upper bound or a lower bound. Example, you can not say =List&lt;? extends Value&amp;Serializable&gt;. 
+</p>
+
+<p>
+<code>List&lt;?&gt;</code> is not <code>List&lt;Object&gt;</code>, but <code>List&lt;? extends Object&gt;</code>.
+</p>
+
+<p>
+Unbounded wildcards is wildcards without bounds, like <code>Pair&lt;?&gt;</code>, it has two methods: <code>? getFirst()</code> and <code>void setFirst(?)</code>. 
+The return value of <code>? getFirst()</code> can only be assigned to an <code>Object</code>, the <code>void setFirst(?)</code> can never be 
+called, not even with an <code>Object</code>.
+</p>
+
+<p>
+In contrast to the non-wildcard versions, parameterized types that include a bounded wildcard are related in 
+the way you might have expected. Example, <code>List&lt;? extends Integer&gt;</code> is subtype of <code>List&lt;? extends Number&gt;</code>, 
+which is subtype of <code>List&lt;?&gt;</code>; <code>List&lt;? super Number&gt;</code> is a subtype of <code>List&lt;? super Integer&gt;</code>. In addition, 
+non-wildcard parameterized types are subtype of suitably bounded, wildcard parameterized types. Example, 
+both <code>List&lt;Integer&gt;</code> and <code>List&lt;Number&gt;</code> are subtype of <code>List&lt;? extends Number&gt;</code>.
+</p>
+
+<p>
+Typically, parameters use lower-bounded wildcards, while return values use upper bounded wildcards. If there is a 
+constraint between a parameter type and the return type, it may not be possible to use a wildcard.
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">Manager</span>&gt; <span style="color: #DFAF8F;">ma</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">Manager</span>&gt;();
+<span style="color: #7CB8BB;">ArrayList</span>&lt;? <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Employee</span>&gt; <span style="color: #DFAF8F;">ea</span> = ma;
+
+ma.add(<span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Manager</span>());
+
+ea.get(0);
+ea.set(0, <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">Manager</span>()); <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">error: no suitable method found for set(int,Manager)</span>
+</pre>
+</div>
+
+<p>
+Since wildcard represents an unknown type, you cannot do anything that requires the type to be known. 
+ wildcard should not appear at the <i>top level</i> in instance creation expression(new), in explicit type parameters 
+in generic method calls, or in supertypes(<code>extends</code> and <code>implements</code>). Example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">LinkedList</span>&lt;?&gt; <span style="color: #DFAF8F;">s</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">LinkedList</span>&lt;<span style="color: #7CB8BB;">String</span>&gt;();
+s.add(<span style="color: #CC9393;">"hello"</span>); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">comppile error</span>
+
+<span style="color: #7CB8BB;">LinkedList</span>&lt;? <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">Number</span>&gt; <span style="color: #DFAF8F;">n</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">LinkedList</span>&lt;<span style="color: #7CB8BB;">Number</span>&gt;();
+n.add(25);  <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">commpile error</span>
+
+<span style="color: #7CB8BB;">List</span>&lt;?&gt; <span style="color: #DFAF8F;">list</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;?&gt;(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">Compile error</span>
+<span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">List</span>&lt;?&gt;&gt; <span style="color: #DFAF8F;">lists</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">List</span>&lt;?&gt;&gt;(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ok</span>
+
+<span style="color: #7CB8BB;">List</span>&lt;?&gt; <span style="color: #DFAF8F;">list</span> = Lists.&lt;?&gt;factory(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">error</span>
+<span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">List</span>&lt;?&gt;&gt; <span style="color: #DFAF8F;">list</span> = Lists.&lt;<span style="color: #7CB8BB;">List</span>&lt;?&gt;&gt;factory(); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">ok</span>
+
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">AnyList</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;?&gt; {} <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">error</span>
+<span style="color: #F0DFAF; font-weight: bold;">class</span> <span style="color: #7CB8BB;">AnyList</span> <span style="color: #F0DFAF; font-weight: bold;">extends</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">List</span>&lt;?&gt;&gt; {} <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">ok</span>
+</pre>
+</div>
+<p>
+In contrast, given a lower-bounded wildcard type, the wildcard is known to be the same as, or super type of, 
+the bound, so adding an element of the same type as the bound is always correct. Example
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #7CB8BB;">LinkedList</span>&lt;? <span style="color: #F0DFAF; font-weight: bold;">super</span> <span style="color: #7CB8BB;">Number</span>&gt; <span style="color: #DFAF8F;">n</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">LinkedList</span>&lt;<span style="color: #7CB8BB;">Number</span>&gt;();
+n.add(25);
+</pre>
+</div>
+
+<p>
+The coversion of the capture of the wildcard to a type is known as capture coversion. Example, 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-java"><span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #F0DFAF; font-weight: bold;">static</span> <span style="color: #7CB8BB;">void</span> &lt;T&gt; rev(<span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">T</span>&gt; <span style="color: #DFAF8F;">list</span>) {
+  <span style="color: #7CB8BB;">List</span>&lt;<span style="color: #7CB8BB;">T</span>&gt; <span style="color: #DFAF8F;">tmp</span> = <span style="color: #F0DFAF; font-weight: bold;">new</span> <span style="color: #7CB8BB;">ArrayList</span>&lt;<span style="color: #7CB8BB;">T</span>&gt;(list);
+  <span style="color: #F0DFAF; font-weight: bold;">for</span>(<span style="color: #7CB8BB;">int</span> <span style="color: #DFAF8F;">i</span>=0; i&lt;list.<span style="color: #7CB8BB;">size</span>(); i++){
+    list.set(i, tmp.get(list.size()-i-1));
+  }
+}
+<span style="color: #F0DFAF; font-weight: bold;">public</span> <span style="color: #7CB8BB;">void</span> <span style="color: #93E0E3;">reverse</span>(<span style="color: #7CB8BB;">List</span>&lt;?&gt; <span style="color: #DFAF8F;">list</span>) { <span style="color: #5F7F5F;">// </span><span style="color: #7F9F7F;">it is equivalent to rev()</span>
+  rev(list); <span style="color: #5F7F5F;">//</span><span style="color: #7F9F7F;">type variable T of rev() captured the wildcard</span>
+}
+</pre>
+</div>
+<p>
+Some restrictions on when 
+capture conversion can apply:
+</p>
+<ul class="org-ul">
+<li>capture conversion won't apply if the type parameter is used with more than one method parameter.
+</li>
+<li>you can only apply capture conversion if the type variable is defined at the top-level of the generic type.
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Erasure</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Drop all type parameters from parameterized types, and replace any type variable with the erasure of its bound, or with 
+<code>Object</code> if it has no bound, or with the erasure of the leftmost bound if it has multiple bounds.
+</p>
+
+<p>
+There is a single class defination for a generic class, no matter how many different parameterized invocations there 
+may be. For a generic class with a type parameter, say <i>E</i>, this fact has consequences
+</p>
+<ul class="org-ul">
+<li>cannot use <i>E</i> in the type of a static field or anywhere within a static method or static initializer.
+</li>
+<li>cannot instantiate <i>E</i>
+</li>
+</ul>
+
+<p>
+Erasure process impacts your program in two key areas:
+</p>
+<ul class="org-ul">
+<li>The runtime actions that can involved generic types
+<ul class="org-ul">
+<li>cannot instantiate a type represented ony as a type parameter, nor can you create an array of such a type.
+cannot do <code>new T()</code> or <code>new T[n]</code>
+</li>
+<li>cannot create an array whose element type is a parameterized type. <code>new List&lt;String&gt;[1]</code> is illegal. 
+You can use <i>ArrayList</i> instead.
+</li>
+<li>cannot use <code>instanceof</code> to see if an object is an instance of a parameterized type.
+</li>
+<li><code>getClass</code> method always returns the raw type
+</li>
+<li>cast involving type parameters or parameterized types are replaced with casts to the erasure of that type
+a cast from <code>Collection&lt;T&gt;</code> to <code>List&lt;T&gt;</code> is ok becuase it does not involve a change to type parameter.
+</li>
+<li>a catch clause cannnot declare that it catches an exception represented by a type variable even if the bound on 
+that type variable is an exception type. The exact type of the exception must be known at compile time.
+</li>
+<li>a generic class is not allowed to directly extend <code>Throwable</code>
+</li>
+<li>cannot use a parameterized type in a class literal expression. like <code>Class c = LinkedList&lt;String&gt;.class</code>.
+</li>
+</ul>
+</li>
+<li>Method overloading and overriding
+<ul class="org-ul">
+<li>definition of "same signature" for two generic methods requires that they have the same number of type variables 
+</li>
+</ul>
+<p>
+with the same corresponding bounds. 
+</p>
+<ul class="org-ul">
+<li>two methods have override-equivalent signatures if their signatures are the same, or if the erasures of their 
+</li>
+</ul>
+<p>
+signatures are the same. A method without generic types can override a method with generic types, but not the other 
+way around.
+</p>
+<ul class="org-ul">
+<li>two methods are overloaded if they have the same name and do not have override-equivalent signatures.
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-sec-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Overloading Methods</h2>
+<div class="outline-text-2" id="text-5">
+<p>
+Considering generic types and generic methods(and constructors), changes on <a href="#sec-5">Overloading Methods</a> summarized below:
+</p>
+<ul class="org-ul">
+<li>If the method invocation includes explicit type arguments, then 
+<ul class="org-ul">
+<li>potential applicable generic methods must have the same number of type parameters.
+</li>
+<li>non-generic methods perhaps also be potential applicable, in which case the actual type arguments are ignored.
+</li>
+</ul>
+</li>
+<li>If the method invocation without explicit type arguments, then
+<ul class="org-ul">
+<li>a generic method might be potential applicable, that depends on if type arguments can be inferred based on the static types of the invocation.
+</li>
+</ul>
+</li>
+<li>once potential applicable methods are determined, applicable methods are determined as <a href="#sec-5">Overloading Methods</a> described.
+</li>
+<li>when the most specific method is searched for, type inferrence is again used when generic methods are being considered.
+However, this time the type inferrence is not based on the actual arguments in method invocation, rather, the formal parameters of another applicable
+method.
+</li>
+</ul>
+
+<p>
+An example, two methods defined, they are <code>void m(String k, Object v)</code> and <code>&lt;S, T extends Number&gt; void m(S k, T v)</code>.
+when call <code>m("Hello", Integer.valueOf(29))</code>
+</p>
+<ul class="org-ul">
+<li>Inferred type is &lt;String, Integer&gt;, both of them are applicable.
+</li>
+<li>check if 1st method is more specific than 2nd method.
+<ul class="org-ul">
+<li>if each parameter of 1. is subtype of corresponding parameter of 2.
+
+<p>
+the 2nd method is generic method, and infers type of 2nd method by that of 1st method, result is &lt;String, Object&gt;
+because String is converted to S and Object is converted to T. Note the bound on T is not considered here.
+since the result is the same as 1st method, pass.
+</p>
+</li>
+<li>if each parameter of 1st method is subtype of bounds of corresponding type parameter of 2nd method.
+
+<p>
+bounds for 2nd method is &lt;Object, Number&gt; since the 2nd parameter of 1st method is not subtype of Number, failure!
+so 1st method is not more specific than 2nd method.
+</p>
+</li>
+</ul>
+</li>
+<li>check if 2nd method is more specific than 1st method
+<ul class="org-ul">
+<li>if each paramter of 2nd method is subtype of corresponding paramter of 1st method
+
+<p>
+A type variable is a subtype only of its bouds(and their supertypes), so for 2nd method is &lt;Object, Number&gt;.
+since the 2nd parameter(Object) of 1st method is not a subtype of Number, failure! 
+so 2nd method is not more specific than 1st method
+</p>
+</li>
+</ul>
+</li>
+</ul>
+
+<p>
+Since neither method is more specific than another, the call is ambiguous and the compiler rejects it as such.
+</p>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-14 Sat 20:52</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

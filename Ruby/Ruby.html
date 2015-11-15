@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+<title>Ruby编程语言</title>
+<!-- 2015-11-15 Sun 15:54 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Ruby编程语言</h1>
+<p>
+动态语言 完全面向对象
+</p>
+
+<p>
+<code>true</code> <code>false</code> <code>nil</code>  
+</p>
+
+<p>
+<code>0</code> 是 <code>true</code>
+</p>
+
+<p>
+双引号中位于分界符 <i>#{</i> 和 <i>}</i> 之间的表达式，将调用其 <code>to\_s</code> 方法转成字符串。
+</p>
+
+<p>
+类和模块都是开放的，可在运行时修改和扩展。
+</p>
+
+<p>
+如果对象 <i>obj</i> 有一个 <i>x=</i> 的方法， 则 <i>obj.x=(1)</i> 与 <i>obj.x=1</i> 。
+</p>
+
+<p>
+一般省略函数调用的圆括弧，尤其是无参方法。
+</p>
+
+<p>
+<code>empty?</code> 方法会测试数据结构是否包含元素。
+</p>
+
+<p>
+方法名中含有字符 <i>!</i> ， 表明该方法会修改原对象。
+</p>
+
+<p>
+全局变量以 <i>$</i> 为前缀，实例变量以 <i>@</i> 为前缀，类变量以 <i>@@</i> 为前缀。
+</p>
+
+<p>
+<code>1..3 #[1,2,3]=，     =1...3 #[1,2]</code>
+</p>
+
+<p>
+字符串是可变的，[]= 去改变字符串中的字符， <i>&lt;&lt;</i> 字符串尾部追加。
+</p>
+
+<p>
+<i>ri</i> 是Ruby的文档查看器，后接类名，模块名，方法名，若一个类定义了同名的类方法和实例方法，则用 <i>::</i> 引用类方法，用 <i>#</i> 引用实例方法。
+</p>
+
+<p>
+标识符由字母、数字、和下划线组成，但不能以字母开头。 以26个大写字母开头的标识符为常量。模块名和类名也必须以大写字母开头。 
+局部变量以下划线或者小写字母开头。
+</p>
+
+<p>
+默认将换行符看作是语句的总结符，只有在一行代码中放入多条语句时，才使用分号分割语句。可用 <i>\</i> 避免自动总结语句。
+</p>
+
+<p>
+把相互关联的类及独立于那些类的方法组成模块。
+</p>
+
+<p>
+代码块既可以用 <i>{</i> 和 <i>}</i> 界定， 也可以用 <i>do</i> 和 <i>end</i> 界定。
+</p>
+
+<p>
+引用一个未被赋值的类变量，会抛出 <code>NameError</code> ; 引用一个未被初始化的实例变量，返回 <i>nil</i> ; 引用一个未被初始化的全局变量，返回 <i>nil</i> 。
+</p>
+
+<p>
+表达式中的 <i>::</i> 表示常量引用。例， <code>::ARG</code> (<code>Object::ARGV</code>)
+</p>
+
+<p>
+只有在真正被赋值后，常量才存在; 对变量赋值时，即使并未真正执行赋值，变量就存在了。
+</p>
+
+<div class="org-src-container">
+
+<pre class="src src-ruby">a[0] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">a[](0)</span>
+x+y <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x.+(y)</span>
+o[x,y] = z <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">o[]=(x,y,z)</span>
+o[x] -= 2 <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">o[]=(x, o.[](x)-2)</span>
+</pre>
+</div>
+
+<p>
+在对象外，实例变量是永不可见的，且实例变量名永不会被对象限定修饰。
+</p>
+
+<p>
+表达式 <i>x</i>, 既可以是局部变量 <i>x</i> ， 也可以是 <i>self</i> 对象的一个方法 <i>x</i> ， 为消除此二义性， Ruby将
+该标识符当作局部变量来处理，条件是在这之前有变量的复制操作（即使该操作未执行）。
+</p>
+
+<p>
+对已存在的常量赋值，只会导致一个警告; 在方法内是不允许对常量赋值的; 因为只有在真正执行了对常量的赋值后， 
+常量才会存在，故不存在未初始化的常量。
+</p>
+
+<p>
+Ruby对属性或数组元素的赋值，其实是对方法调用的简写。
+</p>
+
+<p>
+并行赋值
+</p>
+<div class="org-src-container">
+
+<pre class="src src-ruby">x, y, z = [1, 2, 3] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x, y, z = 1, 2, 3</span>
+x, = [1, ] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x=1</span>
+x, y, z = 1, 2 <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x=1; y=2; z=nil</span>
+x, y, z = 1, *[2, 3] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x, y, z = 1, 2, 3</span>
+x, *y = 1, 2, 3 <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x=1; y=[2, 3]</span>
+*x, y = 1, 2, 3 <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x=[1,2]; y=3</span>
+x, y, *z = 1, *[2, 3, 4] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x=1; y=2; z=[3, 4]</span>
+x, (y, z) = 1, [2,3] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">x, y, z = 1, 2, 3</span>
+a, b, c, d = [1, [2, [3, 4]]] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">a=1; b= [2, [3, 4]]; c=d=nil</span>
+a, (b, (c, d)) = [1, [2, [3, 4]]] <span style="color: #5F7F5F;"># </span><span style="color: #7F9F7F;">a=1; b=2; c=3; d=4</span>
+</pre>
+</div>
+
+<p>
+类中可以定义各个操作符（但不是全部）的含义，例如， <i>&lt;</i> 、 <i>&amp;</i> 、 <i>+</i> 、 <i>！</i> 等等。
+<i>-</i> 和 <i>+</i> 既可以作为一元操作符， 也可以作为二元操作符。 作为一元操作符时，对应的方法名分别为 <i>-@</i> 、 <i>+@</i> 。
+</p>
+
+<p>
+一个类在定义了 <i>&lt;=&gt;</i> 操作符，并混入了 <code>Comparable</code> 模块后， 就自动有了 <i>&lt;</i> 、 <i>&lt;=</i> 、 <i>&gt;</i> 、 <i>&gt;=</i> 、 <i>==</i> 。
+</p>
+
+<p>
+就布尔操作而言， <i>false</i> 和 <i>nil</i> 都被认为是 <i>false</i> ， 其他如 <i>0</i> 、 "" 、 <i>[]</i> 、 <i>{}</i> 都被认为是 <i>true</i> 。
+</p>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 15:54</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>

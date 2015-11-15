@@ -1,0 +1,387 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN" xml:lang="zh-CN">
+<head>
+<title>Git裸版本库</title>
+<!-- 2015-11-15 Sun 15:46 -->
+<meta  http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta  name="generator" content="Org-mode" />
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  .title  { text-align: center; }
+  .todo   { font-family: monospace; color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #eee; font-family: monospace;
+            padding: 2px; font-size: 80%; font-weight: normal; }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  { margin-left: auto; margin-right: 0px;  text-align: right; }
+  .left   { margin-left: 0px;  margin-right: auto; text-align: left; }
+  .center { margin-left: auto; margin-right: auto; text-align: center; }
+  .underline { text-decoration: underline; }
+  #postamble p, #preamble p { font-size: 90%; margin: .2em; }
+  p.verse { margin-left: 3%; }
+  pre {
+    border: 1px solid #ccc;
+    box-shadow: 3px 3px 3px #eee;
+    padding: 8pt;
+    font-family: monospace;
+    overflow: auto;
+    margin: 1.2em;
+  }
+  pre.src {
+    position: relative;
+    overflow: visible;
+    padding-top: 1.2em;
+  }
+  pre.src:before {
+    display: none;
+    position: absolute;
+    background-color: white;
+    top: -10px;
+    right: 10px;
+    padding: 3px;
+    border: 1px solid black;
+  }
+  pre.src:hover:before { display: inline;}
+  pre.src-sh:before    { content: 'sh'; }
+  pre.src-bash:before  { content: 'sh'; }
+  pre.src-emacs-lisp:before { content: 'Emacs Lisp'; }
+  pre.src-R:before     { content: 'R'; }
+  pre.src-perl:before  { content: 'Perl'; }
+  pre.src-java:before  { content: 'Java'; }
+  pre.src-sql:before   { content: 'SQL'; }
+
+  table { border-collapse:collapse; }
+  caption.t-above { caption-side: top; }
+  caption.t-bottom { caption-side: bottom; }
+  td, th { vertical-align:top;  }
+  th.right  { text-align: center;  }
+  th.left   { text-align: center;   }
+  th.center { text-align: center; }
+  td.right  { text-align: right;  }
+  td.left   { text-align: left;   }
+  td.center { text-align: center; }
+  dt { font-weight: bold; }
+  .footpara:nth-child(2) { display: inline; }
+  .footpara { display: block; }
+  .footdef  { margin-bottom: 1em; }
+  .figure { padding: 1em; }
+  .figure p { text-align: center; }
+  .inlinetask {
+    padding: 10px;
+    border: 2px solid gray;
+    margin: 10px;
+    background: #ffffcc;
+  }
+  #org-div-home-and-up
+   { text-align: right; font-size: 70%; white-space: nowrap; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size: smaller }
+  .code-highlighted { background-color: #ffff00; }
+  .org-info-js_info-navigation { border-style: none; }
+  #org-info-js_console-label
+    { font-size: 10px; font-weight: bold; white-space: nowrap; }
+  .org-info-js_search-highlight
+    { background-color: #ffff00; color: #000000; font-weight: bold; }
+  /*]]>*/-->
+</style>
+<link rel="stylesheet" type="text/css" href="http://lianhonghou.github.io/css/norang.css"/>
+<script type="text/javascript">
+/*
+@licstart  The following is the entire license notice for the
+JavaScript code in this tag.
+
+Copyright (C) 2012-2013 Free Software Foundation, Inc.
+
+The JavaScript code in this tag is free software: you can
+redistribute it and/or modify it under the terms of the GNU
+General Public License (GNU GPL) as published by the Free Software
+Foundation, either version 3 of the License, or (at your option)
+any later version.  The code is distributed WITHOUT ANY WARRANTY;
+without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE.  See the GNU GPL for more details.
+
+As additional permission under GNU GPL version 3 section 7, you
+may distribute non-source (e.g., minimized or compacted) forms of
+that code without the copy of the GNU GPL normally required by
+section 4, provided you include this license notice and a URL
+through which recipients can access the Corresponding Source.
+
+
+@licend  The above is the entire license notice
+for the JavaScript code in this tag.
+*/
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+</head>
+<body>
+<div id="content">
+<h1 class="title">Git裸版本库</h1>
+<div id="table-of-contents">
+<h2>&#30446;&#24405;</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1. Why</a></li>
+<li><a href="#sec-2">2. What</a></li>
+<li><a href="#sec-3">3. How to use</a></li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-sec-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Why</h2>
+<div class="outline-text-2" id="text-1">
+<p>
+是为了作为备份的版本库或者共享式的版本库使用的。 
+不仅能节省存储空间（没有工作区和暂存区），而且便于使用git push向其推送更新。
+</p>
+</div>
+</div>
+<div id="outline-container-sec-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> What</h2>
+<div class="outline-text-2" id="text-2">
+<p>
+创建一个裸版本库
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git clone --bare ./git-exercise/ git-exercise-backup
+Cloning into bare repository 'git-exercise-backup'...
+done.
+</pre>
+</div>
+<p>
+与原版本库作比较
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ diff ./git-exercise/.git/ ./git-exercise-backup/
+Only in ./git-exercise/.git/: COMMIT_EDITMSG
+diff ./git-exercise/.git/config ./git-exercise-backup/config
+4,5c4
+&lt;       bare = false
+&lt;       logallrefupdates = true
+---
+&gt;       bare = true
+8a8,9
+&gt; [remote "origin"]
+&gt;       url = c:/Documents and Settings/lhou/./git-exercise/
+Common subdirectories: ./git-exercise/.git/hooks and ./git-exercise-backup/hooks
+Only in ./git-exercise/.git/: index
+Common subdirectories: ./git-exercise/.git/info and ./git-exercise-backup/info
+Only in ./git-exercise/.git/: logs
+Common subdirectories: ./git-exercise/.git/objects and ./git-exercise-backup/objects
+Only in ./git-exercise-backup/: packed-refs
+Common subdirectories: ./git-exercise/.git/refs and ./git-exercise-backup/refs
+</pre>
+</div>
+<p>
+这里，就可以看到，
+</p>
+<ul class="org-ul">
+<li>裸版本库中没有目录index，也即，没有暂存区
+</li>
+<li>裸版本库中没有目录logs,故git reflog不可用
+</li>
+<li>裸版本库中多了文件packed-refs
+</li>
+</ul>
+<div class="org-src-container">
+
+<pre class="src src-git">$ cat packed-refs
+# pack-refs with: peeled
+72c4cc512164e21f585535ac2976c20e665c28d2 refs/heads/master
+$ git cat-file -p 72c4cc
+tree 9986876438a022f2cca5ca26f166a0a0cf53861f
+author tech-note &lt;Email Addr&gt; 1361946631 +0800
+committer tech-note &lt;Email Addr&gt; 1361946631 +0800
+
+start
+</pre>
+</div>
+<p>
+尝试几个命令
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ cd ./git-exercise-backup/
+$ ls -l
+total 2
+-rw-r--r--    1 lhou     Administ       23 Feb 27 16:33 HEAD
+-rw-r--r--    1 lhou     Administ      203 Feb 27 16:33 config
+-rw-r--r--    1 lhou     Administ       73 Feb 27 16:33 description
+drwxr-xr-x    1 lhou     Administ        0 Feb 27 16:33 hooks
+drwxr-xr-x    1 lhou     Administ        0 Feb 27 16:33 info
+drwxr-xr-x    1 lhou     Administ        0 Feb 27 16:33 objects
+-rw-r--r--    1 lhou     Administ       85 Feb 27 16:33 packed-refs
+drwxr-xr-x    1 lhou     Administ        0 Feb 27 16:33 refs
+$ git ls-files
+$ git ls-tree HEAD
+100644 blob d44e18fb93b7107b5cd1b95d601591d77869a1b6    1st.txt
+$ git cat-file -p d44e18
+start
+$ git log
+commit 72c4cc512164e21f585535ac2976c20e665c28d2
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 14:30:31 2013 +0800
+
+    start
+$ git checkout HEAD
+fatal: This operation must be run in a work tree
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-sec-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> How to use</h2>
+<div class="outline-text-2" id="text-3">
+<p>
+先更新下原版本
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ cd ../git-exercise
+$ cat 1st.txt
+start
+$ echo "hello" &gt;&gt; 1st.txt
+$ git add .
+$ git commit -m "hello"
+686db8a] hello
+</pre>
+</div>
+<p>
+尝试将更新推送到备份的裸版本库
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git push
+fatal: No configured push destination.
+Either specify the URL from the command-line or configure a remote repository using
+
+    git remote add &lt;name&gt; &lt;url&gt;
+
+and then push using the remote name
+
+    git push &lt;name&gt;
+</pre>
+</div>
+<p>
+失败了！因为未设定远程版本库。 
+再次尝试 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git push ../git-exercise-backup/
+warning: push.default is unset; its implicit value is changing in
+Git 2.0 from 'matching' to 'simple'. To squelch this message
+and maintain the current behavior after the default changes, use:
+
+  git config --global push.default matching
+
+To squelch this message and adopt the new behavior now, use:
+
+  git config --global push.default simple
+
+See 'git help config' and search for 'push.default' for further information.
+(the 'simple' mode was introduced in Git 1.7.11. Use the similar mode
+'current' instead of 'simple' if you sometimes use older versions of Git)
+
+Counting objects: 5, done.
+Writing objects: 100% (3/3), 249 bytes, done.
+Total 3 (delta 0), reused 0 (delta 0)
+To ../git-exercise-backup/
+   72c4cc5..686db8a  master -&gt; master
+</pre>
+</div>
+<p>
+上面一大段提示，是在说，应该设置一个默认的推送（push）目的地，这样，就可以直接用git push了！这里到底成功了吗？
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git log
+commit 686db8a064b6a2cf1b1dc899a0cb1175d63871dd
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 17:41:15 2013 +0800
+
+    hello
+
+commit 72c4cc512164e21f585535ac2976c20e665c28d2
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 14:30:31 2013 +0800
+
+    start
+$ cd ../git-exercise-backup/
+$ git log
+commit 686db8a064b6a2cf1b1dc899a0cb1175d63871dd
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 17:41:15 2013 +0800
+
+    hello
+
+commit 72c4cc512164e21f585535ac2976c20e665c28d2
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 14:30:31 2013 +0800
+
+    start
+</pre>
+</div>
+<p>
+明显是成功了！因为裸版本库的日志更新了。
+那么当我们上述原始版本丢掉后，怎么使用该裸版本库恢复出一个有工作区的、可正常使用的版本呢？ 答案如下， 
+</p>
+<div class="org-src-container">
+
+<pre class="src src-git">$ git clone git-exercise-backup/ from-git-exercise-backup/
+Cloning into 'from-git-exercise-backup'...
+done.
+$ cd ./from-git-exercise-backup/
+$ ls
+1st.txt
+$ cat 1st.txt
+start
+hello
+$ git log
+commit 686db8a064b6a2cf1b1dc899a0cb1175d63871dd
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 17:41:15 2013 +0800
+
+    hello
+
+commit 72c4cc512164e21f585535ac2976c20e665c28d2
+Author: tech-note &lt;Email Addr&gt;
+Date:   Wed Feb 27 14:30:31 2013 +0800
+
+    start
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div id="postamble" class="status">
+<p class="date">Created: 2015-11-15 Sun 15:46</p>
+<p class="creator"><a href="http://www.gnu.org/software/emacs/">Emacs</a> 24.5.1 (<a href="http://orgmode.org">Org</a> mode 8.2.10)</p>
+<p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
+</div>
+</body>
+</html>
